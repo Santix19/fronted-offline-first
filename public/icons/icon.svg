@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#0f4c5c"/>
+  <!-- trout -->
+  <path d="M110 250c50-62 150-86 236-50 22 9 41 22 58 36l50-38-14 56 14 56-50-38c-17 14-36 27-58 36-86 36-186 12-236-50z" fill="#eef3f4"/>
+  <circle cx="160" cy="245" r="12" fill="#0f4c5c"/>
+  <circle cx="250" cy="236" r="7" fill="#c2416b"/>
+  <circle cx="290" cy="262" r="6" fill="#c2416b"/>
+  <circle cx="225" cy="270" r="5" fill="#c2416b"/>
+  <!-- water lines -->
+  <path d="M96 384c40-22 80-22 120 0s80 22 120 0 80-22 120 0" stroke="#6fb8c9" stroke-width="18" fill="none" stroke-linecap="round"/>
+  <path d="M136 430c27-14 53-14 80 0s53 14 80 0 53-14 80 0" stroke="#6fb8c9" stroke-width="14" fill="none" stroke-linecap="round" opacity=".6"/>
+</svg>

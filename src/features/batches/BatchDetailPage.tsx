@@ -1,0 +1,62 @@
+import { useLiveQuery } from '../../shared/db/useLiveQuery';
+import { Page } from '../../shared/ui/Page';
+import { SyncChip } from '../../shared/ui/SyncChip';
+import { formatDate, formatNumber } from '../../shared/utils/format';
+import { getPond } from '../ponds/pondRepository';
+import { listRecords } from '../records/recordRepository';
+import { RecordList } from '../records/RecordList';
+import { RECORD_LABELS, type RecordType } from '../records/recordTypes';
+import { getBatch } from './batchRepository';
+import { BatchSummaryPanel } from './BatchSummaryPanel';
+
+/** Batch records, in the order the caretaker usually needs them in the day. */
+const BATCH_RECORDS: RecordType[] = ['feeding', 'mortality', 'biometry', 'fry_count'];
+
+async function loadBatch(batchId: string) {
+  const batch = await getBatch(batchId);
+  const pond = batch && (await getPond(batch.pondId));
+  return { batch, pond, records: await listRecords(batchId, 20) };
+}
+
+export function BatchDetailPage({ batchId }: { batchId: string }) {
+  const data = useLiveQuery(() => loadBatch(batchId), ['batches', 'ponds', 'records'], [batchId]);
+  if (!data) return <Page title="Lote" backTo="/">{null}</Page>;
+  const { batch, pond, records } = data;
+  if (!batch) return <Page title="Lote" backTo="/"><p className="notice warn">Este lote no existe en el celular.</p></Page>;
+  const back = `/estanques/${batch.pondId}`;
+
+  return (
+    <Page title={`Lote ${batch.code}`} backTo={back}>
+      <section className="section">
+        <div className="section-head">
+          <p className="muted">
+            {pond?.name ?? 'Estanque'} · siembra {formatDate(batch.stockingDate)}
+            {batch.initialQuantity !== undefined && ` · ${formatNumber(batch.initialQuantity, 0)} alevinos`}
+          </p>
+          <SyncChip state={batch.syncState} />
+        </div>
+        {batch.status === 'cerrado' && <p className="notice">Este lote está cerrado (cosechado).</p>}
+        <BatchSummaryPanel batch={batch} />
+      </section>
+
+      {batch.status === 'activo' && (
+        <section className="section">
+          <h2>Registrar</h2>
+          <div className="button-row">
+            {BATCH_RECORDS.map((type) => (
+              <a key={type} className="button" href={`#/registrar/${type}?lote=${batch.id}`}>{RECORD_LABELS[type]}</a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className="section">
+        <div className="section-head">
+          <h2>Registros de este celular</h2>
+          <a className="button secondary" href={`#/lotes/${batch.id}/editar`}>Editar lote</a>
+        </div>
+        <RecordList records={records} empty="Aún no hay registros de este lote." />
+      </section>
+    </Page>
+  );
+}

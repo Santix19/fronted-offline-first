@@ -1,0 +1,97 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.field label {
+  font-weight: 700;
+}
+
+.field .hint {
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+.field input,
+.field select,
+.field textarea {
+  min-height: var(--touch);
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  font-size: var(--text-lg);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--lake);
+  outline: none;
+}
+
+.field[data-invalid='true'] input,
+.field[data-invalid='true'] select {
+  border-color: var(--danger);
+}
+
+.field .error {
+  color: var(--danger);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.field-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+/* Big segmented choice (pond type, source): one tap instead of a dropdown */
+.choices {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.choices label {
+  position: relative;
+  flex: 1;
+  min-height: var(--touch);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.choices input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.choices input:checked + span {
+  color: var(--lake);
+}
+
+.choices label:has(input:checked) {
+  border-color: var(--lake);
+  background: var(--lake-soft);
+}
+
+.choices label:has(input:focus-visible) {
+  outline: 3px solid var(--lake);
+  outline-offset: 2px;
+}

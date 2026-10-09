@@ -1,0 +1,62 @@
+/* The water band: the one bold element. Big readings, coloured by the expert system's ranges. */
+.water-band {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: var(--space-2);
+}
+
+.reading {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--lake-soft);
+  border-bottom: 5px solid var(--lake);
+}
+
+.reading .value {
+  display: block;
+  font-size: var(--text-xxl);
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.reading .unit {
+  font-size: var(--text-md);
+  font-weight: 600;
+  margin-left: 2px;
+}
+
+.reading .label {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+.reading.ok { background: var(--ok-soft); border-color: var(--ok); }
+.reading.warn { background: var(--warn-soft); border-color: var(--warn); }
+.reading.danger { background: var(--danger-soft); border-color: var(--danger); }
+.reading.none .value { color: var(--ink-soft); }
+
+/* Pond row on the home screen: name on top, its water band below */
+.pond-row {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  color: inherit;
+  text-decoration: none;
+}
+
+.pond-row .head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.pond-row .name {
+  flex: 1;
+  font-size: var(--text-lg);
+  font-weight: 800;
+}

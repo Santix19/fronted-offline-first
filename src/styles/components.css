@@ -1,0 +1,139 @@
+/* Buttons */
+.button {
+  min-height: var(--touch);
+  padding: 0 var(--space-5);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: 2px solid var(--lake);
+  border-radius: var(--radius-md);
+  background: var(--lake);
+  color: var(--on-lake);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button.secondary {
+  background: transparent;
+  color: var(--lake);
+}
+
+.button.danger {
+  border-color: var(--danger);
+  background: transparent;
+  color: var(--danger);
+}
+
+.button.block {
+  width: 100%;
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.button-row > * {
+  flex: 1 1 140px;
+}
+
+/* Plain list of rows (ponds, batches, records): rows, not a grid of cards */
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.list > li + li {
+  border-top: 1px solid var(--line);
+}
+
+.row {
+  min-height: var(--touch);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: inherit;
+  text-decoration: none;
+}
+
+.row-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.row-title {
+  font-weight: 700;
+}
+
+/* Small state chip (sync state, alert level, batch status) */
+.chip {
+  flex-shrink: 0;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.chip.ok { background: var(--ok-soft); color: var(--ok); }
+.chip.warn { background: var(--warn-soft); color: var(--warn); }
+.chip.danger { background: var(--danger-soft); color: var(--danger); }
+.chip.neutral { background: var(--lake-soft); color: var(--lake-strong); }
+
+/* Panels (summary, settings groups) */
+.panel {
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.facts {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--space-4) var(--space-3);
+}
+
+.facts dt {
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+}
+
+.facts dd {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Alert rows: message on its own line, level and action below (fits a narrow phone) */
+.alert-row {
+  flex-wrap: wrap;
+}
+
+.alert-row .row-main {
+  flex-basis: 100%;
+}
+
+.alert-row .button {
+  margin-left: auto;
+  min-height: 44px;
+}
