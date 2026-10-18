@@ -1,11 +1,11 @@
+import { facade } from '../../facade/PisciculturaFacade';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
 import { SyncChip } from '../../shared/ui/SyncChip';
 import { formatDate, formatNumber } from '../../shared/utils/format';
-import { listBatches } from './batchRepository';
 
 /** Batches of one pond, active first. Shown inside the pond screen. */
 export function BatchList({ pondId }: { pondId: string }) {
-  const batches = useLiveQuery(() => listBatches(pondId), ['batches'], [pondId]);
+  const batches = useLiveQuery(() => facade.batches(pondId), ['batches'], [pondId]);
 
   return (
     <section className="section">
