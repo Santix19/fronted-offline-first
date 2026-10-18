@@ -27,3 +27,7 @@ const unsigned long LONG_CUT_US = 25000;     // a cut this long is more than one
 const unsigned long REPORT_EVERY_MS = 250;   // four frames a second is plenty for a phone screen
 
 volatile unsigned long fish = 0;
+
+volatile unsigned long ambiguous = 0;
+
+volatile unsigned long cutStartedUs = 0;
