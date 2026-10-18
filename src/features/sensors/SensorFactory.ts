@@ -99,3 +99,5 @@ const FACTORIES: Record<SensorKind, SensorFactory> = {
 export function sensorFactoryFor(kind: SensorKind): SensorFactory {
   return FACTORIES[kind];
 }
+
+/** Sources this phone can really open: without Web Serial only the simulator is offered. */
