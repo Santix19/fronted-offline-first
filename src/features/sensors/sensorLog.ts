@@ -15,3 +15,7 @@ export interface SensorLogEntry {
  */
 
 const MAX_ENTRIES = 40;
+
+let entries: SensorLogEntry[] = [];
+
+const listeners = new Set<() => void>();
