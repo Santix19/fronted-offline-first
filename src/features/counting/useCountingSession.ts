@@ -34,5 +34,36 @@ export function useCountingSession(batchId: string) {
     setTotals(opened.totals);
     setWarning(null);
   }, [batchId]);
+
+  useEffect(() => {
+    void reopen();
+    // Leaving the screen must release the port, or the next connection finds it busy
+    return () => void source.current?.close();
+  }, [reopen]);
+
+  const connect = useCallback(async (kind: SensorKind) => {
+    if (source.current) return;
+    setProblem(undefined);
+    const opened = facade.openSensor(kind);
+    try {
+      await opened.open();
+    } catch (error) {
+      setProblem(error instanceof Error ? error.message : 'No se pudo abrir el contador');
+      return;
+    }
+    opened.subscribe((event) => {
+      if (event.type === 'problem') {
+        setProblem(event.message);
+        return;
+      }
+      void session.current?.register(event.sample).then((feedback) => {
+        setTotals(feedback.totals);
+        setWarning(feedback.warning);
+      });
+    });
+    source.current = opened;
+    setSensor(opened.descriptor);
+    setConnected(true);
+  }, []);
 }
 
