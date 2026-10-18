@@ -15,3 +15,19 @@ export interface CountingTally {
   startedAt: string;
   updatedAt: string;
 }
+
+export interface CommitInput {
+  batchId: string;
+  total: number;
+  /** Left out when the device cannot measure it, so a zero is never read as a measurement */
+  multipleCuts?: number;
+  source: RecordSource;
+  recordedAt: string;
+}
+
+/**
+ * Implementor side of the Bridge: where a count lives while it is being taken, and where it ends up
+ * when it is closed. IndexedDbCountStore is the real engine and MemoryCountStore is the one tests
+ * and demos use. The abstraction never knows which of the two it is holding, so the counting rules
+ * and the storage engine change independently.
+ */
