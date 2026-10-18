@@ -27,3 +27,9 @@ test('too many ambiguous crossings warn once there are enough frames to judge', 
   const loud = await session.register(pulse(10, 5));
   assert.match(loud.warning ?? '', /demasiado juntos/);
 });
+
+test('without a stocked quantity there is nothing to compare against', async () => {
+  const session = await supervised(undefined);
+  const feedback = await session.register(pulse(999_999));
+  assert.equal(feedback.warning, null);
+});
