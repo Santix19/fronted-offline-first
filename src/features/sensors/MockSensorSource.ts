@@ -11,5 +11,9 @@ export class MockSensorSource implements SensorSource {
   private readonly events = new SensorBroadcast();
 
   private timer?: ReturnType<typeof setInterval>;
+
+  private seq = 0;
+
+  constructor(readonly descriptor: SensorDescriptor, private readonly everyMs = 700) {}
 }
 
