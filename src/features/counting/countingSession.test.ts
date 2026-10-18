@@ -53,3 +53,12 @@ test('discarding a count records nothing', async () => {
   assert.deepEqual(store.committed, []);
   assert.equal(await store.loadTally('b1'), undefined);
 });
+
+test('a hand correction replaces the total', async () => {
+  const { session } = await open();
+  await session.register(pulse(100));
+  await session.correct(97);
+  assert.equal(session.totals.total, 97);
+  await session.correct(-5);
+  assert.equal(session.totals.total, 0);
+});
