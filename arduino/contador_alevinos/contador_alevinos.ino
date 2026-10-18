@@ -39,3 +39,19 @@ unsigned long seq = 0;
 unsigned long lastReportMs = 0;
 
 /* Both edges share one debounce window: a bouncing receiver fires them in pairs. */
+
+void onBeamChange() {
+  unsigned long now = micros();
+  if (now - lastEdgeUs < DEBOUNCE_US) return;
+  lastEdgeUs = now;
+
+  if (digitalRead(BEAM_PIN) == LOW) {
+    cutStartedUs = now;
+    return;
+  }
+
+  /* Beam restored: one crossing finished. A long one is counted as a single fish and flagged,
+     never as two: guessing here would corrupt the comparison against the manual count. */
+  fish++;
+  if (now - cutStartedUs > LONG_CUT_US) ambiguous++;
+}
