@@ -20,7 +20,10 @@ src/
 │   ├── records/    Registros    → eventos del push         (los 5 formularios, validación, historial)
 │   ├── alerts/     Alertas      → /api/alertas             (lista y "atendida", también sin señal)
 │   ├── sync/       Sincronizar  → /api/sync/push y /pull   (cola, pasos de la sincronización, estado)
-│   └── settings/   Ajustes      (servidor, clave, nombre del celular, prueba de conexión)
+│   ├── settings/   Ajustes      (servidor, clave, nombre del celular, prueba de conexión)
+│   ├── sensors/    Contador     (puerto serial del Arduino, fábrica de fuentes, decoradores)
+│   └── counting/   Conteo       (sesión de conteo, motores de persistencia, pantalla)
+├── facade/         La única puerta de entrada: PisciculturaFacade
 ├── shared/
 │   ├── db/         Base del celular (IndexedDB) y refresco automático de pantallas
 │   ├── http/       El único lugar que habla con el backend (clave, tiempos de espera, errores)
@@ -30,6 +33,7 @@ src/
 └── styles/         Colores, tipografía y componentes visuales
 public/sw.js        Service worker: guarda la app para abrirla sin señal
 mock-api/           Backend simulado para demos (mismas rutas y JSON que el real)
+arduino/            Sketch del contador de alevinos (lo que la app lee por el puerto USB)
 ```
 
 Cada archivo hace una sola cosa. Ningún archivo de `src/` pasa de 80 líneas de código.
@@ -43,32 +47,49 @@ En cada carpeta de `features/` los archivos siguen el mismo patrón:
 | `xxxRepository.ts` | Leer y guardar en la base del celular |
 | `XxxPage.tsx` | Las pantallas |
 
-## Cómo funciona el modo sin internet
+Las pantallas **no** importan `xxxRepository`, `xxxApi` ni el motor de sincronización: todas pasan por
+`facade/PisciculturaFacade.ts`. Es una regla que se revisa con un `grep` (ver *Patrones de diseño*).
+
+## Conectar el contador (Arduino)
+
+El contador es una barrera infrarroja sobre el canal de salida. La placa es **deliberadamente tonta**: no
+guarda el total del lote, no sabe la fecha y no almacena nada. Solo reporta cuántos alevinos pasaron desde su
+trama anterior. El total lo lleva el celular, porque es el que sobrevive a que se desconecte el cable y el que
+ya sabe hacer cola sin señal.
+
+Tramas que escribe el sketch (`arduino/contador_alevinos/`, las lee `src/features/sensors/serialFrames.ts`):
 
 ```
- Cuidador ──► Formulario ──► Base del celular (IndexedDB) ──► Pantallas
-                                    │  estado "Por subir"
-                                    ▼  cuando hay señal
-                          POST /api/sync/push  (de a 500, en orden: estanques → lotes → eventos)
-                                    │
-                aceptados / duplicados → "Subido"      rechazados → "Rechazado" + motivo
-                                    ▼
-                          GET /api/sync/pull?desde=<servidor_en>
-                          trae cambios de otros celulares y las alertas pendientes
+# contador de alevinos la cocha v1     ← saludo de arranque, la app lo ignora
+CNT;<seq>;<alevinos>;<ambiguos>        ← alevinos desde la trama anterior
+AGUA;<seq>;<temp_c>;<ph>;<oxigeno>     ← lectura de agua ("-" en lo que no midió)
 ```
 
-- **El celular crea el id (UUID) de cada registro.** Si la señal se cae y se reenvía, el backend lo
-  reconoce como duplicado y no lo guarda dos veces.
-- **Nada se borra en silencio.** Lo que el servidor rechaza queda visible en *Sincronizar* con el motivo,
-  para corregirlo o descartarlo.
-- **Estanques y lotes se pueden editar sin señal.** Gana la edición más reciente, la misma regla del backend.
-  Si otro celular editó después, la app descarga esa versión.
-- **El cursor del pull es la hora del servidor**, no la del celular, para que un reloj atrasado no pierda cambios.
-- **Se sincroniza sola** al abrir la app, al volver la señal, unos segundos después de cada registro y cada
-  2 minutos. También hay un botón *Sincronizar ahora*.
-- **Primer intento con espera larga (90 s):** Render gratis tarda ~1 minuto en despertar.
-- Las validaciones del formulario son **las mismas del backend** (pH 0–14, fechas desde 2024…), para que un
-  dato malo no llegue a la cola.
+Es texto plano a propósito: se puede leer en el monitor serial del Arduino IDE mientras se calibra el
+contador en el estanque, que es donde está el trabajo de verdad.
+
+Para usarlo:
+
+1. Carga `arduino/contador_alevinos/contador_alevinos.ino`. Para la versión ultrasónica, pon `BAUD = 9600` y
+   `REPORT_CUTS = false` (es lo que espera `ArduinoUltrasonicFactory`).
+2. Conecta la placa al celular por USB-OTG, o al computador.
+3. Abre el lote en la app y toca **Contar con el contador** → *Conectar contador infrarrojo*. Chrome pide
+   escoger el puerto; es obligatorio y lo tiene que hacer la persona, no la app.
+4. El total se guarda en el celular en cada trama: se puede salir de la pantalla y volver, y el conteo sigue.
+5. **Guardar el conteo** lo convierte en un registro `conteo` con `origen: "contador"` y entra a la misma cola
+   de subida que todo lo que se escribe a mano.
+
+Requisitos y límites:
+
+- El puerto USB necesita **Chrome o Edge** sobre HTTPS (o `localhost`). Si el navegador no lo soporta, la app
+  ofrece solo el **simulador**, que escribe las mismas tramas y pasa por el mismo parser.
+- Un conteo simulado se guarda con `origen: "manual"`. Nunca queda en la base como si una máquina lo hubiera
+  medido: la tesis compara la precisión del contador contra el conteo a mano, y eso se arruina si el dato se
+  ensucia.
+- Un corte largo (dos alevinos juntos) se cuenta como **un** pez y se marca como ambiguo en
+  `cortes_multiples`. Adivinar ahí dañaría la misma comparación.
+- La pantalla avisa sola cuando el conteo deja de ser creíble: si pasa lo sembrado (lente sucio) o si hay
+  demasiados cortes múltiples (hay que bajar el caudal).
 
 ## Correr en local
 
@@ -92,12 +113,15 @@ La dirección y la clave también se pueden cambiar desde la pantalla *Ajustes* 
 ## Pruebas
 
 ```bash
-npm test          # pruebas de la lógica de sincronización y validación (15 pruebas)
+npm test          # pruebas de sincronización, validación, protocolo del contador y conteo (32 pruebas)
 npm run typecheck # revisa los tipos de TypeScript
 ```
 
 Las pruebas cubren lo más delicado: cómo se divide la cola en envíos, cómo se leen las respuestas del push,
-quién gana cuando dos celulares editan lo mismo y las validaciones de cada registro.
+quién gana cuando dos celulares editan lo mismo y las validaciones de cada registro. También el protocolo
+del contador (tramas con ruido, tramas repetidas, placas que no miden cortes) y la sesión de conteo completa:
+retomar un conteo a medias, corregir a mano, cerrarlo y descartarlo, todo sin IndexedDB y sin placa gracias al
+Bridge.
 
 El flujo completo también se probó en un navegador real: registrar sin señal, cerrar y abrir la app sin señal,
 volver a tener señal y verificar en el servidor que llegó todo, la alerta del sistema experto, atender una
@@ -128,7 +152,10 @@ El modo sin internet necesita **HTTPS** (o `localhost`). Para probar en el celul
 - **Registro por voz:** el backend acepta `origen: "voz"`, pero el reconocimiento de voz del navegador necesita
   internet. Queda para una siguiente versión.
 - **Sensor ESP32:** si el sensor envía directo al backend, la app muestra esas lecturas al sincronizar
-  (`/api/estanques/{id}/lecturas`).
+  (`/api/estanques/{id}/lecturas`). El contador por USB es el otro camino: pasa por el celular y entra a la cola.
+- **El conteo en curso vive en el store `meta`** (clave `count:<lote>`), no en una tabla nueva, para no tener
+  que subir la versión de la base del celular. Si algún día se necesitan varios conteos por lote a la vez,
+  ahí sí toca migración.
 - **La clave `X-API-Key` queda dentro de la app.** Es aceptable para el piloto. En producción haría falta un
   inicio de sesión por usuario.
 - Los rangos de colores de la banda de agua copian los de `Rules.java` del backend. Si el productor los ajusta,
