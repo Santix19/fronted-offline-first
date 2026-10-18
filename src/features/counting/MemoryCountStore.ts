@@ -1,0 +1,13 @@
+import { newId } from '../../shared/utils/ids';
+import type { CommitInput, CountStore, CountingTally } from './countingTypes';
+
+/**
+ * Count engine without a database. The tests use it to check the counting rules without IndexedDB,
+ * and the defence uses it to count without leaving anything behind on the phone.
+ */
+export class MemoryCountStore implements CountStore {
+  private readonly tallies = new Map<string, CountingTally>();
+
+  /** Counts closed during this session, so a test can assert what was stored. */
+}
+
