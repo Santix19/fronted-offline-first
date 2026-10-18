@@ -32,3 +32,20 @@ export abstract class SensorFactory {
     return source;
   }
 }
+
+/** Infrared barrier: the usual fry counter. It can tell two fish crossing at once apart. */
+
+class ArduinoInfraredFactory extends SensorFactory {
+  readonly descriptor: SensorDescriptor = {
+    kind: 'arduino_infrared',
+    label: 'Contador infrarrojo (Arduino)',
+    recordSource: 'contador',
+    baudRate: 115200,
+    countsMultipleCuts: true,
+    needsPort: true,
+  };
+
+  protected createSource(): SensorSource {
+    return new ArduinoSerialAdapter(this.descriptor, { countsMultipleCuts: true });
+  }
+}
