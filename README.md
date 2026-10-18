@@ -93,53 +93,63 @@ es justo lo que delata un cable flojo.
 - Las validaciones del formulario son **las mismas del backend** (pH 0–14, fechas desde 2024…), para que un
   dato malo no llegue a la cola.
 
-## Pruebas
+## Conectar el contador (Arduino)
 
-```bash
-npm test          # pruebas de sincronización, validación, protocolo del contador y conteo (32 pruebas)
-npm run typecheck # revisa los tipos de TypeScript
+El contador es una barrera infrarroja sobre el canal de salida. La placa es **deliberadamente tonta**: no
+guarda el total del lote, no sabe la fecha y no almacena nada. Solo reporta cuántos alevinos pasaron desde su
+trama anterior. El total lo lleva el celular, porque es el que sobrevive a que se desconecte el cable y el que
+ya sabe hacer cola sin señal.
+
+Tramas que escribe el sketch (`arduino/contador_alevinos/`, las lee `src/features/sensors/serialFrames.ts`):
+
+```
+# contador de alevinos la cocha v1     ← saludo de arranque, la app lo ignora
+CNT;<seq>;<alevinos>;<ambiguos>        ← alevinos desde la trama anterior
+AGUA;<seq>;<temp_c>;<ph>;<oxigeno>     ← lectura de agua ("-" en lo que no midió)
 ```
 
-Las pruebas cubren lo más delicado: cómo se divide la cola en envíos, cómo se leen las respuestas del push,
-quién gana cuando dos celulares editan lo mismo y las validaciones de cada registro. También el protocolo
-del contador (tramas con ruido, tramas repetidas, placas que no miden cortes) y la sesión de conteo completa:
-retomar un conteo a medias, corregir a mano, cerrarlo y descartarlo, todo sin IndexedDB y sin placa gracias al
-Bridge.
+Es texto plano a propósito: se puede leer en el monitor serial del Arduino IDE mientras se calibra el
+contador en el estanque, que es donde está el trabajo de verdad.
 
-El flujo completo también se probó en un navegador real: registrar sin señal, cerrar y abrir la app sin señal,
-volver a tener señal y verificar en el servidor que llegó todo, la alerta del sistema experto, atender una
-alerta sin señal, y recibir la edición de otro celular.
+Para usarlo:
 
-## Publicar
+1. Carga `arduino/contador_alevinos/contador_alevinos.ino`. Para la versión ultrasónica, pon `BAUD = 9600` y
+   `REPORT_CUTS = false` (es lo que espera `ArduinoUltrasonicFactory`).
+2. Conecta la placa al celular por USB-OTG, o al computador.
+3. Abre el lote en la app y toca **Contar con el contador** → *Conectar contador infrarrojo*. Chrome pide
+   escoger el puerto; es obligatorio y lo tiene que hacer la persona, no la app.
+4. El total se guarda en el celular en cada trama: se puede salir de la pantalla y volver, y el conteo sigue.
+5. **Guardar el conteo** lo convierte en un registro `conteo` con `origen: "contador"` y entra a la misma cola
+   de subida que todo lo que se escribe a mano.
+
+Requisitos y límites:
+
+- El puerto USB necesita **Chrome o Edge** sobre HTTPS (o `localhost`). Si el navegador no lo soporta, la app
+  ofrece solo el **simulador**, que escribe las mismas tramas y pasa por el mismo parser.
+- Un conteo simulado se guarda con `origen: "manual"`. Nunca queda en la base como si una máquina lo hubiera
+  medido: la tesis compara la precisión del contador contra el conteo a mano, y eso se arruina si el dato se
+  ensucia.
+- Un corte largo (dos alevinos juntos) se cuenta como **un** pez y se marca como ambiguo en
+  `cortes_multiples`. Adivinar ahí dañaría la misma comparación.
+- La pantalla avisa sola cuando el conteo deja de ser creíble: si pasa lo sembrado (lente sucio) o si hay
+  demasiados cortes múltiples (hay que bajar el caudal).
+
+## Correr en local
+
+Requisitos: Node 20 o superior.
 
 ```bash
-npm run build     # genera la carpeta dist/
+npm install
+cp .env.example .env.local     # dirección del backend y clave
+npm run dev                    # http://localhost:5173
 ```
 
-`dist/` es un sitio estático. Se puede publicar gratis en Netlify, Vercel, Cloudflare Pages o un *Static Site*
-de Render. Después:
+**Con el backend real (Java):** en su carpeta, `./mvnw spring-boot:run`. Queda en `http://localhost:8080`
+con la clave `cambia-esta-clave`, que es lo que trae `.env.example`.
 
-1. En el backend (Render), pon la URL publicada en `ALLOWED_ORIGINS`. Si no, el navegador bloquea las llamadas (CORS).
-2. Configura `VITE_API_URL` y `VITE_API_KEY` en el servicio donde publiques, o escríbelos en *Ajustes*.
-3. En el celular, abre la URL en Chrome y elige **Agregar a la pantalla de inicio**.
+**Sin Java (demo rápida):** `npm run mock-api` levanta un backend simulado en el mismo puerto, con las mismas
+rutas y el mismo JSON. Guarda todo en memoria y aplica las mismas reglas de alertas. Sirve para mostrar la app
+o desarrollar sin el backend, pero **la verdad siempre la tiene el backend real**.
 
-El modo sin internet necesita **HTTPS** (o `localhost`). Para probar en el celular, usa la versión publicada.
+La dirección y la clave también se pueden cambiar desde la pantalla *Ajustes* de la app.
 
-## Límites conocidos y decisiones pendientes
-
-- **Los dos repos del backend son versiones distintas del mismo backend.** La app usa lo que tienen en común.
-  El resumen del lote muestra los campos extra (días de cultivo, densidad, conversión) solo si el backend los envía.
-- **iPhone:** Safari puede borrar los datos de una web que no se abre en semanas, y no sincroniza con la app
-  cerrada. Por eso la app pide almacenamiento persistente (ver *Ajustes*) y sincroniza al abrirse.
-  En Android con Chrome no hay este problema.
-- **Registro por voz:** el backend acepta `origen: "voz"`, pero el reconocimiento de voz del navegador necesita
-  internet. Queda para una siguiente versión.
-- **Sensor ESP32:** si el sensor envía directo al backend, la app muestra esas lecturas al sincronizar
-  (`/api/estanques/{id}/lecturas`). El contador por USB es el otro camino: pasa por el celular y entra a la cola.
-- **El conteo en curso vive en el store `meta`** (clave `count:<lote>`), no en una tabla nueva, para no tener
-  que subir la versión de la base del celular. Si algún día se necesitan varios conteos por lote a la vez,
-  ahí sí toca migración.
-- **La clave `X-API-Key` queda dentro de la app.** Es aceptable para el piloto. En producción haría falta un
-  inicio de sesión por usuario.
-- Los rangos de colores de la banda de agua copian los de `Rules.java` del backend. Si el productor los ajusta,
-  hay que cambiarlos en los dos lados (`src/features/ponds/waterRanges.ts`).
