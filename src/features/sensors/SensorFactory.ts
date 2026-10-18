@@ -4,7 +4,6 @@ import { DedupeSensorDecorator, LoggingSensorDecorator } from './sensorDecorator
 import type { SensorDescriptor, SensorKind, SensorSource } from './sensorTypes';
 
 /** Cross-cutting capabilities to add to the source. Both are on unless something turns them off. */
-
 export interface SensorOptions {
   log?: boolean;
   dedupe?: boolean;
@@ -15,7 +14,6 @@ export interface SensorOptions {
  * what is the same for all of them, which is wrapping it in the decorators that were asked for.
  * Supporting a new counter means adding a subclass: no screen and no facade changes.
  */
-
 export abstract class SensorFactory {
   abstract readonly descriptor: SensorDescriptor;
 
@@ -34,7 +32,6 @@ export abstract class SensorFactory {
 }
 
 /** Infrared barrier: the usual fry counter. It can tell two fish crossing at once apart. */
-
 class ArduinoInfraredFactory extends SensorFactory {
   readonly descriptor: SensorDescriptor = {
     kind: 'arduino_infrared',
@@ -55,7 +52,6 @@ class ArduinoInfraredFactory extends SensorFactory {
  * one. Its frames are saved without cortes_multiples instead of with a zero that would read as a
  * measurement, because the thesis compares the counter against the manual count.
  */
-
 class ArduinoUltrasonicFactory extends SensorFactory {
   readonly descriptor: SensorDescriptor = {
     kind: 'arduino_ultrasonic',
@@ -75,7 +71,6 @@ class ArduinoUltrasonicFactory extends SensorFactory {
  * No board at all, for tests and for the defence. Its records are stored as "manual": a simulated
  * count must never end up in the database looking like something a machine measured.
  */
-
 class MockSensorFactory extends SensorFactory {
   readonly descriptor: SensorDescriptor = {
     kind: 'mock',
@@ -101,3 +96,9 @@ export function sensorFactoryFor(kind: SensorKind): SensorFactory {
 }
 
 /** Sources this phone can really open: without Web Serial only the simulator is offered. */
+export function availableSensors(): SensorDescriptor[] {
+  const hasSerial = typeof navigator !== 'undefined' && Boolean(navigator.serial);
+  return Object.values(FACTORIES)
+    .filter((factory) => hasSerial || !factory.descriptor.needsPort)
+    .map((factory) => factory.descriptor);
+}
