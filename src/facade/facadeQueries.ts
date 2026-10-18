@@ -8,12 +8,10 @@ import type { FieldRecord } from '../features/records/recordTypes';
  * The two queries of the facade that read several stores at once. They live here so the facade
  * itself stays a list of one-line delegations and nothing else.
  */
-
 const everything = () =>
   Promise.all([getAll<Pond>('ponds'), getAll<Batch>('batches'), getAll<FieldRecord>('records')]);
 
 /** How many rows are waiting for signal and how many the backend refused. */
-
 export async function countPending(): Promise<{ pending: number; rejected: number }> {
   const [[ponds, batches, records], actions] = await Promise.all([everything(), getAll('actions')]);
   const rows: Syncable[] = [...ponds, ...batches, ...records];
@@ -24,3 +22,8 @@ export async function countPending(): Promise<{ pending: number; rejected: numbe
 }
 
 /** What the backend refused, so the caretaker can fix it or throw it away. */
+export async function listRejected(): Promise<{ ponds: Pond[]; batches: Batch[]; records: FieldRecord[] }> {
+  const [ponds, batches, records] = await everything();
+  const refused = <T extends Syncable>(rows: T[]) => rows.filter((row) => row.syncState === 'rejected');
+  return { ponds: refused(ponds), batches: refused(batches), records: refused(records) };
+}
