@@ -33,3 +33,8 @@ function field(text: string | undefined): number | undefined | null {
 }
 
 const problem = (message: string, frame: string): SensorEvent => ({ type: 'problem', message, frame });
+
+/**
+ * One line of the serial port -> one domain event. Pure function, so the protocol can be tested
+ * without a board plugged in. Returns null for lines that are not data (boot banner, comments).
+ */
