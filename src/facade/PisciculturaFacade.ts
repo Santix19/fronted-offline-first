@@ -63,6 +63,13 @@ export class PisciculturaFacade {
     await cacheSummary(fresh);
     return fresh;
   };
+
+  // ---------- Field records and alerts ----------
+  readonly records = (parentId?: string, limit?: number): Promise<FieldRecord[]> => listRecords(parentId, limit);
+
+  readonly latestReadings = () => latestReadingsByPond();
+
+  readonly saveRecord = (record: FieldRecord): Promise<void> => saveRecord(record);
 }
 
 /** One instance for the whole app: the subsystems behind it already hold their own state. */
