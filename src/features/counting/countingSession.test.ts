@@ -45,3 +45,11 @@ test('a device that cannot measure cuts saves none instead of a zero', async () 
   await session.finish('sensor', false);
   assert.equal(store.committed[0].multipleCuts, undefined);
 });
+
+test('discarding a count records nothing', async () => {
+  const { store, session } = await open();
+  await session.register(pulse(8));
+  await session.cancel();
+  assert.deepEqual(store.committed, []);
+  assert.equal(await store.loadTally('b1'), undefined);
+});
