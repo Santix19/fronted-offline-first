@@ -153,3 +153,53 @@ o desarrollar sin el backend, pero **la verdad siempre la tiene el backend real*
 
 La dirección y la clave también se pueden cambiar desde la pantalla *Ajustes* de la app.
 
+## Pruebas
+
+```bash
+npm test          # pruebas de sincronización, validación, protocolo del contador y conteo (32 pruebas)
+npm run typecheck # revisa los tipos de TypeScript
+```
+
+Las pruebas cubren lo más delicado: cómo se divide la cola en envíos, cómo se leen las respuestas del push,
+quién gana cuando dos celulares editan lo mismo y las validaciones de cada registro. También el protocolo
+del contador (tramas con ruido, tramas repetidas, placas que no miden cortes) y la sesión de conteo completa:
+retomar un conteo a medias, corregir a mano, cerrarlo y descartarlo, todo sin IndexedDB y sin placa gracias al
+Bridge.
+
+El flujo completo también se probó en un navegador real: registrar sin señal, cerrar y abrir la app sin señal,
+volver a tener señal y verificar en el servidor que llegó todo, la alerta del sistema experto, atender una
+alerta sin señal, y recibir la edición de otro celular.
+
+## Publicar
+
+```bash
+npm run build     # genera la carpeta dist/
+```
+
+`dist/` es un sitio estático. Se puede publicar gratis en Netlify, Vercel, Cloudflare Pages o un *Static Site*
+de Render. Después:
+
+1. En el backend (Render), pon la URL publicada en `ALLOWED_ORIGINS`. Si no, el navegador bloquea las llamadas (CORS).
+2. Configura `VITE_API_URL` y `VITE_API_KEY` en el servicio donde publiques, o escríbelos en *Ajustes*.
+3. En el celular, abre la URL en Chrome y elige **Agregar a la pantalla de inicio**.
+
+El modo sin internet necesita **HTTPS** (o `localhost`). Para probar en el celular, usa la versión publicada.
+
+## Límites conocidos y decisiones pendientes
+
+- **Los dos repos del backend son versiones distintas del mismo backend.** La app usa lo que tienen en común.
+  El resumen del lote muestra los campos extra (días de cultivo, densidad, conversión) solo si el backend los envía.
+- **iPhone:** Safari puede borrar los datos de una web que no se abre en semanas, y no sincroniza con la app
+  cerrada. Por eso la app pide almacenamiento persistente (ver *Ajustes*) y sincroniza al abrirse.
+  En Android con Chrome no hay este problema.
+- **Registro por voz:** el backend acepta `origen: "voz"`, pero el reconocimiento de voz del navegador necesita
+  internet. Queda para una siguiente versión.
+- **Sensor ESP32:** si el sensor envía directo al backend, la app muestra esas lecturas al sincronizar
+  (`/api/estanques/{id}/lecturas`). El contador por USB es el otro camino: pasa por el celular y entra a la cola.
+- **El conteo en curso vive en el store `meta`** (clave `count:<lote>`), no en una tabla nueva, para no tener
+  que subir la versión de la base del celular. Si algún día se necesitan varios conteos por lote a la vez,
+  ahí sí toca migración.
+- **La clave `X-API-Key` queda dentro de la app.** Es aceptable para el piloto. En producción haría falta un
+  inicio de sesión por usuario.
+- Los rangos de colores de la banda de agua copian los de `Rules.java` del backend. Si el productor los ajusta,
+  hay que cambiarlos en los dos lados (`src/features/ponds/waterRanges.ts`).
