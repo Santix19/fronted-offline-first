@@ -1,21 +1,19 @@
+import { facade } from '../../facade/PisciculturaFacade';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
 import { Page } from '../../shared/ui/Page';
 import { SyncChip } from '../../shared/ui/SyncChip';
 import { formatDate, formatNumber } from '../../shared/utils/format';
-import { getPond } from '../ponds/pondRepository';
-import { listRecords } from '../records/recordRepository';
 import { RecordList } from '../records/RecordList';
 import { RECORD_LABELS, type RecordType } from '../records/recordTypes';
-import { getBatch } from './batchRepository';
 import { BatchSummaryPanel } from './BatchSummaryPanel';
 
 /** Batch records, in the order the caretaker usually needs them in the day. */
 const BATCH_RECORDS: RecordType[] = ['feeding', 'mortality', 'biometry', 'fry_count'];
 
 async function loadBatch(batchId: string) {
-  const batch = await getBatch(batchId);
-  const pond = batch && (await getPond(batch.pondId));
-  return { batch, pond, records: await listRecords(batchId, 20) };
+  const batch = await facade.batch(batchId);
+  const pond = batch && (await facade.pond(batch.pondId));
+  return { batch, pond, records: await facade.records(batchId, 20) };
 }
 
 export function BatchDetailPage({ batchId }: { batchId: string }) {
@@ -46,6 +44,7 @@ export function BatchDetailPage({ batchId }: { batchId: string }) {
             {BATCH_RECORDS.map((type) => (
               <a key={type} className="button" href={`#/registrar/${type}?lote=${batch.id}`}>{RECORD_LABELS[type]}</a>
             ))}
+            <a className="button" href={`#/lotes/${batch.id}/conteo`}>Contar con el contador</a>
           </div>
         </section>
       )}
