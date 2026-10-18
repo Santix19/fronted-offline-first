@@ -25,5 +25,14 @@ export function useCountingSession(batchId: string) {
   const [sensor, setSensor] = useState<SensorDescriptor>();
 
   const [connected, setConnected] = useState(false);
+
+  const log = useSyncExternalStore(subscribeSensorLog, getSensorLog);
+
+  const reopen = useCallback(async () => {
+    const opened = await facade.openCount(batchId);
+    session.current = opened;
+    setTotals(opened.totals);
+    setWarning(null);
+  }, [batchId]);
 }
 
