@@ -30,3 +30,11 @@ test('a count in progress is resumed, not started over', async () => {
   const second = new CountingSession(store, await resumeTally(store, 'b1'));
   assert.equal(second.totals.total, 40);
 });
+
+test('closing the count stores it and clears the tally', async () => {
+  const { store, session } = await open();
+  await session.register(pulse(8, 2));
+  await session.finish('contador', true);
+  assert.deepEqual(store.committed.map((c) => [c.total, c.multipleCuts, c.source]), [[8, 2, 'contador']]);
+  assert.equal(await store.loadTally('b1'), undefined);
+});
