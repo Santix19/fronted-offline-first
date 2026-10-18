@@ -55,3 +55,10 @@ void onBeamChange() {
   fish++;
   if (now - cutStartedUs > LONG_CUT_US) ambiguous++;
 }
+
+void setup() {
+  pinMode(BEAM_PIN, INPUT_PULLUP);
+  Serial.begin(BAUD);
+  attachInterrupt(digitalPinToInterrupt(BEAM_PIN), onBeamChange, CHANGE);
+  Serial.println("# contador de alevinos la cocha v1");
+}
