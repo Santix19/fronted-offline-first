@@ -24,3 +24,10 @@ export interface FrameDialect {
 const ABSENT = '-';
 
 /** undefined = not measured; null = there is something there but it is not a number (noisy cable). */
+
+function field(text: string | undefined): number | undefined | null {
+  const clean = (text ?? '').trim();
+  if (clean === '' || clean === ABSENT) return undefined;
+  const value = parseOptionalNumber(clean);
+  return value === undefined || Number.isNaN(value) ? null : value;
+}
