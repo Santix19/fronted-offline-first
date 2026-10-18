@@ -85,6 +85,10 @@ export class PisciculturaFacade {
   readonly pendingCounts = () => countPending();
 
   readonly rejected = () => listRejected();
+
+  readonly checkServer = () => checkHealth();
+
+  /** Forces the next pull to download everything again (used after changing server). */
 }
 
 /** One instance for the whole app: the subsystems behind it already hold their own state. */
