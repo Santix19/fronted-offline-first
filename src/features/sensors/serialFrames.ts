@@ -20,3 +20,7 @@ export interface FrameDialect {
   /** false = the board cannot tell simultaneous fish apart, so its cuts field is not a measurement */
   countsMultipleCuts: boolean;
 }
+
+const ABSENT = '-';
+
+/** undefined = not measured; null = there is something there but it is not a number (noisy cable). */
