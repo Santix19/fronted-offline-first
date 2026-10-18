@@ -1,10 +1,10 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { facade } from '../../facade/PisciculturaFacade';
 import { Choices } from '../../shared/ui/Choices';
 import { Field } from '../../shared/ui/Field';
 import { Page } from '../../shared/ui/Page';
 import { navigate } from '../../shared/ui/router';
 import { parseOptionalNumber } from '../../shared/utils/numbers';
-import { getPond, nameTaken, savePond } from './pondRepository';
 import { POND_TYPE_LABELS, type Pond, type PondType } from './pondTypes';
 
 /** Create a pond, or edit one when an id is given. Works without signal. */
@@ -17,7 +17,7 @@ export function PondFormPage({ pondId }: { pondId?: string }) {
 
   useEffect(() => {
     if (!pondId) return;
-    getPond(pondId).then((pond) => {
+    facade.pond(pondId).then((pond) => {
       if (!pond) return;
       setExisting(pond);
       setName(pond.name);
@@ -32,12 +32,12 @@ export function PondFormPage({ pondId }: { pondId?: string }) {
     const found: Record<string, string> = {};
     if (!name.trim()) found.name = 'Escribe el nombre';
     else if (name.trim().length > 80) found.name = 'Máximo 80 caracteres';
-    else if (await nameTaken(name, existing?.id)) found.name = 'Ya hay un estanque con ese nombre';
+    else if (await facade.pondNameTaken(name, existing?.id)) found.name = 'Ya hay un estanque con ese nombre';
     if (Number.isNaN(volumeM3) || (volumeM3 !== undefined && volumeM3 <= 0)) found.volume = 'Debe ser un número mayor que 0';
     setErrors(found);
     if (Object.keys(found).length > 0) return;
 
-    const pond = await savePond({ name, type, volumeM3 }, existing);
+    const pond = await facade.savePond({ name, type, volumeM3 }, existing);
     navigate(`/estanques/${pond.id}`, { replace: true });
   }
 
