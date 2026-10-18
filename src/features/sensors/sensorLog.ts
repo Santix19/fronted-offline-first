@@ -28,3 +28,8 @@ export function appendSensorLog(text: string, bad: boolean): void {
 export function getSensorLog(): SensorLogEntry[] {
   return entries;
 }
+
+export function clearSensorLog(): void {
+  entries = [];
+  listeners.forEach((listener) => listener());
+}
