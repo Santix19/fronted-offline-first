@@ -26,3 +26,5 @@ export abstract class SensorSourceDecorator implements SensorSource {
     return this.inner.subscribe(listener);
   }
 }
+
+/** Writes every frame to the log the counting screen shows, good frames and bad frames alike. */
