@@ -38,3 +38,10 @@ test('closing the count stores it and clears the tally', async () => {
   assert.deepEqual(store.committed.map((c) => [c.total, c.multipleCuts, c.source]), [[8, 2, 'contador']]);
   assert.equal(await store.loadTally('b1'), undefined);
 });
+
+test('a device that cannot measure cuts saves none instead of a zero', async () => {
+  const { store, session } = await open();
+  await session.register(pulse(8, 3));
+  await session.finish('sensor', false);
+  assert.equal(store.committed[0].multipleCuts, undefined);
+});
