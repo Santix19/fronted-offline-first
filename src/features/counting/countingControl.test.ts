@@ -19,3 +19,11 @@ test('counting past what was stocked warns instead of staying quiet', async () =
   const loud = await session.register(pulse(200));
   assert.match(loud.warning ?? '', /lente del contador/);
 });
+
+test('too many ambiguous crossings warn once there are enough frames to judge', async () => {
+  const session = await supervised(10_000);
+  for (let i = 0; i < 9; i++) await session.register(pulse(10, 5));
+  assert.equal(session.totals.frames, 9);
+  const loud = await session.register(pulse(10, 5));
+  assert.match(loud.warning ?? '', /demasiado juntos/);
+});
