@@ -15,5 +15,11 @@ export class ArduinoSerialAdapter implements SensorSource {
   private port?: SerialPort;
 
   private reader?: ReadableStreamDefaultReader<Uint8Array>;
+
+  private readonly decoder = new TextDecoder();
+
+  /** Half a frame that arrived in the previous chunk and waits for its end */
+
+  private pending = '';
 }
 
