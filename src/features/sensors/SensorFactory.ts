@@ -70,3 +70,22 @@ class ArduinoUltrasonicFactory extends SensorFactory {
     return new ArduinoSerialAdapter(this.descriptor, { countsMultipleCuts: false });
   }
 }
+
+/**
+ * No board at all, for tests and for the defence. Its records are stored as "manual": a simulated
+ * count must never end up in the database looking like something a machine measured.
+ */
+
+class MockSensorFactory extends SensorFactory {
+  readonly descriptor: SensorDescriptor = {
+    kind: 'mock',
+    label: 'Simulador (sin contador)',
+    recordSource: 'manual',
+    countsMultipleCuts: true,
+    needsPort: false,
+  };
+
+  protected createSource(): SensorSource {
+    return new MockSensorSource(this.descriptor);
+  }
+}
