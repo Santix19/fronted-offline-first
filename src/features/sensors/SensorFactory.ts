@@ -95,3 +95,7 @@ const FACTORIES: Record<SensorKind, SensorFactory> = {
   arduino_ultrasonic: new ArduinoUltrasonicFactory(),
   mock: new MockSensorFactory(),
 };
+
+export function sensorFactoryFor(kind: SensorKind): SensorFactory {
+  return FACTORIES[kind];
+}
