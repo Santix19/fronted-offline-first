@@ -1,5 +1,5 @@
+import { facade } from '../../facade/PisciculturaFacade';
 import { timeAgo } from '../../shared/utils/format';
-import { attendAlert } from './alertRepository';
 import type { Alert } from './alertTypes';
 
 interface AlertItemProps {
@@ -21,7 +21,7 @@ export function AlertItem({ alert, pondName }: AlertItemProps) {
         </p>
       </div>
       <span className={`chip ${critical ? 'danger' : 'warn'}`}>{critical ? 'Crítica' : 'Advertencia'}</span>
-      <button className="button secondary" onClick={() => attendAlert(alert.id)} aria-label={`Marcar como atendida: ${alert.message}`}>
+      <button className="button secondary" onClick={() => facade.attendAlert(alert.id)} aria-label={`Marcar como atendida: ${alert.message}`}>
         Atendida
       </button>
     </li>
