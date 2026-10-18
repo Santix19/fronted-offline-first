@@ -46,6 +46,13 @@ export class PisciculturaFacade {
   readonly pondNameTaken = (name: string, exceptId?: string): Promise<boolean> => nameTaken(name, exceptId);
 
   readonly batches = (pondId?: string): Promise<Batch[]> => listBatches(pondId);
+
+  readonly batch = (id: string): Promise<Batch | undefined> => getBatch(id);
+
+  readonly saveBatch = (input: BatchInput, existing?: Batch): Promise<Batch> => saveBatch(input, existing);
+
+  readonly batchCodeTaken = (pondId: string, code: string, exceptId?: string): Promise<boolean> =>
+    codeTaken(pondId, code, exceptId);
 }
 
 /** One instance for the whole app: the subsystems behind it already hold their own state. */
