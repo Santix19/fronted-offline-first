@@ -1,14 +1,12 @@
+import { facade } from '../../facade/PisciculturaFacade';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
 import { Page } from '../../shared/ui/Page';
 import { SyncChip } from '../../shared/ui/SyncChip';
-import { listAlerts } from '../alerts/alertRepository';
-import { latestReadingsByPond } from '../records/recordRepository';
-import { listPonds } from './pondRepository';
 import { POND_TYPE_LABELS } from './pondTypes';
 import { WaterBand } from './WaterBand';
 
 async function loadHome() {
-  const [ponds, readings, alerts] = await Promise.all([listPonds(), latestReadingsByPond(), listAlerts()]);
+  const [ponds, readings, alerts] = await Promise.all([facade.ponds(), facade.latestReadings(), facade.alerts()]);
   return { ponds, readings, alerts };
 }
 
