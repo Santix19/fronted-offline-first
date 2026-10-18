@@ -36,28 +36,19 @@ import { countPending, listRejected } from './facadeQueries';
 export class PisciculturaFacade {
   // ---------- Ponds and batches (the catalog that is edited offline) ----------
   readonly ponds = (): Promise<Pond[]> => listPonds();
-
   readonly pond = (id: string): Promise<Pond | undefined> => getPond(id);
-
   readonly savePond = (input: PondInput, existing?: Pond): Promise<Pond> => savePond(input, existing);
-
   readonly deactivatePond = (pond: Pond): Promise<void> => deactivatePond(pond);
-
   readonly pondNameTaken = (name: string, exceptId?: string): Promise<boolean> => nameTaken(name, exceptId);
 
   readonly batches = (pondId?: string): Promise<Batch[]> => listBatches(pondId);
-
   readonly batch = (id: string): Promise<Batch | undefined> => getBatch(id);
-
   readonly saveBatch = (input: BatchInput, existing?: Batch): Promise<Batch> => saveBatch(input, existing);
-
   readonly batchCodeTaken = (pondId: string, code: string, exceptId?: string): Promise<boolean> =>
     codeTaken(pondId, code, exceptId);
 
   /** The expert system's summary: the saved one shows at once, a fresh one needs signal. */
-
   readonly cachedSummary = (batchId: string): Promise<BatchSummary | undefined> => getCachedSummary(batchId);
-
   readonly refreshSummary = async (batchId: string): Promise<BatchSummary> => {
     const fresh = await fetchBatchSummary(batchId);
     await cacheSummary(fresh);
@@ -66,48 +57,40 @@ export class PisciculturaFacade {
 
   // ---------- Field records and alerts ----------
   readonly records = (parentId?: string, limit?: number): Promise<FieldRecord[]> => listRecords(parentId, limit);
-
   readonly latestReadings = () => latestReadingsByPond();
-
   readonly saveRecord = (record: FieldRecord): Promise<void> => saveRecord(record);
-
   readonly discardRecord = (id: string): Promise<void> => discardRecord(id);
-
   readonly alerts = (pondId?: string) => listAlerts(pondId);
-
   readonly attendAlert = (id: string): Promise<void> => attendAlert(id);
 
   // ---------- Synchronization and settings ----------
   readonly sync = (): Promise<void> => runSync();
-
   readonly hasPendingWork = (): Promise<boolean> => hasPendingWork();
-
   readonly pendingCounts = () => countPending();
-
   readonly rejected = () => listRejected();
-
   readonly checkServer = () => checkHealth();
-
   /** Forces the next pull to download everything again (used after changing server). */
-
   readonly resetPullCursor = (): Promise<void> => resetPullCursor();
-
   readonly config = (): Promise<ApiConfig> => getApiConfig();
-
   readonly saveConfig = (config: ApiConfig): Promise<void> => saveApiConfig(config);
-
   readonly keepStorage = (): Promise<boolean> => requestPersistentStorage();
 
   // ---------- Sensors and counting ----------
   /** Sources this phone can really open (without Web Serial, only the simulator). */
-
   readonly sensors = () => availableSensors();
-
   /** Factory Method + decorators: the caller gets a source and never a concrete class. */
-
   readonly openSensor = (kind: SensorKind, options?: SensorOptions) => sensorFactoryFor(kind).create(options);
+
+  /**
+   * Opens (or resumes) the count of a batch. The return type is the abstraction, not the refined
+   * one: callers must not depend on which checks are on or on which engine stores the tally.
+   */
+  readonly openCount = async (batchId: string): Promise<CountingSession> => {
+    const store = new IndexedDbCountStore();
+    const [tally, batch] = await Promise.all([resumeTally(store, batchId), getBatch(batchId)]);
+    return new SupervisedCountingSession(store, tally, batch?.initialQuantity);
+  };
 }
 
 /** One instance for the whole app: the subsystems behind it already hold their own state. */
 export const facade = new PisciculturaFacade();
-
