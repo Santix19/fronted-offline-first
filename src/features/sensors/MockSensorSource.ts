@@ -15,5 +15,14 @@ export class MockSensorSource implements SensorSource {
   private seq = 0;
 
   constructor(readonly descriptor: SensorDescriptor, private readonly everyMs = 700) {}
+
+  async open(): Promise<void> {
+    this.timer ??= setInterval(() => this.tick(), this.everyMs);
+  }
+
+  async close(): Promise<void> {
+    clearInterval(this.timer);
+    this.timer = undefined;
+  }
 }
 
