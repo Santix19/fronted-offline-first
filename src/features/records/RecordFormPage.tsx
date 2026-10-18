@@ -1,13 +1,11 @@
 import { useState, type FormEvent } from 'react';
+import { facade } from '../../facade/PisciculturaFacade';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
 import { Choices } from '../../shared/ui/Choices';
 import { Field } from '../../shared/ui/Field';
 import { Page } from '../../shared/ui/Page';
 import { toDateTimeInput, toIsoWithOffset } from '../../shared/utils/dates';
-import { getBatch } from '../batches/batchRepository';
-import { getPond } from '../ponds/pondRepository';
 import { buildRecord, RECORD_FIELDS, SOURCE_OPTIONS, type FormValues } from './recordForm';
-import { saveRecord } from './recordRepository';
 import { RECORD_LABELS, type RecordSource, type RecordType } from './recordTypes';
 import { validateRecord, type ValidationErrors } from './recordValidation';
 import { SavedNotice } from './SavedNotice';
@@ -19,8 +17,8 @@ interface RecordFormPageProps {
 }
 
 async function loadParentName(type: RecordType, parentId: string): Promise<string | undefined> {
-  if (type === 'water_reading') return (await getPond(parentId))?.name;
-  const batch = await getBatch(parentId);
+  if (type === 'water_reading') return (await facade.pond(parentId))?.name;
+  const batch = await facade.batch(parentId);
   return batch && `Lote ${batch.code}`;
 }
 
@@ -41,7 +39,7 @@ export function RecordFormPage({ type, parentId }: RecordFormPageProps) {
     const found = validateRecord(record);
     setErrors(found);
     if (Object.keys(found).length > 0) return;
-    await saveRecord(record);
+    await facade.saveRecord(record);
     setSavedCount((n) => n + 1);
     setValues({});
     setWhen(toDateTimeInput());
