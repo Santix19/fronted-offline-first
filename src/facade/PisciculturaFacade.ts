@@ -70,6 +70,12 @@ export class PisciculturaFacade {
   readonly latestReadings = () => latestReadingsByPond();
 
   readonly saveRecord = (record: FieldRecord): Promise<void> => saveRecord(record);
+
+  readonly discardRecord = (id: string): Promise<void> => discardRecord(id);
+
+  readonly alerts = (pondId?: string) => listAlerts(pondId);
+
+  readonly attendAlert = (id: string): Promise<void> => attendAlert(id);
 }
 
 /** One instance for the whole app: the subsystems behind it already hold their own state. */
