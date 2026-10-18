@@ -1,10 +1,9 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { getApiConfig, saveApiConfig, type ApiConfig } from '../../shared/http/apiConfig';
+import { facade } from '../../facade/PisciculturaFacade';
+import { type ApiConfig } from '../../shared/http/apiConfig';
 import { DEVICE_ID_PATTERN } from '../../shared/utils/ids';
 import { Field } from '../../shared/ui/Field';
 import { Page } from '../../shared/ui/Page';
-import { resetPullCursor } from '../sync/pullStep';
-import { runSync } from '../sync/syncEngine';
 import { ConnectionTest } from './ConnectionTest';
 import { StorageInfo } from './StorageInfo';
 
@@ -15,7 +14,7 @@ export function SettingsPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    getApiConfig().then(setConfig);
+    facade.config().then(setConfig);
   }, []);
   if (!config) return <Page title="Ajustes">{null}</Page>;
 
@@ -33,12 +32,12 @@ export function SettingsPage() {
     setErrors(found);
     if (Object.keys(found).length > 0) return;
 
-    const previous = await getApiConfig();
-    await saveApiConfig(config);
+    const previous = await facade.config();
+    await facade.saveConfig(config);
     // Another server has other data: download everything from it
-    if (previous.apiUrl !== config.apiUrl.trim().replace(/\/+$/, '')) await resetPullCursor();
+    if (previous.apiUrl !== config.apiUrl.trim().replace(/\/+$/, '')) await facade.resetPullCursor();
     setSaved(true);
-    void runSync();
+    void facade.sync();
   }
 
   return (
