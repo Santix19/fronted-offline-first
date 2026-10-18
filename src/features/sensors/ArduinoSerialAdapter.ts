@@ -11,17 +11,11 @@ import type { SensorDescriptor, SensorEvent, SensorSource } from './sensorTypes'
  */
 export class ArduinoSerialAdapter implements SensorSource {
   private readonly events = new SensorBroadcast();
-
   private port?: SerialPort;
-
   private reader?: ReadableStreamDefaultReader<Uint8Array>;
-
   private readonly decoder = new TextDecoder();
-
   /** Half a frame that arrived in the previous chunk and waits for its end */
-
   private pending = '';
-
   private closing = false;
 
   constructor(readonly descriptor: SensorDescriptor, private readonly dialect: FrameDialect) {}
@@ -68,5 +62,14 @@ export class ArduinoSerialAdapter implements SensorSource {
       }
     }
   }
-}
 
+  /** The port delivers bytes, not lines. Only whole frames reach the parser. */
+  private consume(chunk: string): void {
+    const lines = (this.pending + chunk).split(/\r?\n/);
+    this.pending = lines.pop() ?? '';
+    for (const line of lines) {
+      const event = parseFrame(line, this.dialect);
+      if (event) this.events.emit(event);
+    }
+  }
+}
