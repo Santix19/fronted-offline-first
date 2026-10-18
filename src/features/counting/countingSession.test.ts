@@ -6,7 +6,6 @@ import { MemoryCountStore } from './MemoryCountStore';
 import { pulse } from './testPulse';
 
 /** The Bridge is what lets all of this run with no IndexedDB and no board in sight. */
-
 async function open() {
   const store = new MemoryCountStore();
   return { store, session: new CountingSession(store, await resumeTally(store, 'b1')) };
@@ -61,4 +60,23 @@ test('a hand correction replaces the total', async () => {
   assert.equal(session.totals.total, 97);
   await session.correct(-5);
   assert.equal(session.totals.total, 0);
+});
+
+test('two frames at once cannot leave the older total saved', async () => {
+  const saved: number[] = [];
+  // A store whose first write is the slow one: exactly how writes end up out of order
+  const delays = [20, 0];
+  const store: CountStore = {
+    loadTally: async () => undefined,
+    saveTally: (tally) =>
+      new Promise((resolve) => setTimeout(() => (saved.push(tally.total), resolve()), delays.shift() ?? 0)),
+    clearTally: async () => undefined,
+    commitCount: async () => 'id',
+  };
+
+  const session = new CountingSession(store, await resumeTally(store, 'b1'));
+  await Promise.all([session.register(pulse(10)), session.register(pulse(5))]);
+
+  assert.equal(session.totals.total, 15);
+  assert.deepEqual(saved, [10, 15], 'the 10 must not land after the 15');
 });
