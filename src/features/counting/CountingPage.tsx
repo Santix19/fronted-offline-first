@@ -19,5 +19,9 @@ export function CountingPage({ batchId }: { batchId: string }) {
   const batch = useLiveQuery(() => facade.batch(batchId), ['batches'], [batchId]);
 
   const count = useCountingSession(batchId);
+
+  const [typed, setTyped] = useState('');
+
+  const [saved, setSaved] = useState(0);
 }
 
