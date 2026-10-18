@@ -1,19 +1,17 @@
+import { facade } from '../../facade/PisciculturaFacade';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
 import { Page } from '../../shared/ui/Page';
 import { SyncChip } from '../../shared/ui/SyncChip';
 import { formatNumber } from '../../shared/utils/format';
 import { AlertItem } from '../alerts/AlertItem';
-import { listAlerts } from '../alerts/alertRepository';
 import { BatchList } from '../batches/BatchList';
 import { RecordList } from '../records/RecordList';
-import { getPond } from './pondRepository';
 import { POND_TYPE_LABELS } from './pondTypes';
 import { WaterBand } from './WaterBand';
-import { listRecords } from '../records/recordRepository';
 import type { WaterReading } from '../records/recordTypes';
 
 async function loadPond(pondId: string) {
-  const [pond, alerts, readings] = await Promise.all([getPond(pondId), listAlerts(pondId), listRecords(pondId, 10)]);
+  const [pond, alerts, readings] = await Promise.all([facade.pond(pondId), facade.alerts(pondId), facade.records(pondId, 10)]);
   return { pond, alerts, readings: readings as WaterReading[] };
 }
 
