@@ -31,3 +31,5 @@ function field(text: string | undefined): number | undefined | null {
   const value = parseOptionalNumber(clean);
   return value === undefined || Number.isNaN(value) ? null : value;
 }
+
+const problem = (message: string, frame: string): SensorEvent => ({ type: 'problem', message, frame });
