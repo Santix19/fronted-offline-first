@@ -28,3 +28,8 @@ test('a water frame leaves the fields it did not measure empty', () => {
   const sample = sampleOf(parseFrame('AGUA;3;13.4;-;7.1', infrared, at));
   assert.deepEqual(sample, { kind: 'water', seq: 3, tempC: 13.4, ph: undefined, oxygenMgL: 7.1, at });
 });
+
+test('the boot banner and blank lines are not data', () => {
+  assert.equal(parseFrame('# contador la cocha v1', infrared, at), null);
+  assert.equal(parseFrame('   ', infrared, at), null);
+});
