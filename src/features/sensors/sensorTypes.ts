@@ -21,3 +21,8 @@ export type SensorSample =
  * What a source reports. A bad frame is not an exception: the cable is noisy outdoors and one
  * unreadable line must not stop a count that is already halfway through.
  */
+
+export type SensorEvent =
+  | { type: 'sample'; sample: SensorSample }
+
+  | { type: 'problem'; message: string; frame?: string };
