@@ -15,5 +15,11 @@ export function useCountingSession(batchId: string) {
   const source = useRef<SensorSource | undefined>(undefined);
 
   const [totals, setTotals] = useState<CountingTally>();
+
+  const [warning, setWarning] = useState<string | null>(null);
+
+  const [problem, setProblem] = useState<string>();
+
+  /** Kept after disconnecting too: the closed record has to say what measured it */
 }
 
