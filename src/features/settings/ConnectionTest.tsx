@@ -1,6 +1,6 @@
 import { useState } from 'react';
+import { facade } from '../../facade/PisciculturaFacade';
 import { errorMessage } from '../../shared/http/ApiError';
-import { checkHealth } from '../sync/syncApi';
 
 /** GET /salud: tells whether the server is up. On Render's free plan the first try can take a minute. */
 export function ConnectionTest() {
@@ -9,7 +9,7 @@ export function ConnectionTest() {
   async function test() {
     setState({ tone: '', text: 'Probando… si el servidor estaba dormido puede tardar hasta un minuto.' });
     try {
-      const health = await checkHealth();
+      const health = await facade.checkServer();
       setState({ tone: 'ok', text: `El servidor responde${health.version ? ` (versión ${health.version})` : ''}.` });
     } catch (error) {
       setState({ tone: 'danger', text: errorMessage(error) });
