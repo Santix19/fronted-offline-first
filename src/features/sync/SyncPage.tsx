@@ -1,8 +1,8 @@
+import { facade } from '../../facade/PisciculturaFacade';
 import { Page } from '../../shared/ui/Page';
 import { useOnline } from '../../shared/ui/useOnline';
 import { formatDateTime, timeAgo } from '../../shared/utils/format';
 import { RejectedList } from './RejectedList';
-import { runSync } from './syncEngine';
 import { useSyncStatus } from './syncStatus';
 import { usePendingCounts } from './usePendingCounts';
 
@@ -38,7 +38,7 @@ export function SyncPage() {
         {online && !lastError && lastUploaded !== undefined && lastUploaded > 0 && (
           <p className="notice ok">Se subieron {lastUploaded} registros en la última sincronización.</p>
         )}
-        <button className="button block" onClick={() => runSync()} disabled={!online || running}>
+        <button className="button block" onClick={() => facade.sync()} disabled={!online || running}>
           {running ? 'Sincronizando…' : 'Sincronizar ahora'}
         </button>
       </section>
