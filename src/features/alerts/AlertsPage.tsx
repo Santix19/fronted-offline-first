@@ -1,11 +1,10 @@
+import { facade } from '../../facade/PisciculturaFacade';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
 import { Page } from '../../shared/ui/Page';
-import { listPonds } from '../ponds/pondRepository';
 import { AlertItem } from './AlertItem';
-import { listAlerts } from './alertRepository';
 
 async function loadAlerts() {
-  const [alerts, ponds] = await Promise.all([listAlerts(), listPonds()]);
+  const [alerts, ponds] = await Promise.all([facade.alerts(), facade.ponds()]);
   return { alerts, pondNames: new Map(ponds.map((p) => [p.id, p.name])) };
 }
 
