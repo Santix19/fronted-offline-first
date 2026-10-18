@@ -89,6 +89,10 @@ export class PisciculturaFacade {
   readonly checkServer = () => checkHealth();
 
   /** Forces the next pull to download everything again (used after changing server). */
+
+  readonly resetPullCursor = (): Promise<void> => resetPullCursor();
+
+  readonly config = (): Promise<ApiConfig> => getApiConfig();
 }
 
 /** One instance for the whole app: the subsystems behind it already hold their own state. */
