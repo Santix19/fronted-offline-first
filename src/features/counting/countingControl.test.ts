@@ -6,7 +6,6 @@ import { SupervisedCountingSession } from './SupervisedCountingSession';
 import { pulse } from './testPulse';
 
 /** The checks the producer asked for live in the refined abstraction, not in the plain session. */
-
 async function supervised(expected?: number) {
   const store = new MemoryCountStore();
   return new SupervisedCountingSession(store, await resumeTally(store, 'b1'), expected);
@@ -31,5 +30,12 @@ test('too many ambiguous crossings warn once there are enough frames to judge', 
 test('without a stocked quantity there is nothing to compare against', async () => {
   const session = await supervised(undefined);
   const feedback = await session.register(pulse(999_999));
+  assert.equal(feedback.warning, null);
+});
+
+test('the plain session carries no checks: the refined one adds them', async () => {
+  const store = new MemoryCountStore();
+  const plain = new CountingSession(store, await resumeTally(store, 'b1'));
+  const feedback = await plain.register(pulse(999_999));
   assert.equal(feedback.warning, null);
 });
