@@ -25,5 +25,25 @@ export class ArduinoSerialAdapter implements SensorSource {
   private closing = false;
 
   constructor(readonly descriptor: SensorDescriptor, private readonly dialect: FrameDialect) {}
+
+  async open(): Promise<void> {
+    if (!navigator.serial) {
+      throw new Error('Este navegador no puede abrir el puerto USB. Usa Chrome en el celular o en el computador.');
+    }
+    // Chrome requires the caretaker to pick the port: it cannot be opened without them
+    this.port = await navigator.serial.requestPort();
+    await this.port.open({ baudRate: this.descriptor.baudRate ?? 9600 });
+    void this.readLoop();
+  }
+
+  async close(): Promise<void> {
+    this.closing = true;
+    await this.reader?.cancel().catch(() => undefined);
+    await this.port?.close().catch(() => undefined);
+    this.reader = undefined;
+    this.port = undefined;
+    this.pending = '';
+    this.closing = false;
+  }
 }
 
