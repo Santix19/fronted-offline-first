@@ -21,3 +21,12 @@ test('pulses add up and the running total is saved after each one', async () => 
   assert.equal(session.totals.frames, 2);
   assert.equal((await store.loadTally('b1'))?.total, 15);
 });
+
+test('a count in progress is resumed, not started over', async () => {
+  const store = new MemoryCountStore();
+  const first = new CountingSession(store, await resumeTally(store, 'b1'));
+  await first.register(pulse(40));
+
+  const second = new CountingSession(store, await resumeTally(store, 'b1'));
+  assert.equal(second.totals.total, 40);
+});
