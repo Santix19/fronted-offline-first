@@ -97,6 +97,11 @@ export class PisciculturaFacade {
   readonly saveConfig = (config: ApiConfig): Promise<void> => saveApiConfig(config);
 
   readonly keepStorage = (): Promise<boolean> => requestPersistentStorage();
+
+  // ---------- Sensors and counting ----------
+  /** Sources this phone can really open (without Web Serial, only the simulator). */
+
+  readonly sensors = () => availableSensors();
 }
 
 /** One instance for the whole app: the subsystems behind it already hold their own state. */
