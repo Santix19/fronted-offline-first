@@ -5,7 +5,6 @@ import type { RecordSource } from '../records/recordTypes';
  * the pond, and the app being closed or the battery dying must not throw away the fish already
  * counted.
  */
-
 export interface CountingTally {
   batchId: string;
   total: number;
@@ -31,7 +30,6 @@ export interface CommitInput {
  * and demos use. The abstraction never knows which of the two it is holding, so the counting rules
  * and the storage engine change independently.
  */
-
 export interface CountStore {
   loadTally(batchId: string): Promise<CountingTally | undefined>;
   saveTally(tally: CountingTally): Promise<void>;
@@ -41,3 +39,8 @@ export interface CountStore {
 }
 
 /** What the counting screen shows after each frame. */
+export interface CountingFeedback {
+  totals: CountingTally;
+  /** Message when the count stops being plausible; null while everything looks right */
+  warning: string | null;
+}
