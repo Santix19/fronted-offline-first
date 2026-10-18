@@ -53,6 +53,16 @@ export class PisciculturaFacade {
 
   readonly batchCodeTaken = (pondId: string, code: string, exceptId?: string): Promise<boolean> =>
     codeTaken(pondId, code, exceptId);
+
+  /** The expert system's summary: the saved one shows at once, a fresh one needs signal. */
+
+  readonly cachedSummary = (batchId: string): Promise<BatchSummary | undefined> => getCachedSummary(batchId);
+
+  readonly refreshSummary = async (batchId: string): Promise<BatchSummary> => {
+    const fresh = await fetchBatchSummary(batchId);
+    await cacheSummary(fresh);
+    return fresh;
+  };
 }
 
 /** One instance for the whole app: the subsystems behind it already hold their own state. */
