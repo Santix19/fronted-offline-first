@@ -1,9 +1,6 @@
-import { getAll } from '../../shared/db/repository';
+import { facade } from '../../facade/PisciculturaFacade';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
-import type { Batch } from '../batches/batchTypes';
-import type { Pond } from '../ponds/pondTypes';
-import { discardRecord } from '../records/recordRepository';
-import { RECORD_LABELS, type FieldRecord } from '../records/recordTypes';
+import { RECORD_LABELS } from '../records/recordTypes';
 import { formatDateTime } from '../../shared/utils/format';
 
 interface RejectedItem {
@@ -15,16 +12,12 @@ interface RejectedItem {
 }
 
 async function loadRejected(): Promise<RejectedItem[]> {
-  const [ponds, batches, records] = await Promise.all([
-    getAll<Pond>('ponds'),
-    getAll<Batch>('batches'),
-    getAll<FieldRecord>('records'),
-  ]);
+  const { ponds, batches, records } = await facade.rejected();
   const error = (row: { syncError?: string }) => row.syncError ?? 'Rechazado por el servidor';
   return [
-    ...ponds.filter((p) => p.syncState === 'rejected').map((p) => ({ id: p.id, title: `Estanque ${p.name}`, error: error(p), editHref: `#/estanques/${p.id}/editar` })),
-    ...batches.filter((b) => b.syncState === 'rejected').map((b) => ({ id: b.id, title: `Lote ${b.code}`, error: error(b), editHref: `#/lotes/${b.id}/editar` })),
-    ...records.filter((r) => r.syncState === 'rejected').map((r) => ({ id: r.id, title: `${RECORD_LABELS[r.type]} · ${formatDateTime(r.recordedAt)}`, error: error(r) })),
+    ...ponds.map((p) => ({ id: p.id, title: `Estanque ${p.name}`, error: error(p), editHref: `#/estanques/${p.id}/editar` })),
+    ...batches.map((b) => ({ id: b.id, title: `Lote ${b.code}`, error: error(b), editHref: `#/lotes/${b.id}/editar` })),
+    ...records.map((r) => ({ id: r.id, title: `${RECORD_LABELS[r.type]} · ${formatDateTime(r.recordedAt)}`, error: error(r) })),
   ];
 }
 
@@ -47,7 +40,7 @@ export function RejectedList() {
             {item.editHref ? (
               <a className="button secondary" href={item.editHref}>Corregir</a>
             ) : (
-              <button className="button danger" onClick={() => discardRecord(item.id)}>Descartar</button>
+              <button className="button danger" onClick={() => facade.discardRecord(item.id)}>Descartar</button>
             )}
           </li>
         ))}
