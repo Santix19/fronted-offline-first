@@ -35,3 +35,7 @@ volatile unsigned long cutStartedUs = 0;
 volatile unsigned long lastEdgeUs = 0;
 
 unsigned long seq = 0;
+
+unsigned long lastReportMs = 0;
+
+/* Both edges share one debounce window: a bouncing receiver fires them in pairs. */
