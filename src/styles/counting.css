@@ -1,7 +1,5 @@
-
 /* Counting screen: the running total has to be readable at arm's length, standing over the
    channel, with the phone wet and the sun on the screen. */
-
 .count-total {
   text-align: center;
   padding: var(--space-5) var(--space-3);
@@ -21,7 +19,6 @@
 }
 
 /* Frame log: a diagnosis aid while calibrating, so it stays small and does not compete. */
-
 .frame-log {
   margin: 0;
   padding: 0;
@@ -38,4 +35,13 @@
   border-bottom: 1px solid var(--line);
   font-size: var(--text-sm);
   font-variant-numeric: tabular-nums;
+}
+
+.frame-log li:last-child {
+  border-bottom: 0;
+}
+
+.frame-log li[data-bad='true'] {
+  color: var(--danger);
+  background: var(--danger-soft);
 }
