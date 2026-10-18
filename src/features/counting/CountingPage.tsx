@@ -27,5 +27,14 @@ export function CountingPage({ batchId }: { batchId: string }) {
   const sources = facade.sensors();
 
   const empty = (count.totals?.total ?? 0) === 0;
+
+  const back = `/lotes/${batchId}`;
+
+  async function applyCorrection() {
+    const value = parseOptionalNumber(typed);
+    if (value === undefined || Number.isNaN(value) || value < 0) return;
+    await count.correct(value);
+    setTyped('');
+  }
 }
 
