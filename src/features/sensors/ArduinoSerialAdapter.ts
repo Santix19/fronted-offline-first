@@ -21,5 +21,9 @@ export class ArduinoSerialAdapter implements SensorSource {
   /** Half a frame that arrived in the previous chunk and waits for its end */
 
   private pending = '';
+
+  private closing = false;
+
+  constructor(readonly descriptor: SensorDescriptor, private readonly dialect: FrameDialect) {}
 }
 
