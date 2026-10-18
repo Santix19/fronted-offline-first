@@ -78,5 +78,14 @@ export function useCountingSession(batchId: string) {
     setTotals(feedback.totals);
     setWarning(feedback.warning);
   }, []);
+
+  /** Closes the count: it becomes a pending record and the screen is left ready for another run. */
+
+  const finish = useCallback(async () => {
+    await disconnect();
+    await session.current?.finish(sensor?.recordSource ?? 'manual', sensor?.countsMultipleCuts ?? false);
+    setSensor(undefined);
+    await reopen();
+  }, [disconnect, reopen, sensor]);
 }
 
