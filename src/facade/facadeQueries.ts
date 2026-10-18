@@ -22,3 +22,5 @@ export async function countPending(): Promise<{ pending: number; rejected: numbe
     rejected: rows.filter((row) => row.syncState === 'rejected').length,
   };
 }
+
+/** What the backend refused, so the caretaker can fix it or throw it away. */
