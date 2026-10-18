@@ -4,9 +4,7 @@ import { parseFrame } from './serialFrames';
 import type { SensorEvent } from './sensorTypes';
 
 const infrared = { countsMultipleCuts: true };
-
 const ultrasonic = { countsMultipleCuts: false };
-
 const at = '2026-10-18T09:00:00-05:00';
 
 const sampleOf = (event: SensorEvent | null) => {
@@ -39,4 +37,9 @@ test('a noisy frame is reported, never counted', () => {
     const event = parseFrame(line, infrared, at);
     assert.ok(event && event.type === 'problem', `debería rechazar ${line}`);
   }
+});
+
+test('a count cannot be negative or fractional', () => {
+  assert.equal(parseFrame('CNT;4;-3;0', infrared, at)?.type, 'problem');
+  assert.equal(parseFrame('CNT;4;2.5;0', infrared, at)?.type, 'problem');
 });
