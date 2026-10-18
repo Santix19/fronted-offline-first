@@ -14,3 +14,10 @@ export type SensorKind = 'arduino_infrared' | 'arduino_ultrasonic' | 'mock';
 
 export type SensorSample =
   | { kind: 'fry_pulse'; seq: number; count: number; multipleCuts: number; at: string }
+
+  | { kind: 'water'; seq: number; tempC?: number; ph?: number; oxygenMgL?: number; at: string };
+
+/**
+ * What a source reports. A bad frame is not an exception: the cable is noisy outdoors and one
+ * unreadable line must not stop a count that is already halfway through.
+ */
