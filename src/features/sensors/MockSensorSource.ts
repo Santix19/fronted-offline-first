@@ -9,9 +9,7 @@ import type { SensorDescriptor, SensorEvent, SensorSource } from './sensorTypes'
  */
 export class MockSensorSource implements SensorSource {
   private readonly events = new SensorBroadcast();
-
   private timer?: ReturnType<typeof setInterval>;
-
   private seq = 0;
 
   constructor(readonly descriptor: SensorDescriptor, private readonly everyMs = 700) {}
@@ -24,5 +22,16 @@ export class MockSensorSource implements SensorSource {
     clearInterval(this.timer);
     this.timer = undefined;
   }
-}
 
+  subscribe(listener: (event: SensorEvent) => void): () => void {
+    return this.events.subscribe(listener);
+  }
+
+  private tick(): void {
+    this.seq += 1;
+    const count = 3 + Math.floor(Math.random() * 6);
+    const line = this.seq % 10 === 0 ? `CNT;${this.seq};??;0` : `CNT;${this.seq};${count};${count > 7 ? 1 : 0}`;
+    const event = parseFrame(line, { countsMultipleCuts: this.descriptor.countsMultipleCuts });
+    if (event) this.events.emit(event);
+  }
+}
