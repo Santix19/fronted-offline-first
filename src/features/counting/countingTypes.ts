@@ -31,3 +31,11 @@ export interface CommitInput {
  * and demos use. The abstraction never knows which of the two it is holding, so the counting rules
  * and the storage engine change independently.
  */
+
+export interface CountStore {
+  loadTally(batchId: string): Promise<CountingTally | undefined>;
+  saveTally(tally: CountingTally): Promise<void>;
+  clearTally(batchId: string): Promise<void>;
+  /** Stores the finished count as a field record pending upload. Returns its id. */
+  commitCount(input: CommitInput): Promise<string>;
+}
