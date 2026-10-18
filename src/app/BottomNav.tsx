@@ -1,5 +1,5 @@
+import { facade } from '../facade/PisciculturaFacade';
 import { useLiveQuery } from '../shared/db/useLiveQuery';
-import { listAlerts } from '../features/alerts/alertRepository';
 import { usePendingCounts } from '../features/sync/usePendingCounts';
 
 interface Tab {
@@ -22,7 +22,7 @@ function isActive(tab: Tab, path: string): boolean {
 }
 
 export function BottomNav({ path }: { path: string }) {
-  const alerts = useLiveQuery(listAlerts, ['alerts'])?.length ?? 0;
+  const alerts = useLiveQuery(() => facade.alerts(), ['alerts'])?.length ?? 0;
   const { pending, rejected } = usePendingCounts();
   const counts: Record<string, number> = { '#/alertas': alerts, '#/sincronizacion': pending + rejected };
 
