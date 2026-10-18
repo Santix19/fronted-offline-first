@@ -9,5 +9,11 @@ export class MemoryCountStore implements CountStore {
   private readonly tallies = new Map<string, CountingTally>();
 
   /** Counts closed during this session, so a test can assert what was stored. */
+
+  readonly committed: CommitInput[] = [];
+
+  async loadTally(batchId: string): Promise<CountingTally | undefined> {
+    return this.tallies.get(batchId);
+  }
 }
 
