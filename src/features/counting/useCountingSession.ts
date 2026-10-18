@@ -21,5 +21,9 @@ export function useCountingSession(batchId: string) {
   const [problem, setProblem] = useState<string>();
 
   /** Kept after disconnecting too: the closed record has to say what measured it */
+
+  const [sensor, setSensor] = useState<SensorDescriptor>();
+
+  const [connected, setConnected] = useState(false);
 }
 
