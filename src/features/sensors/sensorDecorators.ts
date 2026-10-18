@@ -44,3 +44,17 @@ export class LoggingSensorDecorator extends SensorSourceDecorator {
  * when it is re-plugged, and a repeated pulse would inflate the count of a lot. A *lower* number is
  * not a repeat, it means the board restarted, so it goes through.
  */
+
+export class DedupeSensorDecorator extends SensorSourceDecorator {
+  override subscribe(listener: (event: SensorEvent) => void): () => void {
+    // Per subscription, not per instance: two screens reading the same source must not starve each other
+    let lastSeq: number | undefined;
+    return this.inner.subscribe((event) => {
+      if (event.type === 'sample') {
+        if (event.sample.seq === lastSeq) return;
+        lastSeq = event.sample.seq;
+      }
+      listener(event);
+    });
+  }
+}
