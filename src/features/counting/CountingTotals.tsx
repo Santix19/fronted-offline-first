@@ -8,3 +8,5 @@ interface CountingTotalsProps {
   warning: string | null;
   problem?: string;
 }
+
+/** The running total, big enough to read standing over the channel with the sun on the screen. */
