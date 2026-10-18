@@ -33,3 +33,10 @@ test('the boot banner and blank lines are not data', () => {
   assert.equal(parseFrame('# contador la cocha v1', infrared, at), null);
   assert.equal(parseFrame('   ', infrared, at), null);
 });
+
+test('a noisy frame is reported, never counted', () => {
+  for (const line of ['CNT;;5;0', 'CNT;4;??;0', 'CNT;4;3;x', 'AGUA;2;-;-;-', 'XX;1;2']) {
+    const event = parseFrame(line, infrared, at);
+    assert.ok(event && event.type === 'problem', `debería rechazar ${line}`);
+  }
+});
