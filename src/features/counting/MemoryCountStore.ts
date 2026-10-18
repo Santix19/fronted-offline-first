@@ -7,9 +7,7 @@ import type { CommitInput, CountStore, CountingTally } from './countingTypes';
  */
 export class MemoryCountStore implements CountStore {
   private readonly tallies = new Map<string, CountingTally>();
-
   /** Counts closed during this session, so a test can assert what was stored. */
-
   readonly committed: CommitInput[] = [];
 
   async loadTally(batchId: string): Promise<CountingTally | undefined> {
@@ -23,5 +21,9 @@ export class MemoryCountStore implements CountStore {
   async clearTally(batchId: string): Promise<void> {
     this.tallies.delete(batchId);
   }
-}
 
+  async commitCount(input: CommitInput): Promise<string> {
+    this.committed.push(input);
+    return newId();
+  }
+}
