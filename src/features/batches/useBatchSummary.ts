@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
+import { facade } from '../../facade/PisciculturaFacade';
 import { errorMessage } from '../../shared/http/ApiError';
 import { useOnline } from '../../shared/ui/useOnline';
-import { fetchBatchSummary } from './batchesApi';
-import { cacheSummary, getCachedSummary } from './batchRepository';
 import type { BatchSummary } from './batchTypes';
 
 /**
@@ -17,12 +16,12 @@ export function useBatchSummary(batchId: string, canFetch: boolean) {
 
   useEffect(() => {
     let active = true;
-    getCachedSummary(batchId).then((cached) => active && cached && setSummary(cached));
+    facade.cachedSummary(batchId).then((cached) => active && cached && setSummary(cached));
     if (online && canFetch) {
       setLoading(true);
-      fetchBatchSummary(batchId)
-        .then(async (fresh) => {
-          await cacheSummary(fresh);
+      facade
+        .refreshSummary(batchId)
+        .then((fresh) => {
           if (!active) return;
           setSummary(fresh);
           setError(undefined);
