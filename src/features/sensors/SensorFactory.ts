@@ -49,3 +49,24 @@ class ArduinoInfraredFactory extends SensorFactory {
     return new ArduinoSerialAdapter(this.descriptor, { countsMultipleCuts: true });
   }
 }
+
+/**
+ * Ultrasonic: cheaper and it still works in cloudy water, but two fish at the same instant count as
+ * one. Its frames are saved without cortes_multiples instead of with a zero that would read as a
+ * measurement, because the thesis compares the counter against the manual count.
+ */
+
+class ArduinoUltrasonicFactory extends SensorFactory {
+  readonly descriptor: SensorDescriptor = {
+    kind: 'arduino_ultrasonic',
+    label: 'Sensor ultrasónico (Arduino)',
+    recordSource: 'sensor',
+    baudRate: 9600,
+    countsMultipleCuts: false,
+    needsPort: true,
+  };
+
+  protected createSource(): SensorSource {
+    return new ArduinoSerialAdapter(this.descriptor, { countsMultipleCuts: false });
+  }
+}
