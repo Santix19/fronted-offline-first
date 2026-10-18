@@ -11,3 +11,14 @@ import type { FieldRecord } from '../features/records/recordTypes';
 
 const everything = () =>
   Promise.all([getAll<Pond>('ponds'), getAll<Batch>('batches'), getAll<FieldRecord>('records')]);
+
+/** How many rows are waiting for signal and how many the backend refused. */
+
+export async function countPending(): Promise<{ pending: number; rejected: number }> {
+  const [[ponds, batches, records], actions] = await Promise.all([everything(), getAll('actions')]);
+  const rows: Syncable[] = [...ponds, ...batches, ...records];
+  return {
+    pending: rows.filter((row) => row.syncState === 'pending').length + actions.length,
+    rejected: rows.filter((row) => row.syncState === 'rejected').length,
+  };
+}
