@@ -8,3 +8,5 @@ const IMPLAUSIBLE_ABOVE = 1.05;
 /** Share of ambiguous crossings over which the fish are going through too close together. */
 
 const MAX_CUTS_SHARE = 0.15;
+
+const MIN_FRAMES_TO_JUDGE = 10;
