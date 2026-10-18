@@ -15,5 +15,13 @@ export class MemoryCountStore implements CountStore {
   async loadTally(batchId: string): Promise<CountingTally | undefined> {
     return this.tallies.get(batchId);
   }
+
+  async saveTally(tally: CountingTally): Promise<void> {
+    this.tallies.set(tally.batchId, tally);
+  }
+
+  async clearTally(batchId: string): Promise<void> {
+    this.tallies.delete(batchId);
+  }
 }
 
