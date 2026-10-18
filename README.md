@@ -50,65 +50,48 @@ En cada carpeta de `features/` los archivos siguen el mismo patrón:
 Las pantallas **no** importan `xxxRepository`, `xxxApi` ni el motor de sincronización: todas pasan por
 `facade/PisciculturaFacade.ts`. Es una regla que se revisa con un `grep` (ver *Patrones de diseño*).
 
-## Conectar el contador (Arduino)
+## Patrones de diseño
 
-El contador es una barrera infrarroja sobre el canal de salida. La placa es **deliberadamente tonta**: no
-guarda el total del lote, no sabe la fecha y no almacena nada. Solo reporta cuántos alevinos pasaron desde su
-trama anterior. El total lo lleva el celular, porque es el que sobrevive a que se desconecte el cable y el que
-ya sabe hacer cola sin señal.
+Cinco patrones, cada uno puesto donde ya había una frontera real del sistema, no de adorno.
 
-Tramas que escribe el sketch (`arduino/contador_alevinos/`, las lee `src/features/sensors/serialFrames.ts`):
+| Patrón | Dónde | Qué problema resuelve |
+|---|---|---|
+| **Facade** | `facade/PisciculturaFacade.ts` | Las pantallas llamaban directo a la base del celular, a la sincronización y a los eventos. Ahora hay una sola puerta: la pantalla pide "los lotes" y no sabe que hay IndexedDB, ni que subir son cuatro pasos en orden, ni que un conteo se puede retomar. |
+| **Factory Method** | `features/sensors/SensorFactory.ts` | Cada contador se abre distinto: el infrarrojo a 115200 baudios y sí distingue cortes múltiples, el ultrasónico a 9600 y no los distingue, el simulador no necesita puerto. Agregar un contador nuevo es agregar una subclase; ni la fachada ni las pantallas cambian. |
+| **Adapter** | `features/sensors/ArduinoSerialAdapter.ts` | El puerto serial entrega pedazos de bytes que cortan las líneas por la mitad; el sistema habla de alevinos. El adaptador traduce, y arriba de él nadie sabe que existe un cable. El protocolo vive aparte, en `serialFrames.ts`, para poder probarlo sin placa. |
+| **Bridge** | `features/counting/` | Las reglas de conteo y control (`CountingSession`, `SupervisedCountingSession`) quedaron separadas del motor que guarda (`IndexedDbCountStore` en la app, `MemoryCountStore` en las pruebas). Cada lado evoluciona solo: por eso el conteo se prueba completo sin IndexedDB y sin Arduino. |
+| **Decorator** | `features/sensors/sensorDecorators.ts` | Dos capacidades transversales que se prenden y apagan sin tocar el adaptador: `LoggingSensorDecorator` (bitácora de tramas, para calibrar el contador en el estanque sin un portátil al lado) y `DedupeSensorDecorator` (el puerto repite la última línea al reconectar, y un pulso repetido infla el conteo del lote). |
+
+El orden de los decoradores importa y está puesto a propósito en `SensorFactory.create`: la bitácora va **por
+dentro**, para que muestre las tramas como llegaron, incluidas las repetidas que el deduplicador descarta. Eso
+es justo lo que delata un cable flojo.
+
+## Cómo funciona el modo sin internet
 
 ```
-# contador de alevinos la cocha v1     ← saludo de arranque, la app lo ignora
-CNT;<seq>;<alevinos>;<ambiguos>        ← alevinos desde la trama anterior
-AGUA;<seq>;<temp_c>;<ph>;<oxigeno>     ← lectura de agua ("-" en lo que no midió)
+ Cuidador ──► Formulario ──► Base del celular (IndexedDB) ──► Pantallas
+                                    │  estado "Por subir"
+                                    ▼  cuando hay señal
+                          POST /api/sync/push  (de a 500, en orden: estanques → lotes → eventos)
+                                    │
+                aceptados / duplicados → "Subido"      rechazados → "Rechazado" + motivo
+                                    ▼
+                          GET /api/sync/pull?desde=<servidor_en>
+                          trae cambios de otros celulares y las alertas pendientes
 ```
 
-Es texto plano a propósito: se puede leer en el monitor serial del Arduino IDE mientras se calibra el
-contador en el estanque, que es donde está el trabajo de verdad.
-
-Para usarlo:
-
-1. Carga `arduino/contador_alevinos/contador_alevinos.ino`. Para la versión ultrasónica, pon `BAUD = 9600` y
-   `REPORT_CUTS = false` (es lo que espera `ArduinoUltrasonicFactory`).
-2. Conecta la placa al celular por USB-OTG, o al computador.
-3. Abre el lote en la app y toca **Contar con el contador** → *Conectar contador infrarrojo*. Chrome pide
-   escoger el puerto; es obligatorio y lo tiene que hacer la persona, no la app.
-4. El total se guarda en el celular en cada trama: se puede salir de la pantalla y volver, y el conteo sigue.
-5. **Guardar el conteo** lo convierte en un registro `conteo` con `origen: "contador"` y entra a la misma cola
-   de subida que todo lo que se escribe a mano.
-
-Requisitos y límites:
-
-- El puerto USB necesita **Chrome o Edge** sobre HTTPS (o `localhost`). Si el navegador no lo soporta, la app
-  ofrece solo el **simulador**, que escribe las mismas tramas y pasa por el mismo parser.
-- Un conteo simulado se guarda con `origen: "manual"`. Nunca queda en la base como si una máquina lo hubiera
-  medido: la tesis compara la precisión del contador contra el conteo a mano, y eso se arruina si el dato se
-  ensucia.
-- Un corte largo (dos alevinos juntos) se cuenta como **un** pez y se marca como ambiguo en
-  `cortes_multiples`. Adivinar ahí dañaría la misma comparación.
-- La pantalla avisa sola cuando el conteo deja de ser creíble: si pasa lo sembrado (lente sucio) o si hay
-  demasiados cortes múltiples (hay que bajar el caudal).
-
-## Correr en local
-
-Requisitos: Node 20 o superior.
-
-```bash
-npm install
-cp .env.example .env.local     # dirección del backend y clave
-npm run dev                    # http://localhost:5173
-```
-
-**Con el backend real (Java):** en su carpeta, `./mvnw spring-boot:run`. Queda en `http://localhost:8080`
-con la clave `cambia-esta-clave`, que es lo que trae `.env.example`.
-
-**Sin Java (demo rápida):** `npm run mock-api` levanta un backend simulado en el mismo puerto, con las mismas
-rutas y el mismo JSON. Guarda todo en memoria y aplica las mismas reglas de alertas. Sirve para mostrar la app
-o desarrollar sin el backend, pero **la verdad siempre la tiene el backend real**.
-
-La dirección y la clave también se pueden cambiar desde la pantalla *Ajustes* de la app.
+- **El celular crea el id (UUID) de cada registro.** Si la señal se cae y se reenvía, el backend lo
+  reconoce como duplicado y no lo guarda dos veces.
+- **Nada se borra en silencio.** Lo que el servidor rechaza queda visible en *Sincronizar* con el motivo,
+  para corregirlo o descartarlo.
+- **Estanques y lotes se pueden editar sin señal.** Gana la edición más reciente, la misma regla del backend.
+  Si otro celular editó después, la app descarga esa versión.
+- **El cursor del pull es la hora del servidor**, no la del celular, para que un reloj atrasado no pierda cambios.
+- **Se sincroniza sola** al abrir la app, al volver la señal, unos segundos después de cada registro y cada
+  2 minutos. También hay un botón *Sincronizar ahora*.
+- **Primer intento con espera larga (90 s):** Render gratis tarda ~1 minuto en despertar.
+- Las validaciones del formulario son **las mismas del backend** (pH 0–14, fechas desde 2024…), para que un
+  dato malo no llegue a la cola.
 
 ## Pruebas
 
