@@ -81,6 +81,10 @@ export class PisciculturaFacade {
   readonly sync = (): Promise<void> => runSync();
 
   readonly hasPendingWork = (): Promise<boolean> => hasPendingWork();
+
+  readonly pendingCounts = () => countPending();
+
+  readonly rejected = () => listRejected();
 }
 
 /** One instance for the whole app: the subsystems behind it already hold their own state. */
