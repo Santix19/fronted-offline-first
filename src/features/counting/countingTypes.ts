@@ -39,3 +39,5 @@ export interface CountStore {
   /** Stores the finished count as a field record pending upload. Returns its id. */
   commitCount(input: CommitInput): Promise<string>;
 }
+
+/** What the counting screen shows after each frame. */
