@@ -1,11 +1,11 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { facade } from '../../facade/PisciculturaFacade';
 import { Choices } from '../../shared/ui/Choices';
 import { Field } from '../../shared/ui/Field';
 import { Page } from '../../shared/ui/Page';
 import { navigate } from '../../shared/ui/router';
 import { toLocalDate } from '../../shared/utils/dates';
 import { parseOptionalNumber } from '../../shared/utils/numbers';
-import { codeTaken, getBatch, saveBatch } from './batchRepository';
 import type { Batch, BatchStatus } from './batchTypes';
 import { validateBatchForm, type BatchFormValues } from './batchValidation';
 
@@ -21,7 +21,7 @@ export function BatchFormPage({ pondId, batchId }: { pondId?: string; batchId?: 
 
   useEffect(() => {
     if (!batchId) return;
-    getBatch(batchId).then((batch) => {
+    facade.batch(batchId).then((batch) => {
       if (!batch) return;
       setExisting(batch);
       setStatus(batch.status);
@@ -40,11 +40,11 @@ export function BatchFormPage({ pondId, batchId }: { pondId?: string; batchId?: 
     event.preventDefault();
     if (!targetPond) return;
     const found = validateBatchForm(values);
-    if (!found.code && (await codeTaken(targetPond, values.code, existing?.id))) found.code = 'Ya hay un lote con ese código en este estanque';
+    if (!found.code && (await facade.batchCodeTaken(targetPond, values.code, existing?.id))) found.code = 'Ya hay un lote con ese código en este estanque';
     setErrors(found);
     if (Object.keys(found).length > 0) return;
 
-    const batch = await saveBatch(
+    const batch = await facade.saveBatch(
       {
         pondId: targetPond,
         code: values.code,
