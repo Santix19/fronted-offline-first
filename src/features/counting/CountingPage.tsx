@@ -36,5 +36,11 @@ export function CountingPage({ batchId }: { batchId: string }) {
     await count.correct(value);
     setTyped('');
   }
+
+  async function closeCount() {
+    await count.finish();
+    setSaved((n) => n + 1);
+    clearSensorLog();
+  }
 }
 
