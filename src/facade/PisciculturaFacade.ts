@@ -93,6 +93,10 @@ export class PisciculturaFacade {
   readonly resetPullCursor = (): Promise<void> => resetPullCursor();
 
   readonly config = (): Promise<ApiConfig> => getApiConfig();
+
+  readonly saveConfig = (config: ApiConfig): Promise<void> => saveApiConfig(config);
+
+  readonly keepStorage = (): Promise<boolean> => requestPersistentStorage();
 }
 
 /** One instance for the whole app: the subsystems behind it already hold their own state. */
