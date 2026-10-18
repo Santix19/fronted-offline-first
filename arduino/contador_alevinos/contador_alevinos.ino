@@ -31,3 +31,7 @@ volatile unsigned long fish = 0;
 volatile unsigned long ambiguous = 0;
 
 volatile unsigned long cutStartedUs = 0;
+
+volatile unsigned long lastEdgeUs = 0;
+
+unsigned long seq = 0;
