@@ -65,5 +65,18 @@ export function useCountingSession(batchId: string) {
     setSensor(opened.descriptor);
     setConnected(true);
   }, []);
+
+  const disconnect = useCallback(async () => {
+    await source.current?.close();
+    source.current = undefined;
+    setConnected(false);
+  }, []);
+
+  const correct = useCallback(async (total: number) => {
+    const feedback = await session.current?.correct(total);
+    if (!feedback) return;
+    setTotals(feedback.totals);
+    setWarning(feedback.warning);
+  }, []);
 }
 
