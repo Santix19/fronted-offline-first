@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { requestPersistentStorage } from '../../shared/db/database';
+import { facade } from '../../facade/PisciculturaFacade';
 
 /**
  * Tells the caretaker whether the browser promised to keep the data.
@@ -23,7 +23,7 @@ export function StorageInfo() {
             El navegador podría borrar los datos si el celular se queda sin espacio. Instala la app en la pantalla de
             inicio y toca el botón para protegerlos.
           </p>
-          <button className="button secondary" onClick={() => requestPersistentStorage().then(setPersistent)}>
+          <button className="button secondary" onClick={() => facade.keepStorage().then(setPersistent)}>
             Proteger los datos
           </button>
         </>
