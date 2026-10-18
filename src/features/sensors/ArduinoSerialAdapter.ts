@@ -45,5 +45,28 @@ export class ArduinoSerialAdapter implements SensorSource {
     this.pending = '';
     this.closing = false;
   }
+
+  subscribe(listener: (event: SensorEvent) => void): () => void {
+    return this.events.subscribe(listener);
+  }
+
+  private async readLoop(): Promise<void> {
+    const stream = this.port?.readable;
+    if (!stream) return;
+    this.reader = stream.getReader();
+    try {
+      for (;;) {
+        const { value, done } = await this.reader.read();
+        if (done) break;
+        // stream: true keeps a multi-byte character split across two chunks from being mangled
+        this.consume(value ? this.decoder.decode(value, { stream: true }) : '');
+      }
+    } catch {
+      // Unplugging the cable mid-count is normal in the field; only a real loss is reported
+      if (!this.closing) {
+        this.events.emit({ type: 'problem', message: 'Se perdió la conexión con el contador: revisa el cable USB' });
+      }
+    }
+  }
 }
 
