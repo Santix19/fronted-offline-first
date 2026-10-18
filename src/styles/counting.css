@@ -21,3 +21,21 @@
 }
 
 /* Frame log: a diagnosis aid while calibrating, so it stays small and does not compete. */
+
+.frame-log {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.frame-log li {
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
