@@ -19,3 +19,12 @@ const MAX_ENTRIES = 40;
 let entries: SensorLogEntry[] = [];
 
 const listeners = new Set<() => void>();
+
+export function appendSensorLog(text: string, bad: boolean): void {
+  entries = [{ at: toIsoWithOffset(), text, bad }, ...entries].slice(0, MAX_ENTRIES);
+  listeners.forEach((listener) => listener());
+}
+
+export function getSensorLog(): SensorLogEntry[] {
+  return entries;
+}
