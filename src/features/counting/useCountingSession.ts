@@ -11,21 +11,13 @@ import type { CountingTally } from './countingTypes';
  */
 export function useCountingSession(batchId: string) {
   const session = useRef<CountingSession | undefined>(undefined);
-
   const source = useRef<SensorSource | undefined>(undefined);
-
   const [totals, setTotals] = useState<CountingTally>();
-
   const [warning, setWarning] = useState<string | null>(null);
-
   const [problem, setProblem] = useState<string>();
-
   /** Kept after disconnecting too: the closed record has to say what measured it */
-
   const [sensor, setSensor] = useState<SensorDescriptor>();
-
   const [connected, setConnected] = useState(false);
-
   const log = useSyncExternalStore(subscribeSensorLog, getSensorLog);
 
   const reopen = useCallback(async () => {
@@ -80,12 +72,19 @@ export function useCountingSession(batchId: string) {
   }, []);
 
   /** Closes the count: it becomes a pending record and the screen is left ready for another run. */
-
   const finish = useCallback(async () => {
     await disconnect();
     await session.current?.finish(sensor?.recordSource ?? 'manual', sensor?.countsMultipleCuts ?? false);
     setSensor(undefined);
     await reopen();
   }, [disconnect, reopen, sensor]);
-}
 
+  const cancel = useCallback(async () => {
+    await disconnect();
+    await session.current?.cancel();
+    setSensor(undefined);
+    await reopen();
+  }, [disconnect, reopen]);
+
+  return { totals, warning, problem, sensor, connected, log, connect, disconnect, correct, finish, cancel };
+}
