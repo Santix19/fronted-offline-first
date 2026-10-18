@@ -38,3 +38,9 @@ export class LoggingSensorDecorator extends SensorSourceDecorator {
     });
   }
 }
+
+/**
+ * Drops a frame whose sequence number is exactly the one before it: the port echoes the last line
+ * when it is re-plugged, and a repeated pulse would inflate the count of a lot. A *lower* number is
+ * not a repeat, it means the board restarted, so it goes through.
+ */
