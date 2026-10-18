@@ -89,3 +89,9 @@ class MockSensorFactory extends SensorFactory {
     return new MockSensorSource(this.descriptor);
   }
 }
+
+const FACTORIES: Record<SensorKind, SensorFactory> = {
+  arduino_infrared: new ArduinoInfraredFactory(),
+  arduino_ultrasonic: new ArduinoUltrasonicFactory(),
+  mock: new MockSensorFactory(),
+};
