@@ -28,3 +28,13 @@ export abstract class SensorSourceDecorator implements SensorSource {
 }
 
 /** Writes every frame to the log the counting screen shows, good frames and bad frames alike. */
+
+export class LoggingSensorDecorator extends SensorSourceDecorator {
+  override subscribe(listener: (event: SensorEvent) => void): () => void {
+    return this.inner.subscribe((event) => {
+      const line = describe(event);
+      appendSensorLog(line, event.type === 'problem');
+      listener(event);
+    });
+  }
+}
