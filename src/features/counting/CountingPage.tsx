@@ -23,5 +23,9 @@ export function CountingPage({ batchId }: { batchId: string }) {
   const [typed, setTyped] = useState('');
 
   const [saved, setSaved] = useState(0);
+
+  const sources = facade.sensors();
+
+  const empty = (count.totals?.total ?? 0) === 0;
 }
 
