@@ -76,6 +76,11 @@ export class PisciculturaFacade {
   readonly alerts = (pondId?: string) => listAlerts(pondId);
 
   readonly attendAlert = (id: string): Promise<void> => attendAlert(id);
+
+  // ---------- Synchronization and settings ----------
+  readonly sync = (): Promise<void> => runSync();
+
+  readonly hasPendingWork = (): Promise<boolean> => hasPendingWork();
 }
 
 /** One instance for the whole app: the subsystems behind it already hold their own state. */
