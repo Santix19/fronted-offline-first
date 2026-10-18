@@ -26,3 +26,22 @@ export type SensorEvent =
   | { type: 'sample'; sample: SensorSample }
 
   | { type: 'problem'; message: string; frame?: string };
+
+/** What a source is and how it behaves, so the screens do not have to know each model. */
+
+export interface SensorDescriptor {
+  kind: SensorKind;
+  /** Shown to the caretaker, in Spanish */
+  label: string;
+  /** The "origen" the backend stores for records built from this source */
+  recordSource: RecordSource;
+  /** Serial speed the sketch uses. Sources without a port do not have one. */
+  baudRate?: number;
+  /**
+   * false = the device cannot tell two fish crossing at the same instant apart. Then the record is
+   * saved without cortes_multiples instead of with a zero that would look like a measurement.
+   */
+  countsMultipleCuts: boolean;
+  /** true = the caretaker has to pick the USB port (Web Serial) */
+  needsPort: boolean;
+}
