@@ -102,6 +102,10 @@ export class PisciculturaFacade {
   /** Sources this phone can really open (without Web Serial, only the simulator). */
 
   readonly sensors = () => availableSensors();
+
+  /** Factory Method + decorators: the caller gets a source and never a concrete class. */
+
+  readonly openSensor = (kind: SensorKind, options?: SensorOptions) => sensorFactoryFor(kind).create(options);
 }
 
 /** One instance for the whole app: the subsystems behind it already hold their own state. */
