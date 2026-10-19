@@ -6,7 +6,20 @@ import { evaluateReading, eventError, parentField } from './rules.mjs';
 
 const PORT = Number(process.env.PORT ?? 8080);
 const API_KEY = process.env.API_KEY ?? 'cambia-esta-clave';
-const db = { ponds: new Map(), batches: new Map(), events: new Map(), alerts: new Map() };
+const db = { ponds: new Map(), batches: new Map(), events: new Map(), alerts: new Map(),
+  users: new Map(), sessions: new Map() };
+
+/**
+ * Cuentas del servidor simulado. Las claves se guardan en claro a proposito: esto corre en memoria
+ * y se borra al apagarlo. El backend real las guarda con BCrypt.
+ */
+function openSession(user) {
+  const token = randomUUID();
+  db.sessions.set(token, user.id);
+  const expires = new Date(Date.now() + 180 * 24 * 3600 * 1000).toISOString();
+  const { clave, ...publicUser } = user;
+  return { token, expira_en: expires, usuario: publicUser };
+}
 const now = () => new Date().toISOString();
 
 function upsertCatalog(map, row, result, check) {
@@ -73,6 +86,33 @@ function summary(batchId) {
 
 const routes = [
   ['GET', /^\/salud$/, () => [200, { estado: 'ok', version: 'mock' }]],
+  ['POST', /^\/api\/auth\/registro$/, (_, body) => {
+    if (!/^\d{5,20}$/.test(body.documento ?? '')) return [422, { detalle: 'documento: debe ser un número de 5 a 20 dígitos' }];
+    if ((body.clave ?? '').length < 8) return [422, { detalle: 'clave: debe tener entre 8 y 72 caracteres' }];
+    if (!(body.nombre ?? '').trim()) return [422, { detalle: 'nombre: no debe estar vacío' }];
+    if ([...db.users.values()].some((u) => u.documento === body.documento)) {
+      return [409, { detalle: 'Ya hay alguien registrado con ese documento' }];
+    }
+    const user = { id: randomUUID(), documento: body.documento, nombre: body.nombre.trim(), rol: 'cuidador', activo: true, clave: body.clave };
+    db.users.set(user.id, user);
+    return [200, openSession(user)];
+  }],
+  ['POST', /^\/api\/auth\/sesion$/, (_, body) => {
+    const user = [...db.users.values()].find((u) => u.documento === body.documento);
+    // El mismo mensaje exista o no el documento, igual que el backend real
+    if (!user || user.clave !== body.clave) return [401, { detalle: 'El documento o la clave no son correctos' }];
+    return [200, openSession(user)];
+  }],
+  ['DELETE', /^\/api\/auth\/sesion$/, (_, __, ___, token) => {
+    db.sessions.delete(token);
+    return [200, {}];
+  }],
+  ['GET', /^\/api\/auth\/yo$/, (_, __, ___, token) => {
+    const user = db.users.get(db.sessions.get(token));
+    if (!user) return [401, { detalle: 'La sesión no es válida' }];
+    const { clave, ...publicUser } = user;
+    return [200, publicUser];
+  }],
   ['POST', /^\/api\/sync\/push$/, (_, body) => [200, push(body)]],
   ['GET', /^\/api\/sync\/pull$/, (url) => [200, pull(url.searchParams.get('desde') ?? undefined)]],
   ['GET', /^\/api\/estanques\/([^/]+)\/lecturas$/, (url, _, [id]) => [200, [...db.events.values()].filter((e) => e.tipo === 'lectura_agua' && e.estanque_id === id).slice(-Number(url.searchParams.get('limite') ?? 500)).reverse()]],
@@ -88,8 +128,8 @@ const routes = [
 
 createServer(async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', req.headers.origin ?? '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-API-Key');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-API-Key, Authorization');
   if (req.method === 'OPTIONS') return res.writeHead(204).end();
   const url = new URL(req.url, 'http://localhost');
   const send = (status, body) => res.writeHead(status, { 'Content-Type': 'application/json' }).end(JSON.stringify(body));
@@ -100,7 +140,8 @@ createServer(async (req, res) => {
   for (const [method, pattern, handler] of routes) {
     const match = url.pathname.match(pattern);
     if (match && req.method === method) {
-      try { return send(...handler(url, raw ? JSON.parse(raw) : {}, match.slice(1))); }
+      const token = (req.headers.authorization ?? '').replace(/^Bearer /, '') || undefined;
+      try { return send(...handler(url, raw ? JSON.parse(raw) : {}, match.slice(1), token)); }
       catch (error) { return send(400, { detalle: String(error.message) }); }
     }
   }
