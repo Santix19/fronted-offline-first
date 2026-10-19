@@ -31,3 +31,9 @@ export type AuthState =
   | { status: 'loading' }
 
   /** No session on this phone: sign in or register */
+
+  | { status: 'signed_out' }
+
+  /** There is a session but it is locked: the PIN opens it, with or without signal */
+
+  | { status: 'locked'; user: User; failedUnlocks: number }
