@@ -2,7 +2,6 @@ import { apiRequest } from '../../shared/http/httpClient';
 import type { User } from './authTypes';
 
 /** The JSON of /api/auth, in Spanish like the rest of the backend. */
-
 interface UserJson {
   id: string;
   documento: string;
@@ -56,4 +55,9 @@ export async function loginOnServer(data: Credentials, deviceId: string): Promis
     anonymous: true,
   });
   return fromSessionJson(json);
+}
+
+/** Closes the session on the server so a lost phone's token stops working. */
+export function logoutOnServer(): Promise<void> {
+  return apiRequest('DELETE', '/api/auth/sesion');
 }
