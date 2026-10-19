@@ -16,5 +16,9 @@ export function LoginPage({ onRegister }: { onRegister: () => void }) {
   const [password, setPassword] = useState('');
 
   const [pin, setPin] = useState('');
+
+  const [errors, setErrors] = useState<AuthErrors>({});
+
+  const [busy, setBusy] = useState(false);
 }
 
