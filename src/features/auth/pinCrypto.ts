@@ -9,3 +9,7 @@
  */
 
 const ROUNDS = 310_000;
+
+const ALGORITHM = 'AES-GCM';
+
+const encoder = new TextEncoder();
