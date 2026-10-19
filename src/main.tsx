@@ -11,6 +11,7 @@ import './styles/feedback.css';
 import './styles/forms.css';
 import './styles/water.css';
 import './styles/counting.css';
+import './styles/auth.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
