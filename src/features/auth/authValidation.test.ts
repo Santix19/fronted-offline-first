@@ -22,3 +22,11 @@ test('el nombre no puede estar vacio ni pasar de 120', () => {
   assert.ok(nameError('x'.repeat(121)));
   assert.equal(nameError('Don Luis'), undefined);
 });
+
+test('el PIN es de exactamente cuatro digitos', () => {
+  assert.ok(pinError(''));
+  assert.ok(pinError('123'));
+  assert.ok(pinError('12345'));
+  assert.ok(pinError('12a4'));
+  assert.equal(pinError('1234'), undefined);
+});
