@@ -34,7 +34,7 @@ src/
 └── styles/         Colores, tipografía y componentes visuales
 public/sw.js        Service worker: guarda la app para abrirla sin señal
 mock-api/           Backend simulado para demos (mismas rutas y JSON que el real)
-arduino/            Sketch del contador de alevinos (lo que la app lee por el puerto USB)
+arduino/            Sketches del contador: por cable (Arduino) y con red propia (ESP32)
 ```
 
 Cada archivo hace una sola cosa. Ningún archivo de `src/` pasa de 80 líneas de código.
@@ -117,6 +117,64 @@ descifra: no hay nada contra qué compararlo y no hay nada que robarse de la bas
 - **Primer intento con espera larga (90 s):** Render gratis tarda ~1 minuto en despertar.
 - Las validaciones del formulario son **las mismas del backend** (pH 0–14, fechas desde 2024…), para que un
   dato malo no llegue a la cola.
+
+## El contador, en sus dos formas
+
+La barrera infrarroja, el tubo y la caja son los mismos; lo que cambia es la placa y por dónde salen
+los datos.
+
+| | **Arduino** (`arduino/contador_alevinos/`) | **ESP32** (`arduino/contador_esp32/`) |
+|---|---|---|
+| Cómo entrega | Cable USB | Cable USB **y** red |
+| Se ve en vivo | Sí, en la pantalla de conteo | Sí por cable; por red se ve al sincronizar |
+| Necesita el celular | Sí, conectado | No: sube sola |
+| Dónde funciona el cable | Chrome de **escritorio** | Chrome de **escritorio** |
+
+### Por qué el cable no sirve en el celular
+
+La app lee el puerto con **Web Serial**, que Chrome trae en el computador pero **no en Android**. La
+app lo detecta sola: si no encuentra el puerto, solo ofrece el simulador. Por eso la placa que de
+verdad resuelve el problema en campo es el ESP32, que no depende del navegador para subir.
+
+Se comprobó midiendo, no de memoria: una página servida por **HTTPS** (como la publicada en Vercel)
+tampoco puede hablarle a un aparato de la red local por `ws://` sin cifrar — el navegador bloquea la
+conexión antes de que salga. Por eso el ESP32 **no** monta su propio WiFi para que el celular se le
+conecte: habla directo con el backend, que es el camino que sí funciona.
+
+### Cómo sube el ESP32
+
+Cada tanda (30 s por omisión) se vuelve un evento `conteo` y se manda con el mismo
+`POST /api/sync/push` que usa el celular:
+
+```json
+{"dispositivo_id":"esp32-contador-1","estanques":[],"lotes":[],"eventos":[
+ {"tipo":"conteo","id":"<uuid>","registrado_en":"2026-10-19T04:33:25Z","origen":"contador",
+  "lote_id":"<lote>","total":143,"cortes_multiples":4}]}
+```
+
+**El id lo crea la placa**, igual que lo hace el celular. Por eso reintentar es inofensivo: si la red
+se cayó a mitad del envío, el reenvío vuelve en `duplicados` y no se guarda dos veces. Es la misma
+propiedad que sostiene toda la sincronización del proyecto.
+
+La placa no tiene reloj, así que pide la hora por NTP al conectarse y fecha cada tanda hacia atrás,
+contando desde que se cerró. Sin hora no manda nada: el servidor rechaza fechas que no cuadran.
+
+**Lo que la placa no hace a propósito:** guardar su cola en memoria permanente. Un corte de corriente
+pierde las tandas que todavía no subieron. Con un powerbank, para una jornada de conteo, es un riesgo
+aceptable; dejarlo escrito es mejor que fingir que no existe.
+
+### Qué hay que editar
+
+Todo está en `arduino/contador_esp32/config.h`: la red (déjala vacía para trabajar solo por cable),
+la dirección del backend y su clave, el lote que se está contando y el nombre de la placa. Nada más
+de ese sketch necesita tocarse.
+
+### Dónde aparecen esos conteos
+
+En cada sincronización la app baja los conteos recientes de cada lote activo, igual que ya bajaba las
+lecturas de agua del sensor. Para la app no hay diferencia entre lo que contó una máquina y lo que
+escribió el cuidador: llegan como registros normales, y el `origen` dice cuál fue cuál. Eso es lo que
+permite comparar la precisión del contador contra el conteo a mano, que es lo que la tesis mide.
 
 ## Conectar el contador (Arduino)
 
