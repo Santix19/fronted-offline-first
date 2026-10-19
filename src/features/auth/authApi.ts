@@ -40,3 +40,20 @@ export interface Credentials {
   password: string;
   name?: string;
 }
+
+export async function registerOnServer(data: Required<Credentials>, deviceId: string): Promise<OpenedSession> {
+  const json = await apiRequest<SessionJson>('POST', '/api/auth/registro', {
+    body: { documento: data.document, nombre: data.name, clave: data.password, dispositivo_id: deviceId },
+    // The phone has no session yet, so this call travels with the device key only
+    anonymous: true,
+  });
+  return fromSessionJson(json);
+}
+
+export async function loginOnServer(data: Credentials, deviceId: string): Promise<OpenedSession> {
+  const json = await apiRequest<SessionJson>('POST', '/api/auth/sesion', {
+    body: { documento: data.document, clave: data.password, dispositivo_id: deviceId },
+    anonymous: true,
+  });
+  return fromSessionJson(json);
+}
