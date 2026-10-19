@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { facade } from '../../facade/PisciculturaFacade';
 import { useAuthState } from './authStatus';
+import { ChangePasswordPage } from './ChangePasswordPage';
 import { LoginPage } from './LoginPage';
 import { RegisterPage } from './RegisterPage';
 import { UnlockPage } from './UnlockPage';
@@ -24,6 +25,8 @@ export function AuthGate({ children }: { children: ReactNode }) {
       return null;
     case 'locked':
       return <UnlockPage user={auth.user} failedUnlocks={auth.failedUnlocks} />;
+    case 'must_change_password':
+      return <ChangePasswordPage user={auth.user} />;
     case 'signed_out':
       return registering ? (
         <RegisterPage onLogin={() => setRegistering(false)} />
