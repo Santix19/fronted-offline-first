@@ -29,3 +29,14 @@
 .auth-card > .muted {
   margin: var(--space-1) 0 var(--space-5);
 }
+
+.auth-footer {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+
+.auth-footer p {
+  margin: 0;
+}
