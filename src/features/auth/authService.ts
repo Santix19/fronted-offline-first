@@ -37,3 +37,19 @@ export async function signUp(credentials: Required<Credentials>, pin: string): P
 }
 
 /** Opens the saved session with the PIN. Works with no signal: nothing here calls the backend. */
+
+export async function unlock(pin: string): Promise<boolean> {
+  if (await unlockSession(pin)) {
+    const stored = await loadSession();
+    if (stored) setAuthState({ status: 'signed_in', user: stored.user });
+    return true;
+  }
+  const stored = await loadSession();
+  if (!stored || stored.failedUnlocks >= MAX_UNLOCK_TRIES) {
+    await forgetSession();
+    setAuthState({ status: 'signed_out' });
+    return false;
+  }
+  setAuthState({ status: 'locked', user: stored.user, failedUnlocks: stored.failedUnlocks });
+  return false;
+}
