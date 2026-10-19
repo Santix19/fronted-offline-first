@@ -10,3 +10,21 @@ import { MAX_UNLOCK_TRIES } from './authTypes';
  */
 
 /** Runs when the app starts: decides whether to show the PIN, the sign-in, or go straight in. */
+
+export async function restoreSession(): Promise<void> {
+  const stored = await loadSession();
+  if (!stored) return setAuthState({ status: 'signed_out' });
+  if (hasExpired(stored) || stored.failedUnlocks >= MAX_UNLOCK_TRIES) {
+    // Too many wrong tries or an expired session: the token on this phone is useless either way
+    await forgetSession();
+    return setAuthState({ status: 'signed_out' });
+  }
+  setAuthState({ status: 'locked', user: stored.user, failedUnlocks: stored.failedUnlocks });
+}
+
+export async function signIn(credentials: Credentials, pin: string): Promise<void> {
+  const { deviceId } = await getApiConfig();
+  const session = await loginOnServer(credentials, deviceId);
+  await saveSession(session, pin);
+  setAuthState({ status: 'signed_in', user: session.user });
+}
