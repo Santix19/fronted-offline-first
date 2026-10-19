@@ -7,6 +7,7 @@ interface UserJson {
   documento: string;
   nombre: string;
   rol: string;
+  debe_cambiar_clave?: boolean;
 }
 
 interface SessionJson {
@@ -21,11 +22,12 @@ export interface OpenedSession {
   user: User;
 }
 
-const fromUserJson = (json: UserJson): User => ({
+export const fromUserJson = (json: UserJson): User => ({
   id: json.id,
   document: json.documento,
   name: json.nombre,
   role: json.rol === 'productor' ? 'productor' : 'cuidador',
+  mustChangePassword: json.debe_cambiar_clave === true,
 });
 
 const fromSessionJson = (json: SessionJson): OpenedSession => ({
@@ -55,6 +57,13 @@ export async function loginOnServer(data: Credentials, deviceId: string): Promis
     anonymous: true,
   });
   return fromSessionJson(json);
+}
+
+/** Changing your own password. This is also how a temporary one stops being temporary. */
+export function changePasswordOnServer(currentPassword: string, newPassword: string): Promise<void> {
+  return apiRequest('POST', '/api/auth/clave', {
+    body: { clave_actual: currentPassword, clave_nueva: newPassword },
+  });
 }
 
 /** Closes the session on the server so a lost phone's token stops working. */
