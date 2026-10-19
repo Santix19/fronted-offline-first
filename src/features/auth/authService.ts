@@ -35,3 +35,5 @@ export async function signUp(credentials: Required<Credentials>, pin: string): P
   await saveSession(session, pin);
   setAuthState({ status: 'signed_in', user: session.user });
 }
+
+/** Opens the saved session with the PIN. Works with no signal: nothing here calls the backend. */
