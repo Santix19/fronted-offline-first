@@ -29,6 +29,11 @@ export function AccountPanel() {
           hasta que alguien vuelva a entrar.
         </p>
       )}
+      {auth.user.role === 'productor' && !confirming && (
+        <p>
+          <a className="button secondary" href="#/personas">Administrar personas</a>
+        </p>
+      )}
       {confirming ? (
         <div className="button-row">
           <button className="button danger" onClick={() => void facade.signOut()}>Sí, cerrar sesión</button>
