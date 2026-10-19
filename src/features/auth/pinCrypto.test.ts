@@ -22,3 +22,11 @@ test('el token cifrado no deja ver el token', async () => {
   assert.ok(!cipher.includes(TOKEN));
   assert.ok(!atob(cipher).includes(TOKEN));
 });
+
+test('el mismo PIN en dos celulares no produce el mismo cifrado', async () => {
+  const unCelular = await encryptToken(TOKEN, '1234', randomBytes(16), randomBytes(12));
+  const otroCelular = await encryptToken(TOKEN, '1234', randomBytes(16), randomBytes(12));
+
+  // Cada celular tiene su propia sal: ver dos bases no dice que usan el mismo PIN
+  assert.notEqual(unCelular, otroCelular);
+});
