@@ -1,0 +1,21 @@
+
+/* The three screens before the app: signing in, registering and the PIN. They fill the window
+   because there is no bottom navigation yet, and they stay centred on a phone held one-handed. */
+
+.auth {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: var(--mist);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  box-shadow: 0 1px 3px rgb(21 38 43 / 12%);
+}
