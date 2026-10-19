@@ -16,5 +16,31 @@ export function RegisterPage({ onLogin }: { onLogin: () => void }) {
   const [errors, setErrors] = useState<AuthErrors>({});
 
   const [busy, setBusy] = useState(false);
+
+  const set = (key: keyof typeof values) => (value: string) => setValues((v) => ({ ...v, [key]: value }));
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    const found = onlyErrors({
+      document: documentError(values.document),
+      name: nameError(values.name),
+      password: passwordError(values.password),
+      pin: pinError(values.pin),
+    });
+    setErrors(found);
+    if (Object.keys(found).length > 0) return;
+
+    setBusy(true);
+    try {
+      await facade.signUp(
+        { document: values.document.trim(), name: values.name.trim(), password: values.password },
+        values.pin,
+      );
+    } catch (error) {
+      setErrors({ form: errorMessage(error) });
+    } finally {
+      setBusy(false);
+    }
+  }
 }
 
