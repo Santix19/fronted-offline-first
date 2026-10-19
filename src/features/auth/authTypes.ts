@@ -24,3 +24,10 @@ export interface StoredSession {
   /** Wrong PIN tries in a row. The app stops accepting after a few. */
   failedUnlocks: number;
 }
+
+/** What the app knows at any moment about who is using it. */
+
+export type AuthState =
+  | { status: 'loading' }
+
+  /** No session on this phone: sign in or register */
