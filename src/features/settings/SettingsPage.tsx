@@ -7,6 +7,7 @@ import { Page } from '../../shared/ui/Page';
 import { AccountPanel } from '../auth/AccountPanel';
 import { ConnectionTest } from './ConnectionTest';
 import { StorageInfo } from './StorageInfo';
+import { ThemePicker } from './ThemePicker';
 
 /** Which backend this phone talks to, its key, and the name the backend knows the phone by. */
 export function SettingsPage() {
@@ -51,6 +52,7 @@ export function SettingsPage() {
         {saved && <p className="notice ok" role="status">Ajustes guardados.</p>}
         <button className="button block" type="submit">Guardar ajustes</button>
       </form>
+      <ThemePicker />
       <ConnectionTest />
       <StorageInfo />
     </Page>
