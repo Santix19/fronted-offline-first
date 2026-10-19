@@ -10,7 +10,6 @@ import { MAX_UNLOCK_TRIES } from './authTypes';
  */
 
 /** Runs when the app starts: decides whether to show the PIN, the sign-in, or go straight in. */
-
 export async function restoreSession(): Promise<void> {
   const stored = await loadSession();
   if (!stored) return setAuthState({ status: 'signed_out' });
@@ -37,7 +36,6 @@ export async function signUp(credentials: Required<Credentials>, pin: string): P
 }
 
 /** Opens the saved session with the PIN. Works with no signal: nothing here calls the backend. */
-
 export async function unlock(pin: string): Promise<boolean> {
   if (await unlockSession(pin)) {
     const stored = await loadSession();
@@ -58,3 +56,12 @@ export async function unlock(pin: string): Promise<boolean> {
  * Signs out. The server is told when there is signal so a lost phone's token dies; without signal
  * the session is dropped from this phone anyway, which is what the caretaker asked for.
  */
+export async function signOut(): Promise<void> {
+  try {
+    if (navigator.onLine) await logoutOnServer();
+  } catch {
+    // The phone is the one that must forget: a server that did not answer cannot stop that
+  }
+  await forgetSession();
+  setAuthState({ status: 'signed_out' });
+}
