@@ -28,3 +28,10 @@ export async function signIn(credentials: Credentials, pin: string): Promise<voi
   await saveSession(session, pin);
   setAuthState({ status: 'signed_in', user: session.user });
 }
+
+export async function signUp(credentials: Required<Credentials>, pin: string): Promise<void> {
+  const { deviceId } = await getApiConfig();
+  const session = await registerOnServer(credentials, deviceId);
+  await saveSession(session, pin);
+  setAuthState({ status: 'signed_in', user: session.user });
+}
