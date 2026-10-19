@@ -12,5 +12,9 @@ export function LoginPage({ onRegister }: { onRegister: () => void }) {
   const online = useOnline();
 
   const [document, setDocument] = useState('');
+
+  const [password, setPassword] = useState('');
+
+  const [pin, setPin] = useState('');
 }
 
