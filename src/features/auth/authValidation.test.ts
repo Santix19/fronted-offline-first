@@ -30,3 +30,8 @@ test('el PIN es de exactamente cuatro digitos', () => {
   assert.ok(pinError('12a4'));
   assert.equal(pinError('1234'), undefined);
 });
+
+test('onlyErrors deja fuera lo que vino bien', () => {
+  assert.deepEqual(onlyErrors({ a: undefined, b: undefined }), {});
+  assert.deepEqual(onlyErrors({ a: 'mal', b: undefined }), { a: 'mal' });
+});
