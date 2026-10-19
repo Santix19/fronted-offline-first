@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { App } from './app/App';
 import { registerServiceWorker } from './app/registerServiceWorker';
 import { facade } from './facade/PisciculturaFacade';
+import { loadTheme } from './shared/ui/theme';
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/layout.css';
@@ -21,3 +22,5 @@ createRoot(document.getElementById('root')!).render(
 
 registerServiceWorker();
 void facade.keepStorage();
+// Antes del primer dibujo no se puede: la base es asincrona. Se pinta y se corrige enseguida.
+void loadTheme();
