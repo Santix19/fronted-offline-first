@@ -13,12 +13,19 @@ const db = { ponds: new Map(), batches: new Map(), events: new Map(), alerts: ne
  * Cuentas del servidor simulado. Las claves se guardan en claro a proposito: esto corre en memoria
  * y se borra al apagarlo. El backend real las guarda con BCrypt.
  */
+const sinClave = ({ clave, ...resto }) => resto;
+
+/** El usuario del token, solo si es productor. */
+function productor(token) {
+  const user = db.users.get(db.sessions.get(token));
+  return user && user.rol === 'productor' ? user : undefined;
+}
+
 function openSession(user) {
   const token = randomUUID();
   db.sessions.set(token, user.id);
   const expires = new Date(Date.now() + 180 * 24 * 3600 * 1000).toISOString();
-  const { clave, ...publicUser } = user;
-  return { token, expira_en: expires, usuario: publicUser };
+  return { token, expira_en: expires, usuario: sinClave(user) };
 }
 const now = () => new Date().toISOString();
 
@@ -93,9 +100,45 @@ const routes = [
     if ([...db.users.values()].some((u) => u.documento === body.documento)) {
       return [409, { detalle: 'Ya hay alguien registrado con ese documento' }];
     }
-    const user = { id: randomUUID(), documento: body.documento, nombre: body.nombre.trim(), rol: 'cuidador', activo: true, clave: body.clave };
+    // Igual que el backend: el primero que se registra es el productor de la finca
+    const rol = db.users.size === 0 ? 'productor' : 'cuidador';
+    const user = { id: randomUUID(), documento: body.documento, nombre: body.nombre.trim(), rol, activo: true, clave: body.clave, debe_cambiar_clave: false };
     db.users.set(user.id, user);
     return [200, openSession(user)];
+  }],
+  ['GET', /^\/api\/usuarios$/, (_, __, ___, token) => {
+    const producer = productor(token);
+    if (!producer) return [403, { detalle: 'Esto solo lo puede hacer el productor' }];
+    return [200, [...db.users.values()].map(sinClave)];
+  }],
+  ['PATCH', /^\/api\/usuarios\/([^/]+)$/, (_, body, [id], token) => {
+    const producer = productor(token);
+    if (!producer) return [403, { detalle: 'Esto solo lo puede hacer el productor' }];
+    if (producer.id === id) return [409, { detalle: 'No puedes cambiar tu propia cuenta' }];
+    const user = db.users.get(id);
+    if (!user) return [404, { detalle: 'Esa persona no existe' }];
+    if (body.rol != null) user.rol = body.rol;
+    if (body.activo != null) user.activo = body.activo;
+    return [200, sinClave(user)];
+  }],
+  ['POST', /^\/api\/usuarios\/([^/]+)\/clave-temporal$/, (_, __, [id], token) => {
+    if (!productor(token)) return [403, { detalle: 'Esto solo lo puede hacer el productor' }];
+    const user = db.users.get(id);
+    if (!user) return [404, { detalle: 'Esa persona no existe' }];
+    // Sin vocales ni caracteres que se confundan: esto se dicta en voz alta junto a un estanque
+    const alfabeto = 'bcdfghjkmnpqrstvwxyz23456789';
+    user.clave = Array.from({ length: 10 }, () => alfabeto[Math.floor(Math.random() * alfabeto.length)]).join('');
+    user.debe_cambiar_clave = true;
+    return [200, { clave_temporal: user.clave, usuario: sinClave(user) }];
+  }],
+  ['POST', /^\/api\/auth\/clave$/, (_, body, __, token) => {
+    const user = db.users.get(db.sessions.get(token));
+    if (!user) return [401, { detalle: 'La sesión no es válida' }];
+    if (user.clave !== body.clave_actual) return [401, { detalle: 'La clave actual no es correcta' }];
+    if (user.clave === body.clave_nueva) return [409, { detalle: 'La clave nueva tiene que ser distinta de la actual' }];
+    user.clave = body.clave_nueva;
+    user.debe_cambiar_clave = false;
+    return [200, {}];
   }],
   ['POST', /^\/api\/auth\/sesion$/, (_, body) => {
     const user = [...db.users.values()].find((u) => u.documento === body.documento);
@@ -110,8 +153,7 @@ const routes = [
   ['GET', /^\/api\/auth\/yo$/, (_, __, ___, token) => {
     const user = db.users.get(db.sessions.get(token));
     if (!user) return [401, { detalle: 'La sesión no es válida' }];
-    const { clave, ...publicUser } = user;
-    return [200, publicUser];
+    return [200, sinClave(user)];
   }],
   ['POST', /^\/api\/sync\/push$/, (_, body) => [200, push(body)]],
   ['GET', /^\/api\/sync\/pull$/, (url) => [200, pull(url.searchParams.get('desde') ?? undefined)]],
