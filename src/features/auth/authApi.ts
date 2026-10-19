@@ -28,3 +28,15 @@ const fromUserJson = (json: UserJson): User => ({
   name: json.nombre,
   role: json.rol === 'productor' ? 'productor' : 'cuidador',
 });
+
+const fromSessionJson = (json: SessionJson): OpenedSession => ({
+  token: json.token,
+  expiresAt: json.expira_en,
+  user: fromUserJson(json.usuario),
+});
+
+export interface Credentials {
+  document: string;
+  password: string;
+  name?: string;
+}
