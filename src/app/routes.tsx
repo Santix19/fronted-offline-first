@@ -5,6 +5,7 @@ import { BatchFormPage } from '../features/batches/BatchFormPage';
 import { CountingPage } from '../features/counting/CountingPage';
 import { PondDetailPage } from '../features/ponds/PondDetailPage';
 import { PondFormPage } from '../features/ponds/PondFormPage';
+import { PeoplePage } from '../features/people/PeoplePage';
 import { PondListPage } from '../features/ponds/PondListPage';
 import { RECORD_LABELS, type RecordType } from '../features/records/recordTypes';
 import { RecordFormPage } from '../features/records/RecordFormPage';
@@ -28,6 +29,7 @@ const ROUTES: [string, (p: Params) => ReactNode][] = [
   ['/alertas', () => <AlertsPage />],
   ['/sincronizacion', () => <SyncPage />],
   ['/ajustes', () => <SettingsPage />],
+  ['/personas', () => <PeoplePage />],
 ];
 
 function recordForm(p: Params): ReactNode {
