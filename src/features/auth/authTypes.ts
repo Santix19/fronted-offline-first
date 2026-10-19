@@ -1,6 +1,4 @@
-
 /** Who is signed in on this phone. Comes from the backend when the session opens. */
-
 export interface User {
   id: string;
   document: string;
@@ -12,7 +10,6 @@ export interface User {
  * The session as it is kept on the phone. The token is stored encrypted with a key derived from
  * the PIN, so reading the phone's database is not a way into the farm's data.
  */
-
 export interface StoredSession {
   user: User;
   expiresAt: string;
@@ -26,14 +23,13 @@ export interface StoredSession {
 }
 
 /** What the app knows at any moment about who is using it. */
-
 export type AuthState =
   | { status: 'loading' }
-
   /** No session on this phone: sign in or register */
-
   | { status: 'signed_out' }
-
   /** There is a session but it is locked: the PIN opens it, with or without signal */
-
   | { status: 'locked'; user: User; failedUnlocks: number }
+  | { status: 'signed_in'; user: User };
+
+/** Tries before the session is wiped, so a lost phone is not opened by guessing. */
+export const MAX_UNLOCK_TRIES = 5;
