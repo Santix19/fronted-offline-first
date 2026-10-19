@@ -3,9 +3,7 @@ import { test } from 'node:test';
 import { decryptToken, encryptToken, fromBase64, randomBytes, toBase64 } from './pinCrypto';
 
 const SALT = randomBytes(16);
-
 const IV = randomBytes(12);
-
 const TOKEN = 'un-token-de-sesion-cualquiera';
 
 test('el PIN correcto devuelve el token y uno equivocado no devuelve nada', async () => {
@@ -29,4 +27,9 @@ test('el mismo PIN en dos celulares no produce el mismo cifrado', async () => {
 
   // Cada celular tiene su propia sal: ver dos bases no dice que usan el mismo PIN
   assert.notEqual(unCelular, otroCelular);
+});
+
+test('la sal y el vector viajan en base64 sin perder nada', () => {
+  const bytes = randomBytes(16);
+  assert.deepEqual(fromBase64(toBase64(bytes.buffer as ArrayBuffer)), bytes);
 });
