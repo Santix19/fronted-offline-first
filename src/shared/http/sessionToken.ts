@@ -6,6 +6,7 @@
  * the PIN; this copy exists while the app is unlocked and dies when the tab closes.
  */
 let token: string | undefined;
+let onRejected: (() => void) | undefined;
 
 export function setSessionToken(value: string | undefined): void {
   token = value;
@@ -13,4 +14,20 @@ export function setSessionToken(value: string | undefined): void {
 
 export function getSessionToken(): string | undefined {
   return token;
+}
+
+/**
+ * What to do when the backend refuses the token we are carrying: the session expired, or it was
+ * closed from another phone. Registered by the auth feature, called by the http client, so neither
+ * one has to know about the other.
+ */
+export function onSessionRejected(listener: () => void): void {
+  onRejected = listener;
+}
+
+export function sessionWasRejected(): void {
+  if (token) {
+    token = undefined;
+    onRejected?.();
+  }
 }
