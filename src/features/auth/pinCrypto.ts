@@ -17,3 +17,8 @@ const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
 export const toBase64 = (bytes: ArrayBuffer): string => btoa(String.fromCharCode(...new Uint8Array(bytes)));
+
+export const fromBase64 = (text: string): Uint8Array =>
+  Uint8Array.from(atob(text), (character) => character.charCodeAt(0));
+
+export const randomBytes = (length: number): Uint8Array => crypto.getRandomValues(new Uint8Array(length));
