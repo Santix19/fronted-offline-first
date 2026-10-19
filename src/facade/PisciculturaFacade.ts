@@ -1,7 +1,9 @@
 import { requestPersistentStorage } from '../shared/db/database';
 import { getApiConfig, saveApiConfig, type ApiConfig } from '../shared/http/apiConfig';
 import type { Credentials } from '../features/auth/authApi';
-import { restoreSession, signIn, signOut, signUp, unlock } from '../features/auth/authService';
+import type { Role } from '../features/auth/authTypes';
+import { fetchPeople, resetPassword, updatePerson, type Person } from '../features/people/peopleApi';
+import { changePassword, restoreSession, signIn, signOut, signUp, unlock } from '../features/auth/authService';
 import { attendAlert, listAlerts } from '../features/alerts/alertRepository';
 import { cacheSummary, codeTaken, getBatch, getCachedSummary, listBatches, saveBatch, type BatchInput } from '../features/batches/batchRepository';
 import type { Batch, BatchSummary } from '../features/batches/batchTypes';
@@ -44,6 +46,15 @@ export class PisciculturaFacade {
   /** Opens the saved session with the PIN. Works with no signal. */
   readonly unlock = (pin: string): Promise<boolean> => unlock(pin);
   readonly signOut = (): Promise<void> => signOut();
+  /** Cambiar la clave propia; así deja de ser temporal la que dio el productor. */
+  readonly changePassword = (current: string, next: string): Promise<void> => changePassword(current, next);
+
+  // ---------- Lo que solo hace el productor ----------
+  readonly people = (): Promise<Person[]> => fetchPeople();
+  readonly updatePerson = (id: string, change: { role?: Role; active?: boolean }): Promise<Person> =>
+    updatePerson(id, change);
+  /** Clave temporal para quien olvidó la suya. Vuelve una sola vez. */
+  readonly resetPassword = (id: string): Promise<string> => resetPassword(id);
 
   // ---------- Ponds and batches (the catalog that is edited offline) ----------
   readonly ponds = (): Promise<Pond[]> => listPonds();
