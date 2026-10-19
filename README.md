@@ -20,6 +20,7 @@ src/
 │   ├── records/    Registros    → eventos del push         (los 5 formularios, validación, historial)
 │   ├── alerts/     Alertas      → /api/alertas             (lista y "atendida", también sin señal)
 │   ├── sync/       Sincronizar  → /api/sync/push y /pull   (cola, pasos de la sincronización, estado)
+│   ├── auth/       Cuenta       → /api/auth              (entrar, crear cuenta, PIN sin señal)
 │   ├── settings/   Ajustes      (servidor, clave, nombre del celular, prueba de conexión)
 │   ├── sensors/    Contador     (puerto serial del Arduino, fábrica de fuentes, decoradores)
 │   └── counting/   Conteo       (sesión de conteo, motores de persistencia, pantalla)
@@ -156,7 +157,7 @@ La dirección y la clave también se pueden cambiar desde la pantalla *Ajustes* 
 ## Pruebas
 
 ```bash
-npm test          # pruebas de sincronización, validación, protocolo del contador y conteo (32 pruebas)
+npm test          # sincronización, validación, protocolo del contador, conteo y cuenta (41 pruebas)
 npm run typecheck # revisa los tipos de TypeScript
 ```
 
