@@ -13,3 +13,7 @@ const ROUNDS = 310_000;
 const ALGORITHM = 'AES-GCM';
 
 const encoder = new TextEncoder();
+
+const decoder = new TextDecoder();
+
+export const toBase64 = (bytes: ArrayBuffer): string => btoa(String.fromCharCode(...new Uint8Array(bytes)));
