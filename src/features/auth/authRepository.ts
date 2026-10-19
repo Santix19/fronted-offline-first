@@ -48,3 +48,10 @@ export async function unlockSession(pin: string): Promise<boolean> {
  * Forgets the session on this phone. What the caretaker recorded is NOT deleted: those rows belong
  * to the farm, not to whoever was signed in, and some may still be waiting for signal.
  */
+
+export async function forgetSession(): Promise<void> {
+  await setMeta<StoredSession | undefined>(KEY, undefined);
+  setSessionToken(undefined);
+}
+
+export const sessionUser = (stored: StoredSession | undefined): User | undefined => stored?.user;
