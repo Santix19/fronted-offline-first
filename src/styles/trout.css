@@ -1,0 +1,81 @@
+/* Los colores de la trucha van aparte de los tokens de la interfaz: son los de un pez, no los de
+   un botón, y si algún día cambia la paleta de la app esta sigue pareciendo una trucha. */
+:root {
+  --trout-back: #0b3a4d;
+  --trout-mid: #1b7f9e;
+  --trout-belly: #dff0f4;
+  --trout-fin: #14607a;
+  --trout-edge: #22d3ee;
+  --trout-spot: #04131c;
+  --trout-stripe: #67e8f9;
+  --trout-eye: #04131c;
+  /* Cuánto se ve el banco del fondo. Encima se leen datos de la finca, así que es poco. */
+  --trout-school-opacity: 0.12;
+}
+
+/* Sobre fondo claro el cian eléctrico desaparece: el contorno se oscurece y el banco necesita
+   algo más de cuerpo para verse. Mismos dos selectores que la paleta de la app. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --trout-back: #0a3346;
+    --trout-mid: #2a86a4;
+    --trout-belly: #f2fafc;
+    --trout-fin: #17708c;
+    --trout-edge: #0e6e8c;
+    --trout-stripe: #7fd4e8;
+    --trout-school-opacity: 0.16;
+  }
+}
+
+:root[data-theme='light'] {
+  --trout-back: #0a3346;
+  --trout-mid: #2a86a4;
+  --trout-belly: #f2fafc;
+  --trout-fin: #17708c;
+  --trout-edge: #0e6e8c;
+  --trout-stripe: #7fd4e8;
+  --trout-school-opacity: 0.16;
+}
+
+/* La grande del inicio de sesión: entra saltando una sola vez y se queda quieta. */
+.trout-hero {
+  display: block;
+  margin: 0 auto var(--space-4);
+  filter: drop-shadow(0 6px 18px rgb(34 211 238 / 25%));
+  animation: trout-jump 900ms ease-out;
+}
+
+@keyframes trout-jump {
+  from { transform: translate(-14%, 18%) rotate(-12deg) scale(0.86); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+/* El banco que cruza el fondo de la app. Va detrás de todo y no recibe toques: es agua, no
+   interfaz. Solo se anima transform, que la pinta la GPU y no rehace el diseño en cada cuadro. */
+.trout-school {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.trout-school svg {
+  position: absolute;
+  left: 0;
+  opacity: var(--trout-school-opacity);
+  /* Nadan hacia la izquierda, así que la que dibujamos mirando a la derecha se voltea */
+  animation: trout-swim linear infinite;
+}
+
+@keyframes trout-swim {
+  from { transform: translateX(calc(100vw + 20%)) scaleX(-1) rotate(2deg); }
+  50% { transform: translateX(50vw) scaleX(-1) rotate(-3deg); }
+  to { transform: translateX(-40%) scaleX(-1) rotate(2deg); }
+}
+
+/* Quien pidió menos movimiento no ve el banco nadando ni el salto. */
+@media (prefers-reduced-motion: reduce) {
+  .trout-hero { animation: none; }
+  .trout-school { display: none; }
+}
