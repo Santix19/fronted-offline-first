@@ -1,10 +1,19 @@
 /** Who is signed in on this phone. Comes from the backend when the session opens. */
+export type Role = 'cuidador' | 'productor';
+
 export interface User {
   id: string;
   document: string;
   name: string;
-  role: 'cuidador' | 'productor';
+  role: Role;
+  /** true = la clave es temporal, la dio el productor y solo sirve para entrar y cambiarla */
+  mustChangePassword: boolean;
 }
+
+export const ROLE_LABELS: Record<Role, string> = {
+  cuidador: 'Cuidador',
+  productor: 'Productor',
+};
 
 /**
  * The session as it is kept on the phone. The token is stored encrypted with a key derived from
@@ -29,6 +38,8 @@ export type AuthState =
   | { status: 'signed_out' }
   /** There is a session but it is locked: the PIN opens it, with or without signal */
   | { status: 'locked'; user: User; failedUnlocks: number }
+  /** Signed in, but on a password the producer handed over: nothing else until it is changed */
+  | { status: 'must_change_password'; user: User }
   | { status: 'signed_in'; user: User };
 
 /** Tries before the session is wiped, so a lost phone is not opened by guessing. */
