@@ -10,3 +10,9 @@ test('el documento tiene que ser un numero de 5 a 20 digitos', () => {
   assert.equal(documentError('1085123456'), undefined);
   assert.equal(documentError('  1085123456  '), undefined, 'se ignoran los espacios de los bordes');
 });
+
+test('la clave tiene el mismo minimo que el backend', () => {
+  assert.ok(passwordError(''));
+  assert.ok(passwordError('corta'));
+  assert.equal(passwordError('laguna2026'), undefined);
+});
