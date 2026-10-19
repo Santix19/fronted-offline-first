@@ -15,3 +15,16 @@ interface SessionJson {
   expira_en: string;
   usuario: UserJson;
 }
+
+export interface OpenedSession {
+  token: string;
+  expiresAt: string;
+  user: User;
+}
+
+const fromUserJson = (json: UserJson): User => ({
+  id: json.id,
+  document: json.documento,
+  name: json.nombre,
+  role: json.rol === 'productor' ? 'productor' : 'cuidador',
+});
