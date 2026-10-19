@@ -22,3 +22,20 @@ export const fromBase64 = (text: string): Uint8Array =>
   Uint8Array.from(atob(text), (character) => character.charCodeAt(0));
 
 export const randomBytes = (length: number): Uint8Array => crypto.getRandomValues(new Uint8Array(length));
+
+async function keyFromPin(pin: string, salt: Uint8Array): Promise<CryptoKey> {
+  const material = await crypto.subtle.importKey('raw', encoder.encode(pin), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: salt as BufferSource, iterations: ROUNDS, hash: 'SHA-256' },
+    material,
+    { name: ALGORITHM, length: 256 },
+    false,
+    ['encrypt', 'decrypt'],
+  );
+}
+
+export async function encryptToken(token: string, pin: string, salt: Uint8Array, iv: Uint8Array): Promise<string> {
+  const key = await keyFromPin(pin, salt);
+  const cipher = await crypto.subtle.encrypt({ name: ALGORITHM, iv: iv as BufferSource }, key, encoder.encode(token));
+  return toBase64(cipher);
+}
