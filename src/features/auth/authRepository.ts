@@ -12,7 +12,6 @@ export const loadSession = (): Promise<StoredSession | undefined> => getMeta<Sto
  * Keeps the session on the phone with its token encrypted under the PIN. From here on the app
  * opens without signal: unlocking only needs the PIN and what is already stored.
  */
-
 export async function saveSession(session: OpenedSession, pin: string): Promise<void> {
   const salt = randomBytes(16);
   const iv = randomBytes(12);
@@ -29,7 +28,6 @@ export async function saveSession(session: OpenedSession, pin: string): Promise<
 }
 
 /** true when the PIN was right. A wrong one is counted so a lost phone cannot be guessed open. */
-
 export async function unlockSession(pin: string): Promise<boolean> {
   const stored = await loadSession();
   if (!stored) return false;
@@ -48,10 +46,13 @@ export async function unlockSession(pin: string): Promise<boolean> {
  * Forgets the session on this phone. What the caretaker recorded is NOT deleted: those rows belong
  * to the farm, not to whoever was signed in, and some may still be waiting for signal.
  */
-
 export async function forgetSession(): Promise<void> {
   await setMeta<StoredSession | undefined>(KEY, undefined);
   setSessionToken(undefined);
 }
 
 export const sessionUser = (stored: StoredSession | undefined): User | undefined => stored?.user;
+
+/** An expired session cannot be unlocked: the backend would refuse its token anyway. */
+export const hasExpired = (stored: StoredSession, now = new Date()): boolean =>
+  new Date(stored.expiresAt) <= now;
