@@ -12,5 +12,9 @@ export function RegisterPage({ onLogin }: { onLogin: () => void }) {
   const online = useOnline();
 
   const [values, setValues] = useState({ document: '', name: '', password: '', pin: '' });
+
+  const [errors, setErrors] = useState<AuthErrors>({});
+
+  const [busy, setBusy] = useState(false);
 }
 
