@@ -13,6 +13,7 @@ import './styles/forms.css';
 import './styles/water.css';
 import './styles/counting.css';
 import './styles/auth.css';
+import './styles/trout.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
