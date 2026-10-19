@@ -1,4 +1,5 @@
 import { getApiConfig } from '../../shared/http/apiConfig';
+import { onSessionRejected } from '../../shared/http/sessionToken';
 import { loginOnServer, logoutOnServer, registerOnServer, type Credentials } from './authApi';
 import { forgetSession, hasExpired, loadSession, saveSession, unlockSession } from './authRepository';
 import { setAuthState } from './authStatus';
@@ -8,6 +9,15 @@ import { MAX_UNLOCK_TRIES } from './authTypes';
  * The whole story of who is signed in: opening a session against the backend, keeping it on the
  * phone under a PIN, and unlocking it later with or without signal. The facade is the only caller.
  */
+
+/**
+ * When the backend refuses our token the session ended somewhere else: it expired, or the producer
+ * closed it because this phone was lost. The app goes back to the sign-in instead of showing an
+ * error on every screen. What was recorded stays on the phone, waiting for whoever signs in next.
+ */
+onSessionRejected(() => {
+  void forgetSession().then(() => setAuthState({ status: 'signed_out' }));
+});
 
 /** Runs when the app starts: decides whether to show the PIN, the sign-in, or go straight in. */
 export async function restoreSession(): Promise<void> {
