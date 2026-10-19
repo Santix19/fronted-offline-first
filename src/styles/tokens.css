@@ -1,23 +1,30 @@
-/* Design tokens: a field tool for a cold, misty high-altitude lagoon.
-   Deep lake teal on cool mist; status colours only where they carry meaning. */
-:root {
-  --lake: #0f4c5c;
-  --lake-strong: #0a3540;
-  --lake-soft: #d6e6ea;
-  --mist: #eef3f4;
-  --surface: #ffffff;
-  --ink: #15262b;
-  --ink-soft: #4d6168;
-  --line: #c9d6da;
-  --bar: #0f4c5c;
-  --on-lake: #ffffff;
+/* Design tokens: the colours of a rainbow trout under the water of the lagoon.
+   Deep blue water, electric cyan where something needs to be seen, bone white for what is read.
 
-  --ok: #2f7d4f;
-  --ok-soft: #dcefe3;
-  --warn: #9a6200;
-  --warn-soft: #fbedd0;
-  --danger: #b3261e;
-  --danger-soft: #f9dedc;
+   Dark by default, which is what the water looks like. A phone set to light mode gets the same
+   palette turned around, and Settings can force either one: under the sun at the lagoon the light
+   theme reads better, indoors the dark one is easier on the eyes. Nobody is stuck with a guess. */
+:root {
+  /* The cyan that outlines the fish: the brand, and the one colour that pulls the eye */
+  --lake: #22d3ee;
+  --lake-strong: #67e8f9;
+  --lake-soft: #0e3c4e;
+  /* The water: deep below, a little lighter where the fish swims */
+  --mist: #061a24;
+  --surface: #0b2a38;
+  /* The belly of the trout */
+  --ink: #e6eef0;
+  --ink-soft: #92aeb8;
+  --line: #1a4254;
+  --bar: #04131c;
+  --on-lake: #04131c;
+
+  --ok: #34d399;
+  --ok-soft: #0a3a32;
+  --warn: #fbbf24;
+  --warn-soft: #3a2e0b;
+  --danger: #fb7185;
+  --danger-soft: #42151f;
 
   --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --text-sm: 0.875rem;
@@ -36,25 +43,4 @@
   --radius-sm: 6px;
   --radius-md: 12px;
   --touch: 52px; /* buttons stay big enough for wet hands and gloves */
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --lake: #6fb8c9;
-    --lake-strong: #9dd3df;
-    --lake-soft: #16343c;
-    --mist: #0c1a1e;
-    --surface: #13252a;
-    --ink: #e6f0f2;
-    --ink-soft: #a3b8be;
-    --line: #2a434a;
-    --bar: #0d3540;
-    --on-lake: #06222a;
-    --ok: #74c493;
-    --ok-soft: #173826;
-    --warn: #e8b453;
-    --warn-soft: #3a2c10;
-    --danger: #f2a39d;
-    --danger-soft: #4a1d1a;
-  }
 }
