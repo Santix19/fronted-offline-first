@@ -1,5 +1,7 @@
 import { requestPersistentStorage } from '../shared/db/database';
 import { getApiConfig, saveApiConfig, type ApiConfig } from '../shared/http/apiConfig';
+import type { Credentials } from '../features/auth/authApi';
+import { restoreSession, signIn, signOut, signUp, unlock } from '../features/auth/authService';
 import { attendAlert, listAlerts } from '../features/alerts/alertRepository';
 import { cacheSummary, codeTaken, getBatch, getCachedSummary, listBatches, saveBatch, type BatchInput } from '../features/batches/batchRepository';
 import type { Batch, BatchSummary } from '../features/batches/batchTypes';
@@ -34,6 +36,15 @@ import { countPending, listRejected } from './facadeQueries';
  * methods are bound arrow properties so a screen can pass one straight to useLiveQuery.
  */
 export class PisciculturaFacade {
+  // ---------- Who is using the app ----------
+  /** Decides at start-up whether to ask for the PIN, for a sign-in, or go straight in. */
+  readonly restoreSession = (): Promise<void> => restoreSession();
+  readonly signIn = (credentials: Credentials, pin: string): Promise<void> => signIn(credentials, pin);
+  readonly signUp = (credentials: Required<Credentials>, pin: string): Promise<void> => signUp(credentials, pin);
+  /** Opens the saved session with the PIN. Works with no signal. */
+  readonly unlock = (pin: string): Promise<boolean> => unlock(pin);
+  readonly signOut = (): Promise<void> => signOut();
+
   // ---------- Ponds and batches (the catalog that is edited offline) ----------
   readonly ponds = (): Promise<Pond[]> => listPonds();
   readonly pond = (id: string): Promise<Pond | undefined> => getPond(id);
