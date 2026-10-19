@@ -1,11 +1,14 @@
 import { getApiConfig } from './apiConfig';
 import { ApiError } from './ApiError';
+import { getSessionToken } from './sessionToken';
 
 type Query = Record<string, string | number | boolean | undefined>;
 
 interface RequestOptions {
   body?: unknown;
   query?: Query;
+  /** true for signing in and registering: the phone has no token yet */
+  anonymous?: boolean;
 }
 
 /**
@@ -17,10 +20,11 @@ const NORMAL_TIMEOUT_MS = 20_000;
 let serverAwake = false;
 
 /** The only place that talks to the backend. Every feature api file goes through here. */
-export async function apiRequest<T>(method: 'GET' | 'POST' | 'PATCH', path: string, options: RequestOptions = {}): Promise<T> {
+export async function apiRequest<T>(method: 'GET' | 'POST' | 'PATCH' | 'DELETE', path: string, options: RequestOptions = {}): Promise<T> {
   if (!navigator.onLine) throw new ApiError('offline', 'Sin conexión');
 
   const { apiUrl, apiKey } = await getApiConfig();
+  const token = getSessionToken();
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), serverAwake ? NORMAL_TIMEOUT_MS : COLD_START_TIMEOUT_MS);
 
@@ -28,7 +32,14 @@ export async function apiRequest<T>(method: 'GET' | 'POST' | 'PATCH', path: stri
   try {
     response = await fetch(apiUrl + path + toQueryString(options.query), {
       method,
-      headers: { 'X-API-Key': apiKey, ...(options.body ? { 'Content-Type': 'application/json' } : {}) },
+      // Both credentials travel: the device key, which the backend has always required, and the
+      // session token when there is one. The backend takes either, so a phone that has not signed
+      // in yet keeps working exactly as before.
+      headers: {
+        'X-API-Key': apiKey,
+        ...(token && !options.anonymous ? { Authorization: `Bearer ${token}` } : {}),
+        ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+      },
       body: options.body ? JSON.stringify(options.body) : undefined,
       signal: controller.signal,
     });
