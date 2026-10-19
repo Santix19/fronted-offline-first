@@ -67,6 +67,30 @@ El orden de los decoradores importa y está puesto a propósito en `SensorFactor
 dentro**, para que muestre las tramas como llegaron, incluidas las repetidas que el deduplicador descarta. Eso
 es justo lo que delata un cable flojo.
 
+## Entrar a la app
+
+```
+ Primera vez (con señal) ──► Entrar o Crear cuenta ──► se elige un PIN de 4 dígitos
+                                        │
+                                        ▼
+                    el token de sesión se guarda CIFRADO con el PIN
+                                        │
+ Cada vez que se abre ──────────────────┴──► PIN ──► adentro (no se habla con el servidor)
+```
+
+**El PIN no se guarda en ninguna parte, ni siquiera cifrado.** Es lo que deriva la llave
+(PBKDF2, 310.000 vueltas) que descifra el token con AES-GCM. Un PIN equivocado simplemente no
+descifra: no hay nada contra qué compararlo y no hay nada que robarse de la base del celular.
+
+- **Entrar por primera vez y crear la cuenta necesitan señal.** Es el único momento en que hace
+  falta. De ahí en adelante la app abre con el PIN, en la laguna y sin barras.
+- **Cinco PIN equivocados y la sesión se borra**, para que un celular perdido no se abra probando.
+  Quien lo tenga puede volver a entrar con su clave, que sí necesita señal.
+- **Cerrar sesión avisa si quedan registros por subir.** Esos datos no se borran —son de la finca,
+  no de quien estaba adentro— pero nadie podrá subirlos hasta que alguien vuelva a entrar.
+- Cada llamada al backend lleva las dos credenciales: la clave del servidor, que siempre existió, y
+  el token de la sesión. El backend acepta cualquiera de las dos.
+
 ## Cómo funciona el modo sin internet
 
 ```
