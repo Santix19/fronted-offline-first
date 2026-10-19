@@ -1,4 +1,3 @@
-
 /**
  * The PIN never leaves the phone and is never stored, not even hashed: it is what derives the key
  * that encrypts the session token. A wrong PIN simply fails to decrypt, so there is nothing to
@@ -7,13 +6,10 @@
  * PBKDF2 with many rounds on purpose: a PIN is four digits, so the only thing that makes guessing
  * expensive is how slow deriving the key is.
  */
-
 const ROUNDS = 310_000;
-
 const ALGORITHM = 'AES-GCM';
 
 const encoder = new TextEncoder();
-
 const decoder = new TextDecoder();
 
 export const toBase64 = (bytes: ArrayBuffer): string => btoa(String.fromCharCode(...new Uint8Array(bytes)));
@@ -38,4 +34,19 @@ export async function encryptToken(token: string, pin: string, salt: Uint8Array,
   const key = await keyFromPin(pin, salt);
   const cipher = await crypto.subtle.encrypt({ name: ALGORITHM, iv: iv as BufferSource }, key, encoder.encode(token));
   return toBase64(cipher);
+}
+
+/** undefined when the PIN is wrong: AES-GCM refuses to decrypt instead of returning garbage. */
+export async function decryptToken(cipher: string, pin: string, salt: Uint8Array, iv: Uint8Array): Promise<string | undefined> {
+  try {
+    const key = await keyFromPin(pin, salt);
+    const plain = await crypto.subtle.decrypt(
+      { name: ALGORITHM, iv: iv as BufferSource },
+      key,
+      fromBase64(cipher) as BufferSource,
+    );
+    return decoder.decode(plain);
+  } catch {
+    return undefined;
+  }
 }
