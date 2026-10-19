@@ -1,6 +1,6 @@
 import { getApiConfig } from './apiConfig';
 import { ApiError } from './ApiError';
-import { getSessionToken } from './sessionToken';
+import { getSessionToken, sessionWasRejected } from './sessionToken';
 
 type Query = Record<string, string | number | boolean | undefined>;
 
@@ -52,6 +52,9 @@ export async function apiRequest<T>(method: 'GET' | 'POST' | 'PATCH' | 'DELETE',
   }
 
   serverAwake = true;
+  // A token the backend refuses is a session that ended somewhere else: the app has to notice
+  // instead of carrying on as if someone were still signed in
+  if (response.status === 401 && token && !options.anonymous) sessionWasRejected();
   if (!response.ok) throw await ApiError.fromResponse(response);
   return response.status === 204 ? (undefined as T) : ((await response.json()) as T);
 }
