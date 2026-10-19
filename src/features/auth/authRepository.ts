@@ -29,3 +29,22 @@ export async function saveSession(session: OpenedSession, pin: string): Promise<
 }
 
 /** true when the PIN was right. A wrong one is counted so a lost phone cannot be guessed open. */
+
+export async function unlockSession(pin: string): Promise<boolean> {
+  const stored = await loadSession();
+  if (!stored) return false;
+
+  const token = await decryptToken(stored.tokenCipher, pin, fromBase64(stored.salt), fromBase64(stored.iv));
+  if (!token) {
+    await setMeta<StoredSession>(KEY, { ...stored, failedUnlocks: stored.failedUnlocks + 1 });
+    return false;
+  }
+  if (stored.failedUnlocks > 0) await setMeta<StoredSession>(KEY, { ...stored, failedUnlocks: 0 });
+  setSessionToken(token);
+  return true;
+}
+
+/**
+ * Forgets the session on this phone. What the caretaker recorded is NOT deleted: those rows belong
+ * to the farm, not to whoever was signed in, and some may still be waiting for signal.
+ */
