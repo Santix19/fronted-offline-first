@@ -1,6 +1,7 @@
 import { getApiConfig } from '../../shared/http/apiConfig';
 import { onSessionRejected } from '../../shared/http/sessionToken';
-import { loginOnServer, logoutOnServer, registerOnServer, type Credentials } from './authApi';
+import { changePasswordOnServer, loginOnServer, logoutOnServer, registerOnServer, type Credentials } from './authApi';
+import { setMeta } from '../../shared/db/repository';
 import { forgetSession, hasExpired, loadSession, saveSession, unlockSession } from './authRepository';
 import { setAuthState } from './authStatus';
 import { MAX_UNLOCK_TRIES } from './authTypes';
@@ -35,7 +36,10 @@ export async function signIn(credentials: Credentials, pin: string): Promise<voi
   const { deviceId } = await getApiConfig();
   const session = await loginOnServer(credentials, deviceId);
   await saveSession(session, pin);
-  setAuthState({ status: 'signed_in', user: session.user });
+  // Una clave que dio el productor abre la puerta y nada más: lo primero es cambiarla
+  setAuthState(session.user.mustChangePassword
+    ? { status: 'must_change_password', user: session.user }
+    : { status: 'signed_in', user: session.user });
 }
 
 export async function signUp(credentials: Required<Credentials>, pin: string): Promise<void> {
@@ -45,11 +49,29 @@ export async function signUp(credentials: Required<Credentials>, pin: string): P
   setAuthState({ status: 'signed_in', user: session.user });
 }
 
+/**
+ * Cambia la clave propia y deja de ser temporal. Necesita señal, pero es lo primero que se hace
+ * tras recibir una del productor, que siempre ocurre con alguien al lado.
+ */
+export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
+  await changePasswordOnServer(currentPassword, newPassword);
+  const stored = await loadSession();
+  if (stored) {
+    const user = { ...stored.user, mustChangePassword: false };
+    await setMeta('session', { ...stored, user });
+    setAuthState({ status: 'signed_in', user });
+  }
+}
+
 /** Opens the saved session with the PIN. Works with no signal: nothing here calls the backend. */
 export async function unlock(pin: string): Promise<boolean> {
   if (await unlockSession(pin)) {
     const stored = await loadSession();
-    if (stored) setAuthState({ status: 'signed_in', user: stored.user });
+    if (stored) {
+      setAuthState(stored.user.mustChangePassword
+        ? { status: 'must_change_password', user: stored.user }
+        : { status: 'signed_in', user: stored.user });
+    }
     return true;
   }
   const stored = await loadSession();
