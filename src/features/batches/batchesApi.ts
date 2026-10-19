@@ -1,3 +1,4 @@
+import type { FryCount } from '../records/recordTypes';
 import { apiRequest } from '../../shared/http/httpClient';
 import type { Batch, BatchStatus, BatchSummary } from './batchTypes';
 
@@ -66,4 +67,33 @@ export async function fetchBatchSummary(batchId: string): Promise<BatchSummary> 
     pendingAlerts: num('alertas_pendientes') ?? 0,
     notes: Array.isArray(json.notas) ? json.notas : [],
   };
+}
+
+/** Un conteo como lo devuelve GET /api/lotes/{id}/conteos. */
+interface FryCountJson {
+  id: string;
+  lote_id: string;
+  total: number;
+  cortes_multiples: number | null;
+  origen: string;
+  registrado_en: string;
+}
+
+/**
+ * Los conteos que ya están en el servidor, incluidos los que sube sola la placa del contador.
+ * Llegan como registros normales: para la app no hay diferencia entre lo que contó una máquina y
+ * lo que escribió el cuidador, más allá del "origen" que cada uno trae.
+ */
+export async function fetchRecentCounts(batchId: string, limit = 20): Promise<FryCount[]> {
+  const rows = await apiRequest<FryCountJson[]>('GET', `/api/lotes/${batchId}/conteos`, { query: { limite: limit } });
+  return rows.map((r) => ({
+    id: r.id,
+    type: 'fry_count',
+    batchId: r.lote_id,
+    total: r.total,
+    multipleCuts: r.cortes_multiples ?? undefined,
+    source: r.origen as FryCount['source'],
+    recordedAt: r.registrado_en,
+    syncState: 'synced',
+  }));
 }
