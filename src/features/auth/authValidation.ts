@@ -16,3 +16,18 @@ export function documentError(document: string): string | undefined {
   if (!document.trim()) return 'Escribe tu número de documento';
   return DOCUMENT.test(document.trim()) ? undefined : 'Debe ser un número de 5 a 20 dígitos';
 }
+
+export function passwordError(password: string): string | undefined {
+  if (!password) return 'Escribe tu clave';
+  return password.length >= 8 ? undefined : 'La clave debe tener al menos 8 caracteres';
+}
+
+export function nameError(name: string): string | undefined {
+  if (!name.trim()) return 'Escribe tu nombre';
+  return name.trim().length <= 120 ? undefined : 'El nombre no puede pasar de 120 caracteres';
+}
+
+export function pinError(pin: string): string | undefined {
+  if (!pin) return 'Elige un PIN de 4 dígitos';
+  return PIN.test(pin) ? undefined : 'El PIN debe ser de 4 dígitos';
+}
