@@ -8,5 +8,12 @@ interface UnlockPageProps {
   user: User;
 
   failedUnlocks: number;
+
+}
+
+/**
+ * The everyday screen: the caretaker opens the app at the pond and types the PIN. Nothing here
+ * talks to the backend, so it works exactly the same with no signal at all.
+ */
 }
 
