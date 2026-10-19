@@ -44,3 +44,28 @@
   --radius-md: 12px;
   --touch: 52px; /* buttons stay big enough for wet hands and gloves */
 }
+
+/* The same trout seen from above, with the sun on the water. Cyan goes darker here because the
+   electric one is unreadable on white, and the sun at the lagoon is already hard enough.
+   Two selectors, one palette: what the phone prefers, and what Settings chose by hand. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --lake: #0e6e8c;
+    --lake-strong: #073d52;
+    --lake-soft: #cdeaf2;
+    --mist: #e8f1f4;
+    --surface: #ffffff;
+    --ink: #06202b;
+    --ink-soft: #456673;
+    --line: #bbd6df;
+    --bar: #0a2e3f;
+    --on-lake: #ffffff;
+
+    --ok: #15803d;
+    --ok-soft: #d7f0e0;
+    --warn: #8a5a00;
+    --warn-soft: #fbecc9;
+    --danger: #be123c;
+    --danger-soft: #fbdde3;
+  }
+}
