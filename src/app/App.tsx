@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { AuthGate } from '../features/auth/AuthGate';
 import { ConnectionPill } from '../features/sync/ConnectionPill';
 import { loadSavedSyncStatus } from '../features/sync/syncStatus';
 import { useAutoSync } from '../features/sync/useAutoSync';
@@ -9,6 +10,15 @@ import { renderRoute } from './routes';
 
 /** App shell: the current screen, the bottom navigation and automatic sync in the background. */
 export function App() {
+  return (
+    <AuthGate>
+      <SignedInApp />
+    </AuthGate>
+  );
+}
+
+/** Everything below here only ever renders with someone signed in. */
+function SignedInApp() {
   const path = usePath();
   useAutoSync();
 
