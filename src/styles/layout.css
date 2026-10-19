@@ -1,5 +1,8 @@
 /* App frame: top bar, scrolling content, bottom navigation. */
 .app {
+  /* Por encima del banco de truchas, que nada en el fondo */
+  position: relative;
+  z-index: 1;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
