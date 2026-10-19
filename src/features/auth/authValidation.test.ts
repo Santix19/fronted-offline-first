@@ -16,3 +16,9 @@ test('la clave tiene el mismo minimo que el backend', () => {
   assert.ok(passwordError('corta'));
   assert.equal(passwordError('laguna2026'), undefined);
 });
+
+test('el nombre no puede estar vacio ni pasar de 120', () => {
+  assert.ok(nameError('   '));
+  assert.ok(nameError('x'.repeat(121)));
+  assert.equal(nameError('Don Luis'), undefined);
+});
