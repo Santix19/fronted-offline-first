@@ -69,3 +69,23 @@
     --danger-soft: #fbdde3;
   }
 }
+
+:root[data-theme='light'] {
+  --lake: #0e6e8c;
+  --lake-strong: #073d52;
+  --lake-soft: #cdeaf2;
+  --mist: #e8f1f4;
+  --surface: #ffffff;
+  --ink: #06202b;
+  --ink-soft: #456673;
+  --line: #bbd6df;
+  --bar: #0a2e3f;
+  --on-lake: #ffffff;
+
+  --ok: #15803d;
+  --ok-soft: #d7f0e0;
+  --warn: #8a5a00;
+  --warn-soft: #fbecc9;
+  --danger: #be123c;
+  --danger-soft: #fbdde3;
+}
