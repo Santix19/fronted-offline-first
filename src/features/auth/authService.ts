@@ -53,3 +53,8 @@ export async function unlock(pin: string): Promise<boolean> {
   setAuthState({ status: 'locked', user: stored.user, failedUnlocks: stored.failedUnlocks });
   return false;
 }
+
+/**
+ * Signs out. The server is told when there is signal so a lost phone's token dies; without signal
+ * the session is dropped from this phone anyway, which is what the caretaker asked for.
+ */
