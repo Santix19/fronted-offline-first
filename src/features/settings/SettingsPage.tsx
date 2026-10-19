@@ -4,6 +4,7 @@ import { type ApiConfig } from '../../shared/http/apiConfig';
 import { DEVICE_ID_PATTERN } from '../../shared/utils/ids';
 import { Field } from '../../shared/ui/Field';
 import { Page } from '../../shared/ui/Page';
+import { AccountPanel } from '../auth/AccountPanel';
 import { ConnectionTest } from './ConnectionTest';
 import { StorageInfo } from './StorageInfo';
 
@@ -42,6 +43,7 @@ export function SettingsPage() {
 
   return (
     <Page title="Ajustes">
+      <AccountPanel />
       <form className="form" onSubmit={submit} noValidate>
         <Field label="Dirección del servidor" type="url" value={config.apiUrl} onChange={set('apiUrl')} error={errors.apiUrl} hint="Por ejemplo https://lacocha-backend.onrender.com" />
         <Field label="Clave del servidor" type="password" value={config.apiKey} onChange={set('apiKey')} hint="La misma API_KEY configurada en el backend" autoComplete="off" />
