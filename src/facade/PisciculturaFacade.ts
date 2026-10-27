@@ -5,11 +5,23 @@ import type { Role } from '../features/auth/authTypes';
 import { fetchPeople, resetPassword, updatePerson, type Person } from '../features/people/peopleApi';
 import { changePassword, restoreSession, signIn, signOut, signUp, unlock } from '../features/auth/authService';
 import { attendAlert, listAlerts } from '../features/alerts/alertRepository';
+import {
+  aiAvailable,
+  attendFindingOnServer,
+  fetchBatchFindings,
+  fetchBatchProjection,
+  fetchPendingFindings,
+  fetchPondFindings,
+  fromFindingJson,
+  type FindingJson,
+} from '../features/findings/findingsApi';
+import type { BatchProjection, Finding } from '../features/findings/findingTypes';
 import { cacheSummary, codeTaken, getBatch, getCachedSummary, listBatches, saveBatch, type BatchInput } from '../features/batches/batchRepository';
 import type { Batch, BatchSummary } from '../features/batches/batchTypes';
 import { fetchBatchSummary } from '../features/batches/batchesApi';
 import { CountingSession, resumeTally } from '../features/counting/CountingSession';
 import { IndexedDbCountStore } from '../features/counting/IndexedDbCountStore';
+import { fetchServerCounts, type ServerCount } from '../features/counting/networkCountsApi';
 import { SupervisedCountingSession } from '../features/counting/SupervisedCountingSession';
 import { deactivatePond, getPond, listPonds, nameTaken, savePond, type PondInput } from '../features/ponds/pondRepository';
 import type { Pond } from '../features/ponds/pondTypes';
@@ -112,6 +124,42 @@ export class PisciculturaFacade {
     const [tally, batch] = await Promise.all([resumeTally(store, batchId), getBatch(batchId)]);
     return new SupervisedCountingSession(store, tally, batch?.initialQuantity);
   };
+
+  // ---------- Lo que encontró la IA ----------
+  /**
+   * Si hay servicio de IA. Las pantallas lo preguntan para decidir si muestran la sección o la
+   * dejan fuera: un panel vacío se lee como "revisé y está todo bien", y eso es justo lo que no
+   * se sabe cuando no hay servicio.
+   */
+  readonly aiAvailable = (): Promise<boolean> => aiAvailable();
+  readonly pendingFindings = (): Promise<Finding[]> => fetchPendingFindings();
+  readonly pondFindings = (pondId: string): Promise<Finding[]> => fetchPondFindings(pondId);
+  readonly batchFindings = (batchId: string): Promise<Finding[]> => fetchBatchFindings(batchId);
+  /**
+   * Marca un hallazgo como visto. Mientras está pendiente silencia sus propias repeticiones, así
+   * que atenderlo es también lo que permite que el mismo problema vuelva a avisar más adelante.
+   */
+  readonly attendFinding = async (id: string): Promise<Finding> => {
+    const { deviceId } = await getApiConfig();
+    return attendFindingOnServer(id, deviceId);
+  };
+  /** Hacia dónde va el lote. Se calcula al preguntar y no se guarda. */
+  readonly batchProjection = (batchId: string): Promise<BatchProjection> => fetchBatchProjection(batchId);
+  /**
+   * Un hallazgo que llegó por el stream, ya en la forma que usa la app.
+   *
+   * Existe para que las pantallas no tengan que conocer la forma del JSON del backend, que es lo
+   * único que la fachada esconde y que de otro modo se filtraría a un componente.
+   */
+  readonly readFinding = (raw: unknown): Finding => fromFindingJson(raw as FindingJson);
+
+  /**
+   * Los conteos que el servidor tiene de un lote, incluido lo que el contador subió por WiFi.
+   *
+   * Es distinto de lo que contó este celular por el cable, y la pantalla los muestra aparte: si el
+   * mismo paso de alevinos se midió por los dos lados, sumarlos daría el doble.
+   */
+  readonly serverCounts = (batchId: string): Promise<ServerCount[]> => fetchServerCounts(batchId);
 }
 
 /** One instance for the whole app: the subsystems behind it already hold their own state. */
