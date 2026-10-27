@@ -7,6 +7,7 @@ import { parseOptionalNumber } from '../../shared/utils/numbers';
 import { SavedNotice } from '../records/SavedNotice';
 import { clearSensorLog } from '../sensors/sensorLog';
 import { CountingTotals } from './CountingTotals';
+import { NetworkCounts } from './NetworkCounts';
 import { FrameLog } from './FrameLog';
 import { useCountingSession } from './useCountingSession';
 
@@ -43,6 +44,10 @@ export function CountingPage({ batchId }: { batchId: string }) {
       {saved > 0 && <SavedNotice count={saved} backHref={`#${back}`} />}
 
       <CountingTotals totals={count.totals} sensor={count.sensor} warning={count.warning} problem={count.problem} />
+
+      {/* Lo que el ESP32 sube solo por WiFi. Aparte del número de arriba, que es lo que cuenta
+          este celular por el cable: ver el comentario de NetworkCounts. */}
+      <NetworkCounts batchId={batchId} />
 
       <section className="section">
         <h2>Contador</h2>
