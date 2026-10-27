@@ -12,7 +12,6 @@ import './styles/feedback.css';
 import './styles/forms.css';
 import './styles/water.css';
 import './styles/counting.css';
-import './styles/findings.css';
 import './styles/auth.css';
 import './styles/trout.css';
 

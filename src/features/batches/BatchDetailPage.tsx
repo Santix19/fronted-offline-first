@@ -3,8 +3,6 @@ import { useLiveQuery } from '../../shared/db/useLiveQuery';
 import { Page } from '../../shared/ui/Page';
 import { SyncChip } from '../../shared/ui/SyncChip';
 import { formatDate, formatNumber } from '../../shared/utils/format';
-import { FindingsPanel } from '../findings/FindingsPanel';
-import { ProjectionPanel } from '../findings/ProjectionPanel';
 import { RecordList } from '../records/RecordList';
 import { RECORD_LABELS, type RecordType } from '../records/recordTypes';
 import { BatchSummaryPanel } from './BatchSummaryPanel';
@@ -38,10 +36,6 @@ export function BatchDetailPage({ batchId }: { batchId: string }) {
         {batch.status === 'cerrado' && <p className="notice">Este lote está cerrado (cosechado).</p>}
         <BatchSummaryPanel batch={batch} />
       </section>
-
-      {/* Lo que el resumen no dice: hacia dónde va, y qué encontró el análisis */}
-      <ProjectionPanel batchId={batch.id} />
-      <FindingsPanel batchId={batch.id} />
 
       {batch.status === 'activo' && (
         <section className="section">
