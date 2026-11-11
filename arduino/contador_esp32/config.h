@@ -68,6 +68,22 @@
 #define UMBRAL_CORTADO 1200
 #define UMBRAL_LIBRE 2000
 
+/*
+ * Modo de calibración. En true, la placa deja de contar y se dedica a imprimir lo que está
+ * leyendo, diez veces por segundo, junto con la duración de cada corte:
+ *
+ *     LECTURA;3412;libre
+ *     LECTURA;180;cortado
+ *     CORTE;84 ms
+ *
+ * Con eso se eligen los dos umbrales mirando datos en vez de a ojo: se anota cuánto marca con el
+ * haz libre y cuánto con el dedo puesto, y los umbrales van repartidos entre esos dos valores.
+ * La duración de los cortes sirve además para ajustar CORTE_LARGO_US más abajo.
+ *
+ * Acuérdate de volverlo a false para contar de verdad.
+ */
+#define MOSTRAR_LECTURAS false
+
 // ---- si SENSOR_ANALOGICO es false (el armado con LM393) ----
 // Pin donde entra la salida del comparador. Casi cualquiera sirve de interrupción.
 #define PIN_BARRERA 4
