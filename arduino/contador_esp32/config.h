@@ -26,8 +26,23 @@
 // Con qué nombre aparece esta placa en el servidor. Letras, números, punto, guion y guion bajo.
 #define DISPOSITIVO_ID "esp32-contador-1"
 
-// ---------------------------------------------------------------- el sensor
-// Pin donde entra la señal de la barrera. En el ESP32 casi cualquiera sirve de interrupción.
+// ---------------------------------------------------------------- cómo está armado el sensor
+/*
+ * Hay dos formas de armar la barrera, y esta línea decide cuál se usa. Las dos cuentan igual: lo
+ * que cambia es cuántas piezas hay que conectar.
+ *
+ *   true  (recomendado)  El fototransistor va directo a la placa y el umbral lo decide el
+ *                        programa. Cuatro piezas, seis conexiones, sin chip y sin potenciómetro.
+ *                        Es el armado de la guía de conexiones.
+ *
+ *   false                Con el comparador LM393 y el potenciómetro, que deciden el umbral por
+ *                        hardware. Seis piezas y el doble de cables. Queda disponible por si el
+ *                        armado simple diera problemas en campo.
+ */
+#define SENSOR_ANALOGICO true
+
+// ---- si SENSOR_ANALOGICO es false (el armado con LM393) ----
+// Pin donde entra la salida del comparador. Casi cualquiera sirve de interrupción.
 #define PIN_BARRERA 4
 // Si tu módulo entrega HIGH al cortar el haz en vez de LOW, pon esto en true.
 #define BARRERA_INVERTIDA false
