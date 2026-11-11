@@ -5,16 +5,9 @@ import type { Role } from '../features/auth/authTypes';
 import { fetchPeople, resetPassword, updatePerson, type Person } from '../features/people/peopleApi';
 import { changePassword, restoreSession, signIn, signOut, signUp, unlock } from '../features/auth/authService';
 import { attendAlert, listAlerts } from '../features/alerts/alertRepository';
-import {
-  aiAvailable,
-  attendFindingOnServer,
-  fetchBatchFindings,
-  fetchBatchProjection,
-  fetchPendingFindings,
-  fetchPondFindings,
-  fromFindingJson,
-  type FindingJson,
-} from '../features/findings/findingsApi';
+import { httpAiSource } from '../features/findings/aiSource';
+import { cachedAiSource } from '../features/findings/cachedAiSource';
+import { fromFindingJson, type FindingJson } from '../features/findings/findingsApi';
 import type { BatchProjection, Finding } from '../features/findings/findingTypes';
 import { fetchServerCounts, type ServerCount } from '../features/counting/networkCountsApi';
 import { cacheSummary, codeTaken, getBatch, getCachedSummary, listBatches, saveBatch, type BatchInput } from '../features/batches/batchRepository';
@@ -98,7 +91,18 @@ export class PisciculturaFacade {
   readonly attendAlert = (id: string): Promise<void> => attendAlert(id);
 
   // ---------- Synchronization and settings ----------
-  readonly sync = (): Promise<void> => runSync();
+  /**
+   * Sincroniza y, al terminar, le dice al análisis que olvide lo que sabía.
+   *
+   * Es la otra mitad del Proxy: la caché no adivina cuándo quedó vieja, se lo dicen. Una
+   * sincronización es el único momento en que los datos de un lote cambian de verdad —una
+   * mortalidad nueva, una biometría—, así que es exactamente aquí donde lo guardado deja de valer.
+   * El vencimiento por tiempo que tiene la caché es solo la red de seguridad.
+   */
+  readonly sync = async (): Promise<void> => {
+    await runSync();
+    this.ai.forget();
+  };
   readonly hasPendingWork = (): Promise<boolean> => hasPendingWork();
   readonly pendingCounts = () => countPending();
   readonly rejected = () => listRejected();
@@ -127,24 +131,34 @@ export class PisciculturaFacade {
 
   // ---------- Lo que encontró la IA ----------
   /**
+   * El análisis, detrás de un Proxy que evita preguntar dos veces lo mismo.
+   *
+   * La fachada no sabe que hay una caché en el medio ni le importa: pide por la misma interfaz que
+   * si hablara con el backend directo. Cambiarla por `httpAiSource()` a secas no rompería nada,
+   * solo haría más llamadas.
+   */
+  private readonly ai = cachedAiSource(httpAiSource());
+
+  /**
    * Si hay servicio de IA. Las pantallas lo preguntan para decidir si muestran la sección o la
    * dejan fuera: un panel vacío se lee como "revisé y está todo bien", y eso es justo lo que no se
    * sabe cuando no hay servicio.
    */
-  readonly aiAvailable = (): Promise<boolean> => aiAvailable();
-  readonly pendingFindings = (): Promise<Finding[]> => fetchPendingFindings();
-  readonly pondFindings = (pondId: string): Promise<Finding[]> => fetchPondFindings(pondId);
-  readonly batchFindings = (batchId: string): Promise<Finding[]> => fetchBatchFindings(batchId);
+  readonly aiAvailable = (): Promise<boolean> => this.ai.available();
+  readonly pendingFindings = (): Promise<Finding[]> => this.ai.pendingFindings();
+  readonly pondFindings = (pondId: string): Promise<Finding[]> => this.ai.pondFindings(pondId);
+  readonly batchFindings = (batchId: string): Promise<Finding[]> => this.ai.batchFindings(batchId);
   /**
    * Marca un hallazgo como visto. Mientras está pendiente silencia sus propias repeticiones, así
    * que atenderlo es también lo que permite que el mismo problema vuelva a avisar más adelante.
    */
   readonly attendFinding = async (id: string): Promise<Finding> => {
     const { deviceId } = await getApiConfig();
-    return attendFindingOnServer(id, deviceId);
+    return this.ai.attend(id, deviceId);
   };
-  /** Hacia dónde va el lote. Se calcula al preguntar y no se guarda. */
-  readonly batchProjection = (batchId: string): Promise<BatchProjection> => fetchBatchProjection(batchId);
+  /** Hacia dónde va el lote. El servidor la calcula al preguntar y no la guarda. */
+  readonly batchProjection = (batchId: string): Promise<BatchProjection> =>
+    this.ai.projection(batchId);
   /**
    * Un hallazgo que llegó por el stream, ya en la forma que usa la app.
    *
