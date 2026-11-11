@@ -24,6 +24,8 @@ volatile unsigned long peces = 0;
 volatile unsigned long ambiguos = 0;
 volatile unsigned long cortadoDesdeUs = 0;
 volatile unsigned long ultimoFlancoUs = 0;
+/** Si el haz está cortado ahora mismo. Solo lo usa el modo analógico. */
+volatile bool cortado = false;
 
 unsigned long seq = 0;
 unsigned long ultimaTandaMs = 0;
@@ -31,17 +33,16 @@ unsigned long ultimaTandaMs = 0;
 /*
  * El candado de los contadores.
  *
- * Hoy basta con apagar la interrupcion, porque solo hay un hilo contando. Eso deja de alcanzar en
- * cuanto el conteo se mueva a su propia tarea: apagar interrupciones calla al nucleo propio y no
- * al otro, y entonces los dos nucleos tocarian `peces` a la vez. Un candado los ordena en los dos
- * casos, asi que se pone ya y el cambio siguiente no tiene que tocar esto.
+ * Los dos núcleos tocan `peces` y `ambiguos`: uno los suma y el otro los lee y los pone en cero
+ * al cerrar la tanda. Apagar interrupciones no sirve aquí, porque eso solo calla al núcleo
+ * propio; hace falta un candado que los dos respeten.
  */
 portMUX_TYPE candado = portMUX_INITIALIZER_UNLOCKED;
 
-/** Da por terminado un cruce: suma un pez, y lo marca ambiguo si duro demasiado. */
+/** Da por terminado un cruce: suma un pez, y lo marca ambiguo si duró demasiado. */
 static inline void terminarCruce(unsigned long ahora) {
-  // Un corte largo cuenta como un solo pez y queda marcado, nunca como dos: adivinar ahi
-  // arruinaria la comparacion con el conteo a mano, que es lo que la tesis mide.
+  // Un corte largo cuenta como un solo pez y queda marcado, nunca como dos: adivinar ahí
+  // arruinaría la comparación con el conteo a mano, que es lo que la tesis mide.
   bool largo = (ahora - cortadoDesdeUs) > CORTE_LARGO_US;
   portENTER_CRITICAL(&candado);
   peces++;
@@ -49,7 +50,63 @@ static inline void terminarCruce(unsigned long ahora) {
   portEXIT_CRITICAL(&candado);
 }
 
-/** Nivel que tiene el pin mientras el haz está cortado. */
+#if SENSOR_ANALOGICO
+
+/*
+ * La tarea que mira el haz, en el núcleo 0.
+ *
+ * Mira mil veces por segundo. Es de sobra: un alevín de cuatro centímetros cruzando a medio metro
+ * por segundo tapa el haz ochenta milisegundos, así que lo ven ochenta lecturas seguidas. Y
+ * analogRead tarda unos cien microsegundos, de modo que la tarea pasa la mayor parte del tiempo
+ * dormida y le deja el núcleo a lo que haga falta.
+ */
+void tareaSensor(void *) {
+  for (;;) {
+    int lectura = analogRead(PIN_SENSOR);
+    unsigned long ahora = micros();
+
+    if (MOSTRAR_LECTURAS) {
+      // En calibración no se cuenta: se muestra lo que se está leyendo
+      static unsigned long ultimoAvisoMs = 0;
+      if (millis() - ultimoAvisoMs >= 100) {
+        ultimoAvisoMs = millis();
+        Serial.printf("LECTURA;%d;%s\n", lectura, cortado ? "cortado" : "libre");
+      }
+    }
+
+    if (!cortado && lectura < UMBRAL_CORTADO) {
+      // Se cortó el haz. El antirrebote evita contar dos veces un receptor que vibra.
+      if (ahora - ultimoFlancoUs >= ANTIRREBOTE_US) {
+        ultimoFlancoUs = ahora;
+        cortadoDesdeUs = ahora;
+        cortado = true;
+      }
+    } else if (cortado && lectura > UMBRAL_LIBRE) {
+      if (ahora - ultimoFlancoUs >= ANTIRREBOTE_US) {
+        ultimoFlancoUs = ahora;
+        cortado = false;
+        if (MOSTRAR_LECTURAS) {
+          Serial.printf("CORTE;%lu ms\n", (ahora - cortadoDesdeUs) / 1000UL);
+        } else {
+          terminarCruce(ahora);
+        }
+      }
+    }
+
+    vTaskDelay(1 / portTICK_PERIOD_MS);
+  }
+}
+
+static void iniciarSensor() {
+  // El rango completo hasta 3,3 V. Sin esto el ADC satura cerca de 1 V y la mitad de arriba de la
+  // escala no se distingue, que es justo donde está "haz libre".
+  analogSetPinAttenuation(PIN_SENSOR, ADC_11db);
+  // Clavada en el núcleo 0: loop() corre en el 1 y es el que se queda esperando al servidor
+  xTaskCreatePinnedToCore(tareaSensor, "sensor", 2048, NULL, 1, NULL, 0);
+}
+
+#else  // el armado con LM393
+
 inline int nivelCortado() {
   return BARRERA_INVERTIDA ? HIGH : LOW;
 }
@@ -68,17 +125,21 @@ void IRAM_ATTR alCambiarLaBarrera() {
     cortadoDesdeUs = ahora;
     return;
   }
-
-  // Se restableció el haz: terminó un cruce.
   terminarCruce(ahora);
 }
 
-void setup() {
+static void iniciarSensor() {
   pinMode(PIN_BARRERA, INPUT_PULLUP);
-  Serial.begin(115200);
   attachInterrupt(digitalPinToInterrupt(PIN_BARRERA), alCambiarLaBarrera, CHANGE);
+}
+
+#endif
+
+void setup() {
+  Serial.begin(115200);
   Serial.println("# contador de alevinos la cocha (esp32)");
 
+  iniciarSensor();
   iniciarRed();
   ultimaTandaMs = millis();
 }
@@ -86,6 +147,7 @@ void setup() {
 void loop() {
   atenderRed();
 
+  if (MOSTRAR_LECTURAS) return;  // en calibración no se cierran tandas
   if (millis() - ultimaTandaMs < (unsigned long) TANDA_SEGUNDOS * 1000UL) return;
   ultimaTandaMs = millis();
 
