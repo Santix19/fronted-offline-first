@@ -51,6 +51,23 @@
  */
 #define PIN_SENSOR 34
 
+/*
+ * A partir de qué lectura se considera que el haz está cortado, y a partir de cuál que volvió.
+ *
+ * La lectura va de 0 (oscuro) a 4095 (luz plena). Con el haz libre el fototransistor conduce y el
+ * número sube; cuando un alevín lo tapa, cae.
+ *
+ * Son dos números y no uno a propósito. Con un solo umbral, una lectura que quede justo encima
+ * del borde tiembla entre cortado y libre y cuenta varios peces donde pasó uno. Dejando una
+ * franja entre los dos, para decir "volvió la luz" hay que subir bastante más de lo que hizo
+ * falta para decir "se cortó". Es lo mismo que hace el potenciómetro del otro armado, pero sin
+ * tener que girar nada.
+ *
+ * Para saber qué números poner en TU montaje, pon MOSTRAR_LECTURAS en true (abajo).
+ */
+#define UMBRAL_CORTADO 1200
+#define UMBRAL_LIBRE 2000
+
 // ---- si SENSOR_ANALOGICO es false (el armado con LM393) ----
 // Pin donde entra la salida del comparador. Casi cualquiera sirve de interrupción.
 #define PIN_BARRERA 4
