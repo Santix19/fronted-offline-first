@@ -28,6 +28,27 @@ volatile unsigned long ultimoFlancoUs = 0;
 unsigned long seq = 0;
 unsigned long ultimaTandaMs = 0;
 
+/*
+ * El candado de los contadores.
+ *
+ * Hoy basta con apagar la interrupcion, porque solo hay un hilo contando. Eso deja de alcanzar en
+ * cuanto el conteo se mueva a su propia tarea: apagar interrupciones calla al nucleo propio y no
+ * al otro, y entonces los dos nucleos tocarian `peces` a la vez. Un candado los ordena en los dos
+ * casos, asi que se pone ya y el cambio siguiente no tiene que tocar esto.
+ */
+portMUX_TYPE candado = portMUX_INITIALIZER_UNLOCKED;
+
+/** Da por terminado un cruce: suma un pez, y lo marca ambiguo si duro demasiado. */
+static inline void terminarCruce(unsigned long ahora) {
+  // Un corte largo cuenta como un solo pez y queda marcado, nunca como dos: adivinar ahi
+  // arruinaria la comparacion con el conteo a mano, que es lo que la tesis mide.
+  bool largo = (ahora - cortadoDesdeUs) > CORTE_LARGO_US;
+  portENTER_CRITICAL(&candado);
+  peces++;
+  if (largo) ambiguos++;
+  portEXIT_CRITICAL(&candado);
+}
+
 /** Nivel que tiene el pin mientras el haz está cortado. */
 inline int nivelCortado() {
   return BARRERA_INVERTIDA ? HIGH : LOW;
@@ -48,10 +69,8 @@ void IRAM_ATTR alCambiarLaBarrera() {
     return;
   }
 
-  // Se restableció el haz: terminó un cruce. Uno largo cuenta como un solo pez y queda marcado
-  // como ambiguo, nunca como dos: adivinar ahí arruinaría la comparación con el conteo a mano.
-  peces++;
-  if (ahora - cortadoDesdeUs > CORTE_LARGO_US) ambiguos++;
+  // Se restableció el haz: terminó un cruce.
+  terminarCruce(ahora);
 }
 
 void setup() {
@@ -70,14 +89,14 @@ void loop() {
   if (millis() - ultimaTandaMs < (unsigned long) TANDA_SEGUNDOS * 1000UL) return;
   ultimaTandaMs = millis();
 
-  // Se leen y se ponen en cero de un solo golpe, con la interrupción apagada: si pasa un pez
-  // justo aquí, o entra en esta tanda o entra en la siguiente, pero no se pierde ni se cuenta dos veces
-  noInterrupts();
+  // Se leen y se ponen en cero de un solo golpe, con el candado puesto: si pasa un pez justo
+  // aquí, o entra en esta tanda o entra en la siguiente, pero no se pierde ni se cuenta dos veces
+  portENTER_CRITICAL(&candado);
   unsigned long contados = peces;
   unsigned long cortes = ambiguos;
   peces = 0;
   ambiguos = 0;
-  interrupts();
+  portEXIT_CRITICAL(&candado);
 
   if (contados == 0) return;
 
