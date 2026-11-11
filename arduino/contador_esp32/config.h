@@ -41,6 +41,16 @@
  */
 #define SENSOR_ANALOGICO true
 
+// ---- si SENSOR_ANALOGICO es true ----
+/*
+ * Pin donde entra la señal del fototransistor. Tiene que ser uno del ADC1: del 32 al 39.
+ *
+ * No es un capricho. El ESP32 tiene dos conversores analógicos y el WiFi se apropia del segundo,
+ * así que un pin del ADC2 (el 4, el 2, el 12 al 15, el 25 al 27) deja de leer en cuanto la placa
+ * se conecta a la red. El 34 además es de solo entrada, que es justo lo que se necesita aquí.
+ */
+#define PIN_SENSOR 34
+
 // ---- si SENSOR_ANALOGICO es false (el armado con LM393) ----
 // Pin donde entra la salida del comparador. Casi cualquiera sirve de interrupción.
 #define PIN_BARRERA 4
