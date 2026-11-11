@@ -18,6 +18,7 @@
  * riesgo aceptable, y dejarlo escrito es mejor que fingir que no existe.
  */
 #include "config.h"
+#include "red.h"
 
 volatile unsigned long peces = 0;
 volatile unsigned long ambiguos = 0;

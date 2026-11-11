@@ -4,7 +4,13 @@
  * El id de cada evento se crea aquí, igual que lo hace el celular, y por eso reintentar es
  * inofensivo: el backend reconoce el repetido y responde "duplicados" en vez de guardarlo dos
  * veces. Es la misma propiedad que sostiene toda la sincronización del proyecto.
+ *
+ * Va en .cpp y no en .ino a propósito; red.h explica por qué.
  */
+#include <Arduino.h>
+
+#include "config.h"
+#include "red.h"
 #include <HTTPClient.h>
 #include <WiFi.h>
 #include <time.h>
