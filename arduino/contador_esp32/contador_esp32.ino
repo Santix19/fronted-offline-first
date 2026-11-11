@@ -138,6 +138,16 @@ static void iniciarSensor() {
 void setup() {
   Serial.begin(115200);
   Serial.println("# contador de alevinos la cocha (esp32)");
+  if (SENSOR_ANALOGICO) {
+    Serial.printf("# sensor directo en el pin %d\n", PIN_SENSOR);
+    if (MOSTRAR_LECTURAS) {
+      Serial.println("# MODO CALIBRACION: no se esta contando");
+      Serial.printf("# umbrales de hoy: cortado por debajo de %d, libre por encima de %d\n",
+                    UMBRAL_CORTADO, UMBRAL_LIBRE);
+    }
+  } else {
+    Serial.printf("# comparador LM393 en el pin %d\n", PIN_BARRERA);
+  }
 
   iniciarSensor();
   iniciarRed();
