@@ -53,7 +53,9 @@ Las pantallas **no** importan `xxxRepository`, `xxxApi` ni el motor de sincroniz
 
 ## Patrones de diseño
 
-Cinco patrones, cada uno puesto donde ya había una frontera real del sistema, no de adorno.
+Seis patrones, cada uno puesto donde ya había una frontera real del sistema, no de adorno. Los
+cinco primeros salieron del conteo y la sincronización; el **Proxy** entró después, con el análisis
+del servicio de IA, y por un motivo que solo existe en un celular en la laguna.
 
 | Patrón | Dónde | Qué problema resuelve |
 |---|---|---|
@@ -61,7 +63,30 @@ Cinco patrones, cada uno puesto donde ya había una frontera real del sistema, n
 | **Factory Method** | `features/sensors/SensorFactory.ts` | Cada contador se abre distinto: el infrarrojo a 115200 baudios y sí distingue cortes múltiples, el ultrasónico a 9600 y no los distingue, el simulador no necesita puerto. Agregar un contador nuevo es agregar una subclase; ni la fachada ni las pantallas cambian. |
 | **Adapter** | `features/sensors/ArduinoSerialAdapter.ts` | El puerto serial entrega pedazos de bytes que cortan las líneas por la mitad; el sistema habla de alevinos. El adaptador traduce, y arriba de él nadie sabe que existe un cable. El protocolo vive aparte, en `serialFrames.ts`, para poder probarlo sin placa. |
 | **Bridge** | `features/counting/` | Las reglas de conteo y control (`CountingSession`, `SupervisedCountingSession`) quedaron separadas del motor que guarda (`IndexedDbCountStore` en la app, `MemoryCountStore` en las pruebas). Cada lado evoluciona solo: por eso el conteo se prueba completo sin IndexedDB y sin Arduino. |
+| **Proxy** | `features/findings/cachedAiSource.ts` | `available()` lo pregunta `useFindings` cada vez que se monta, y `FindingsPanel` está en la pantalla de alertas **y** en la del lote: ir de una a la otra y volver son tres llamadas para una respuesta que no cambió. La proyección se pide cada vez que se abre un lote. El Proxy responde por el servicio cuando ya sabe la respuesta, y lo que se ahorra no es cómputo: es latencia que el cuidador no espera y megabytes que no paga. |
 | **Decorator** | `features/sensors/sensorDecorators.ts` | Dos capacidades transversales que se prenden y apagan sin tocar el adaptador: `LoggingSensorDecorator` (bitácora de tramas, para calibrar el contador en el estanque sin un portátil al lado) y `DedupeSensorDecorator` (el puerto repite la última línea al reconectar, y un pulso repetido infla el conteo del lote). |
+
+### El Proxy, y por qué hay uno a cada lado
+
+El backend tiene su propio Proxy sobre el mismo servicio (`CachingAnalyzer`), y no es duplicación:
+los dos resuelven problemas distintos. El del servidor existe porque el servicio de IA duerme en el
+plan gratuito de Render y despertarlo cuesta un minuto. Este existe porque del otro lado hay un
+**celular en la laguna**, y el Proxy del servidor no le ahorra ni un byte: la petición igual tiene
+que salir del teléfono y cruzar la red.
+
+Lo que **no** guarda es la parte que vale revisar:
+
+- **Las listas de hallazgos.** Llegan hallazgos nuevos por el stream mientras la pantalla está
+  abierta, así que una lista guardada envejece sola y sin avisar. Y `useFindings` ya las tiene en
+  el estado de React mientras la pantalla vive, que es justo lo que una caché daría.
+- **Lo que falló.** Guardaría un minuto malo y lo convertiría en dos.
+- **Nada cuando no hay señal.** Sería tentador servir lo guardado, pero este proyecto no muestra
+  algo viejo como si fuera de ahora: el resumen del lote, que sí se guarda, se muestra siempre con
+  su antigüedad al lado. Mientras eso no exista para la proyección, el panel no aparece sin señal.
+
+Y la otra mitad del diseño es que **la caché no adivina cuándo quedó vieja, se lo dicen**:
+`facade.sync()` la borra al terminar cada sincronización, que es el único momento en que los datos
+de un lote cambian de verdad. El vencimiento por tiempo es solo la red de seguridad.
 
 El orden de los decoradores importa y está puesto a propósito en `SensorFactory.create`: la bitácora va **por
 dentro**, para que muestre las tramas como llegaron, incluidas las repetidas que el deduplicador descarta. Eso
