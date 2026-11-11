@@ -13,6 +13,33 @@
  *     el mismo POST /api/sync/push que usa el celular. Si no hay red, la tanda espera en la cola
  *     y se reintenta: el id del evento se crea aquí, así que un reenvío no duplica nada.
  *
+ *
+ * ## Dos formas de armar la barrera, y por qué el sketch soporta las dos
+ *
+ * Con SENSOR_ANALOGICO en true el fototransistor va directo a la placa y el umbral lo decide este
+ * programa. Son cuatro piezas y seis conexiones. Es el armado recomendado, y existe porque la
+ * versión con comparador tenía el doble de cables y un chip de ocho patas donde es fácil
+ * equivocarse de una: armarlo era la parte difícil de todo el proyecto.
+ *
+ * Con SENSOR_ANALOGICO en false se usa el LM393 y el potenciómetro, que hacen esa misma decisión
+ * por hardware. Queda disponible como respaldo: si el armado simple diera problemas en campo, se
+ * cambia una línea de config.h y se vuelve al otro sin tocar nada más.
+ *
+ *
+ * ## Por qué el conteo corre en el otro núcleo
+ *
+ * Esto importa y no se ve. Subir una tanda al servidor puede tardar hasta minuto y medio cuando
+ * Render tiene el servicio dormido, y durante esa espera el programa está detenido ahí.
+ *
+ * En el armado con LM393 eso daba igual: el comparador entrega un flanco digital y una
+ * interrupción lo atiende aunque el programa principal esté ocupado. Leyendo el voltaje no hay
+ * interrupción que valga, hay que ir a mirar, y si el único hilo está esperando al servidor nadie
+ * mira: el contador quedaría ciego justo mientras sube, y los alevinos que pasen en ese minuto y
+ * medio no existen para nadie.
+ *
+ * Por eso el conteo vive en su propia tarea, clavada en el núcleo 0, y la red se queda en loop(),
+ * que Arduino corre en el núcleo 1. Mientras uno espera al servidor, el otro sigue mirando el haz.
+ *
  * Lo que la placa NO hace a propósito: guardar la cola en memoria permanente. Un corte de
  * corriente pierde lo que todavía no se subió. Para una jornada de conteo con un powerbank es un
  * riesgo aceptable, y dejarlo escrito es mejor que fingir que no existe.
