@@ -119,3 +119,24 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+/* Loading: the same shapes as the real thing, breathing once a second. Opacity only. */
+.skeleton-bar {
+  display: block;
+  height: 14px;
+  width: 60%;
+  border-radius: var(--radius-pill);
+  background: var(--rule);
+  animation: breathe var(--dur-slow) var(--ease-loop) infinite alternate;
+}
+
+.skeleton-bar.tall {
+  height: var(--text-xxl);
+  width: 30%;
+}
+
+.skeleton-bar.chart {
+  height: 72px;
+  width: 100%;
+  border-radius: var(--radius-md);
+}

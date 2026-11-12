@@ -18,12 +18,32 @@ async function load() {
   return buildDashboard({ ponds, batches, records, alerts: alerts.length, ...pending, now: Date.now() });
 }
 
+/** The dashboard's own shape while the phone's database answers, so nothing jumps when it arrives. */
+function DashboardSkeleton() {
+  return (
+    <section className="dashboard" aria-label="Resumen" aria-busy="true">
+      <div className="kpi-grid">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="kpi skeleton">
+            <span className="skeleton-bar tall" />
+            <span className="skeleton-bar" />
+          </div>
+        ))}
+      </div>
+      <div className="panel trend skeleton">
+        <span className="skeleton-bar" />
+        <span className="skeleton-bar chart" />
+      </div>
+    </section>
+  );
+}
+
 /** The first thing on the home screen: what needs you, then how the water has been. */
 export function HomeDashboard() {
   const data = useLiveQuery(load, ['ponds', 'batches', 'records', 'alerts']);
   const tiles = useRef<HTMLDivElement>(null);
   useStagger(tiles, [data !== undefined]);
-  if (!data) return null;
+  if (!data) return <DashboardSkeleton />;
 
   return (
     <section className="dashboard" aria-label="Resumen">
