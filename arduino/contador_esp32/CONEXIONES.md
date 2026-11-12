@@ -1,64 +1,86 @@
 # Cómo se conecta el contador
 
-Cuatro piezas y nueve conexiones, todo a 3,3 V. Esto va aquí y no solo en el PDF porque el
-sketch depende del montaje: `PIN_SENSOR` tiene que ser el pin donde de verdad entra la señal, y
-los umbrales de `config.h` dependen de la resistencia de carga que se haya puesto.
+Barrera infrarroja con comparador LM393: cuatro piezas, tres resistencias y quince cables, todo
+a 3,3 V. Esto va aquí y no solo en el PDF porque el sketch depende del montaje — `PIN_BARRERA`
+tiene que ser el pin donde de verdad entra la salida del comparador.
+
+El paso a paso con dibujos está en `conexiones-contador-alevinos.pdf`. Este archivo es la
+referencia corta.
 
 ## Las piezas
 
 | Pieza | Para qué |
 |---|---|
-| LED infrarrojo (el transparente) | La linterna |
-| Fototransistor (el oscuro) | El ojo |
+| LED infrarrojo 940 nm (el transparente) | La linterna |
+| Fototransistor 940 nm (el negro) | El ojo |
 | Resistencia 220 Ω | Le pone freno a la corriente del LED |
-| Resistencia 10 kΩ | Convierte la luz del sensor en un voltaje |
-
-El LM393 y el potenciómetro **no se usan** en este montaje. Quedan como respaldo: con
-`SENSOR_ANALOGICO` en `false` el sketch vuelve al armado con comparador.
+| Resistencia 10 kΩ (carga) | Convierte la luz del sensor en un voltaje |
+| LM393 | Compara ese voltaje contra el del potenciómetro y responde 0 o 1 |
+| Potenciómetro 10 kΩ | Elige la frontera entre "hay luz" y "no hay luz" |
+| Resistencia 10 kΩ (de subida) | La salida del LM393 no sabe subir sola; esta la sube |
 
 ## Las conexiones
 
-Todo va en la mitad de abajo de la protoboard (filas `F`–`J`) y en las dos líneas largas de
-abajo. La mitad de arriba y el riel de 5 V quedan sin usar.
+El LM393 va **a caballo del canal del medio**, con la muesca a la izquierda: patas 1 a 4 en la
+fila `F` y patas 8 a 5 en la fila `E`. Puesto entero de un lado, cada pata quedaría en corto con
+la de enfrente.
 
 | # | Pieza o cable | Un extremo | El otro |
 |---|---|---|---|
-| 1 | Cable | Pin `GND` del ESP32 | Línea `GND` |
-| 2 | Cable | Pin `3V3` del ESP32 | Línea `3,3 V` |
-| 3 | Resistencia 220 Ω | Línea `3,3 V` | `J-6` |
-| 4 | LED · pata larga | `I-6` | — |
-| 5 | LED · pata corta | `I-9` | — |
-| 6 | Cable | `J-9` | Línea `GND` |
-| 7 | Fototransistor · pata larga | `I-20` | — |
-| 8 | Fototransistor · pata corta | `I-23` | — |
-| 9 | Cable | `J-20` | Línea `3,3 V` |
-| 10 | Resistencia 10 kΩ | `J-23` | Línea `GND` |
-| 11 | Cable | Pin `D34` del ESP32 | `G-23` |
+| 1 | Cable negro | Pin `GND` del ESP32 | Línea `GND` de abajo |
+| 2 | Cable naranja | Pin `3V3` del ESP32 | Línea `3,3 V` de abajo |
+| 3 | Puente naranja | Línea `3,3 V` de abajo, columna 29 | Línea `3,3 V` de arriba, columna 29 |
+| 4 | Puente negro | Línea `GND` de abajo, columna 31 | Línea `GND` de arriba, columna 31 |
+| 5 | Resistencia 220 Ω | Línea `3,3 V` de abajo | `J-6` |
+| 6 | LED transparente · pata **larga** | `I-6` | queda unida a la resistencia por dentro de la placa |
+| 7 | LED transparente · pata **corta** | `I-9` | — |
+| 8 | Cable negro | `J-9` | Línea `GND` de abajo |
+| 9 | Fototransistor negro · pata **larga** | `I-22` | — |
+| 10 | Fototransistor negro · pata **corta** | `I-25` | — |
+| 11 | Cable naranja | `J-22` | Línea `3,3 V` de abajo |
+| 12 | Resistencia 10 kΩ *(carga)* | `J-25` | Línea `GND` de abajo |
+| 13 | LM393 | patas 1 a 4 en `F-16` … `F-19` | patas 8 a 5 en `E-16` … `E-19` |
+| 14 | Cable naranja | `A-16` *(pata 8)* | Línea `3,3 V` de arriba |
+| 15 | Cable negro | `J-19` *(pata 4)* | Línea `GND` de abajo |
+| 16 | Cable negro | `A-18` *(pata 6)* | Línea `GND` de arriba |
+| 17 | Cable negro | `B-19` *(pata 5)* | Línea `GND` de arriba |
+| 18 | Potenciómetro 10 kΩ | las tres patas en `F-10`, `F-11` y `F-12` | la del medio es el cursor |
+| 19 | Cable negro | `J-10` | Línea `GND` de abajo |
+| 20 | Cable naranja | `J-12` | Línea `3,3 V` de abajo |
+| 21 | Cable azul | `G-11` *(cursor del potenciómetro)* | `G-17` *(pata 2 del LM393)* |
+| 22 | Cable verde | `H-25` *(señal del fototransistor)* | `H-18` *(pata 3 del LM393)* |
+| 23 | Resistencia 10 kΩ *(de subida)* | `J-16` *(pata 1)* | Línea `3,3 V` de abajo |
+| 24 | Cable rosado | Pin `D4` del ESP32 | `H-16` *(pata 1)* |
 
-Son once filas y nueve piezas: el LED y el fototransistor ocupan dos filas cada uno, una por
-pata, pero se meten de una vez.
+Son 24 filas y 22 cosas que meter: el LED y el fototransistor ocupan dos filas
+cada uno, una por pata.
 
-La columna 23 es el punto que importa: ahí se juntan la pata corta del sensor, la resistencia de
-10 kΩ y el cable que va al ESP32. Ese es el voltaje que `tareaSensor()` lee mil veces por
-segundo.
+## Tres decisiones que no se ven en la tabla
 
-## Dos decisiones que no se ven en el dibujo
+**Por qué un comparador y no leer el sensor directo.** El fototransistor no entrega un sí o un
+no, sino un voltaje que sube y baja de a poquitos — también con la luz del día o el agua turbia.
+El LM393 lo convierte en un pulso limpio, y la frontera se ajusta con un destornillador en vez
+de recompilando.
 
-**Por qué el pin 34.** El ESP32 tiene dos conversores analógicos y el WiFi se queda con el
-segundo. Un pin del ADC2 (el 4, el 2, del 12 al 15, del 25 al 27) deja de leer en cuanto la
-placa se conecta a la red, y el contador quedaría mudo justo cuando empieza a subir datos. El 34
-es del ADC1 y además es de solo entrada.
+**Por qué sirve el pin 4.** Lo que llega es digital, así que casi cualquier pin vale. En el
+armado reducido (`SENSOR_ANALOGICO true`) habría que usar uno del ADC1, del 32 al 39, porque el
+WiFi se apropia del segundo conversor y un pin del ADC2 deja de leer en cuanto la placa se
+conecta a la red.
 
-**Por qué todo a 3,3 V.** El LED infrarrojo cae alrededor de 1,2 V, así que con 220 Ω le entran
-unos 9 mA: de sobra para los pocos centímetros del tubo. Alimentarlo de 3,3 V en vez de 5 V
-ahorra el riel de 5 V entero y el puente entre los dos GND — dos conexiones menos y una
-tensión menos que seguir en el dibujo.
+**Por qué las patas 5 y 6 van a tierra.** El chip trae dos comparadores y aquí se usa uno. Las
+entradas del que sobra, dejadas al aire, flotan y captan ruido que puede alterar al de al lado:
+comparten la misma pastilla de silicio. La pata 7 sí se deja al aire — una salida sin conectar
+no hace daño.
 
-## Calibrar
+## Ajustar
 
-Los umbrales de `config.h` son un punto de partida, no un valor universal: dependen del LED, de
-la distancia y de la luz del sitio. Para medirlos, ponga `MOSTRAR_LECTURAS` en `true`, abra el
-Monitor Serie a 115200 y anote cuánto marca con el haz libre y cuánto tapado. Los dos umbrales
-van repartidos entre esos valores, dejando una franja ancha entre ellos.
+Gire el tornillo del potenciómetro hasta que empiece a contar solo sin que pase nada: ese es un
+extremo. Después al otro lado, hasta que deje de contar aunque tape el haz con el dedo: ese es el
+otro. El punto bueno está en el medio, no en el borde — la luz del día cambia durante la jornada
+y ese margen es lo que evita volver a ajustar a media mañana.
 
-El paso a paso completo, con dibujos, está en `conexiones-contador-alevinos.pdf`.
+## El armado de respaldo
+
+Con `SENSOR_ANALOGICO` en `true` el fototransistor va directo al pin 34 y el umbral lo deciden
+`UMBRAL_CORTADO` y `UMBRAL_LIBRE`. Dos piezas menos, pero hay que recompilar para cambiar el
+umbral. Está por si el LM393 o el potenciómetro fallan lejos de una tienda de electrónica.
