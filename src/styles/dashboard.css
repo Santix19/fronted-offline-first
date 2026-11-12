@@ -18,7 +18,7 @@
   padding: var(--space-4);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: var(--surface);
+  background: transparent;
   color: var(--ink);
   text-decoration: none;
   transition: transform var(--dur-quick) var(--ease-water), border-color var(--dur-quick) var(--ease-water);
@@ -52,9 +52,27 @@
 }
 
 .trend {
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-color: var(--ink);
   gap: var(--space-2);
+}
+
+/* The benefit-card light: a blurred ellipse leaking in from the upper-left, behind the chart */
+.trend::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -80px;
+  left: -110px;
+  width: 376px;
+  height: 238px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--halo-mint), var(--halo-periwinkle));
+  filter: blur(60px);
+  opacity: 0.7;
+  pointer-events: none;
 }
 
 .trend-head {
@@ -77,22 +95,22 @@
 
 .spark-line {
   fill: none;
-  stroke: var(--lake);
-  stroke-width: 2.5;
+  stroke: var(--ink);
+  stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .spark-area {
-  fill: var(--lake-soft);
+  fill: var(--halo-mint);
   stroke: none;
-  opacity: 0.8;
+  opacity: 0.35;
 }
 
 .spark-dot {
-  fill: var(--lake);
-  stroke: var(--surface);
-  stroke-width: 2;
+  fill: var(--halo-coral);
+  stroke: var(--ink);
+  stroke-width: 1.25;
 }
 
 @media (min-width: 720px) {
