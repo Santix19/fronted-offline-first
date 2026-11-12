@@ -102,7 +102,7 @@
   height: 3px;
   background: var(--lake);
   transform: translateX(calc(var(--tab, 0) * 100%));
-  transition: transform var(--dur-calm) var(--ease-water);
+  transition: transform var(--dur-state) var(--ease-water);
 }
 
 .bottom-nav .nav-pill[data-hidden='true'] {
