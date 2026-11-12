@@ -1,6 +1,7 @@
 import { MaskedText } from '../../shared/ui/MaskedText';
 import { Trout } from '../../shared/ui/Trout';
 import { LocalTime } from './LocalTime';
+import { markStorySeen } from './storySeen';
 import { StoryDiagram } from './StoryDiagram';
 
 const FISH = [
@@ -79,7 +80,7 @@ export function EnterChapter() {
       <div className="invitation">
         <h2 className="display small">A trabajar.</h2>
         <p className="story-lede">Entra con tu documento y tu clave. Sin señal, tu PIN abre la app igual.</p>
-        <a className="button" href="#/">Entrar a La Cocha</a>
+        <a className="button" href="#/" onClick={() => void markStorySeen()}>Entrar a La Cocha</a>
       </div>
       <LocalTime />
     </section>

@@ -1,9 +1,10 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useGsap } from '../../shared/motion/useGsap';
 import { useLenis } from '../../shared/motion/useLenis';
 import { useReducedMotion } from '../../shared/motion/reducedMotion';
 import { CountChapter, EnterChapter, LakeChapter, RouteChapter, SaveChapter, SyncChapter, WriteChapter } from './StoryChapters';
 import { StoryPhone } from './StoryPhone';
+import { markStorySeen } from './storySeen';
 import { buildStory } from './storyTimeline';
 
 /**
@@ -15,6 +16,8 @@ export function StoryPage() {
   const root = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   useLenis(!reduced);
+  // The next screen should start at its top, not wherever the story was left
+  useEffect(() => () => window.scrollTo(0, 0), []);
 
   useGsap(
     root,
@@ -39,7 +42,7 @@ export function StoryPage() {
         <CountChapter />
         <EnterChapter />
       </div>
-      <a className="story-skip" href="#/">Saltar</a>
+      <a className="story-skip" href="#/" onClick={() => void markStorySeen()}>Saltar</a>
     </div>
   );
 }
