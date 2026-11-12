@@ -2,9 +2,9 @@ import { useSyncExternalStore } from 'react';
 import { getMeta, setMeta } from '../db/repository';
 
 /**
- * Which palette the app paints. "auto" follows the phone, which is the sensible default; the other
- * two exist because the right answer changes with where the caretaker is standing: under the sun
- * at the lagoon the light one reads better, and indoors at night the dark one is easier.
+ * Which palette the app paints. Light is the default because the app lives outdoors, under the sun
+ * at the lagoon, where it reads best. "auto" follows the phone and dark is easier indoors at night;
+ * both are one tap away in Ajustes.
  */
 export type Theme = 'auto' | 'light' | 'dark';
 
@@ -16,7 +16,7 @@ export const THEME_LABELS: Record<Theme, string> = {
 
 const KEY = 'theme';
 
-let theme: Theme = 'auto';
+let theme: Theme = 'light';
 const listeners = new Set<() => void>();
 
 /** "auto" leaves no attribute, so the media query in tokens.css is the one that decides. */
@@ -28,11 +28,9 @@ function paint(next: Theme): void {
 
 export async function loadTheme(): Promise<void> {
   const saved = await getMeta<Theme>(KEY);
-  if (saved) {
-    theme = saved;
-    paint(saved);
-    listeners.forEach((listener) => listener());
-  }
+  theme = saved ?? 'light';
+  paint(theme);
+  listeners.forEach((listener) => listener());
 }
 
 export async function setTheme(next: Theme): Promise<void> {
