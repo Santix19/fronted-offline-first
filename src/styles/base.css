@@ -80,3 +80,26 @@ textarea {
     transition: none !important;
   }
 }
+
+/* Display type for titles: Bricolage Grotesque, tight and heavy, like a name painted on a boat. */
+h1,
+h2,
+.display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-weight: 700;
+}
+
+h2 {
+  font-weight: 600;
+}
+
+.display {
+  font-size: var(--text-display);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
