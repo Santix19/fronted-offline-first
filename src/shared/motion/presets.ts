@@ -18,8 +18,8 @@ export const duration = {
   reveal: 0.64,
 } as const;
 
-const STAGGER_STEP = 0.06;
-const STAGGER_CAP = 6;
+const STAGGER_STEP = 0.04;
+const STAGGER_CAP = 5;
 
 /** Delay for the nth item of a list. Capped so a long list never makes the caretaker wait. */
 export function staggerDelay(index: number): number {

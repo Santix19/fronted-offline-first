@@ -15,7 +15,7 @@ export function useStagger(scope: RefObject<HTMLElement | null>, deps: unknown[]
       g.from(items, {
         opacity: 0,
         y: 10,
-        duration: duration.panel,
+        duration: duration.state,
         ease: ease.out,
         delay: (i: number) => staggerDelay(i),
         clearProps: 'opacity,transform',
