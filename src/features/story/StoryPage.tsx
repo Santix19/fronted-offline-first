@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useGsap } from '../../shared/motion/useGsap';
 import { useLenis } from '../../shared/motion/useLenis';
 import { useReducedMotion } from '../../shared/motion/reducedMotion';
-import { Backdrop } from '../../shared/ui/Backdrop';
+import { LiveBackdrop } from '../../shared/ui/LiveBackdrop';
 import { CountChapter, EnterChapter, LakeChapter, RouteChapter, SaveChapter, SyncChapter, WriteChapter } from './StoryChapters';
 import { StoryPhone } from './StoryPhone';
 import { markStorySeen } from './storySeen';
@@ -33,8 +33,8 @@ export function StoryPage() {
       <div className="story-progress" aria-hidden="true">
         <div className="story-progress-bar" />
       </div>
+      <LiveBackdrop />
       <div className="story-stage">
-        <Backdrop fixed={false} />
         <LakeChapter />
         <WriteChapter />
         <SaveChapter />

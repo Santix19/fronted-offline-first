@@ -221,3 +221,23 @@
   object-fit: contain;
   user-select: none;
 }
+
+/* ---------- The live 3D lagoon (story and sign-in) ---------- */
+.lagoon {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.lagoon-canvas,
+.lagoon canvas {
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+}
+
+/* Signed-in screens: the flat backdrop in light blues only (Nico, 2026-11-12: "light blue, not purple") */
+.backdrop-sky .tone-convert .backdrop-fill { background: linear-gradient(198.8deg, #a9cbff, var(--blue), #a9cbff); }
+.backdrop-sky .tone-fresh .backdrop-fill { background: linear-gradient(200deg, #d9e9ff, #8fb9ff, #d9e9ff); }
+.backdrop-sky .tone-warm .backdrop-fill { background: linear-gradient(160deg, #c4defc, var(--blue), #c4defc); }

@@ -19,11 +19,6 @@ const EXAMPLES: Capsule[] = [
 export function LakeChapter() {
   return (
     <section className="chapter ch-lake">
-      <div className="lake-objects" aria-hidden="true">
-        <GlossyObject kind="fish" color="blue" size={260} tilt={-16} className="float lake-fish" />
-        <GlossyObject kind="drop" color="lime" size={120} tilt={14} className="float float-slow lake-drop" />
-        <GlossyObject kind="thermo" color="peach" size={130} tilt={18} className="float lake-thermo" />
-      </div>
       <h1 className="display hero">
         <MaskedText text="La laguna no tiene señal." mode="chars" delay={0.2} />
       </h1>
