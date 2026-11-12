@@ -17,6 +17,8 @@ import './styles/findings.css';
 import './styles/auth.css';
 import './styles/trout.css';
 import './styles/motion.css';
+import './styles/story.css';
+import './styles/story-phone.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

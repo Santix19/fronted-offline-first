@@ -1,0 +1,103 @@
+/* "La laguna, sin señal": the scroll story. The default (no .story-pinned) is the readable stack. */
+.story {
+  min-height: 100dvh;
+  background: var(--mist);
+  color: var(--ink);
+  overflow-x: clip;
+}
+
+.story-stage {
+  position: relative;
+  overflow: hidden;
+}
+
+.chapter {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-5);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* Pinned: every chapter sits on the same screen and the timeline decides which one shows */
+.story-pinned .story-stage {
+  height: 100svh;
+}
+
+.story-pinned .chapter {
+  position: absolute;
+  inset: 0;
+  max-width: none;
+  padding-inline: max(var(--space-5), calc((100vw - 720px) / 2));
+}
+
+/* The chapters that share the screen with the phone keep their copy in the top half */
+.story-pinned .ch-write,
+.story-pinned .ch-save,
+.story-pinned .ch-sync {
+  justify-content: flex-start;
+  padding-top: 17svh;
+}
+
+.display.small {
+  font-size: clamp(2.25rem, 9vw, 4rem);
+}
+
+.story-lede {
+  max-width: 28ch;
+  font-size: var(--text-lg);
+  color: var(--ink-soft);
+}
+
+.story-big {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 28vw, 12rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  color: var(--lake);
+}
+
+.story-fish {
+  position: absolute;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.ch-lake .display {
+  color: var(--lake-strong);
+}
+
+.ch-enter .button {
+  align-self: flex-start;
+}
+
+.story-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 3;
+}
+
+.story-progress-bar {
+  height: 100%;
+  background: var(--lake);
+  transform-origin: left;
+}
+
+.story-skip {
+  position: fixed;
+  top: max(var(--space-3), env(safe-area-inset-top));
+  right: var(--space-4);
+  z-index: 3;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
+}
