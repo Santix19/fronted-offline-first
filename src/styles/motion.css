@@ -46,3 +46,12 @@
 @keyframes fade-in {
   from { opacity: 0; }
 }
+
+/* Each counted fry gives the total one small beat, so you can see the barrier is alive */
+.tick {
+  animation: tick var(--dur-quick) var(--ease-water);
+}
+
+@keyframes tick {
+  from { transform: scale(1.12); }
+}
