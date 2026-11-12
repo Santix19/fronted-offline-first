@@ -89,3 +89,23 @@
   from { transform: scale(0.75); opacity: 0.55; }
   to { transform: scale(1.15); opacity: 1; }
 }
+
+/* Saved: a small trout clears the water once in the corner of the confirmation */
+.notice.saved {
+  position: relative;
+  overflow: hidden;
+  padding-right: 88px;
+}
+
+.trout-leap {
+  position: absolute;
+  top: 10px;
+  right: 8px;
+  animation: leap 900ms var(--ease-water) both;
+}
+
+@keyframes leap {
+  0% { transform: translate(-40px, 38px) rotate(24deg); opacity: 0; }
+  45% { transform: translate(0, -8px) rotate(-12deg); opacity: 1; }
+  100% { transform: translate(0, 0) rotate(0); opacity: 1; }
+}
