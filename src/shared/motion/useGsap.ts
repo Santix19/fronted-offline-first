@@ -8,7 +8,7 @@ import { prefersReducedMotion } from './reducedMotion';
  * Under reduced motion the callback gets `reduced = true` so it can jump straight to the end state.
  */
 export function useGsap(
-  scope: RefObject<HTMLElement | null>,
+  scope: RefObject<Element | null>,
   build: (g: typeof gsap, reduced: boolean) => void,
   deps: unknown[] = [],
 ): void {
