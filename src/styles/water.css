@@ -14,7 +14,8 @@
 
 .reading .value {
   display: block;
-  font-size: var(--text-xxl);
+  /* Three tiles share a 375px screen: the number shrinks before the unit can spill out of its tile */
+  font-size: clamp(1.75rem, 8.4vw, var(--text-xxl));
   font-weight: 800;
   line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -22,7 +23,7 @@
 }
 
 .reading .unit {
-  font-size: var(--text-md);
+  font-size: var(--text-sm);
   font-weight: 600;
   margin-left: 2px;
 }
