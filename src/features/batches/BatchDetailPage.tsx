@@ -48,7 +48,7 @@ export function BatchDetailPage({ batchId }: { batchId: string }) {
           <h2>Registrar</h2>
           <div className="button-row">
             {BATCH_RECORDS.map((type) => (
-              <a key={type} className="button" href={`#/registrar/${type}?lote=${batch.id}`}>{RECORD_LABELS[type]}</a>
+              <a key={type} className="button secondary" href={`#/registrar/${type}?lote=${batch.id}`}>{RECORD_LABELS[type]}</a>
             ))}
             <a className="button" href={`#/lotes/${batch.id}/conteo`}>Contar con el contador</a>
           </div>

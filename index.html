@@ -9,6 +9,11 @@
     <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icons/icon-192.png" />
     <title>La Cocha</title>
+    <script>
+      // Light is the default; this runs before the first paint so there is no dark flash.
+      // theme.ts replaces it with the saved choice as soon as the database answers.
+      document.documentElement.setAttribute('data-theme', 'light');
+    </script>
   </head>
   <body>
     <div id="root"></div>

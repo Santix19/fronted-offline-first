@@ -12,7 +12,8 @@ interface ReadingProps {
 function Reading({ variable, label, unit, value }: ReadingProps) {
   const tone = toneOf(variable, value);
   return (
-    <div className={`reading ${tone}`}>
+    // key on the value: a new reading remounts the tile and replays the ripple
+    <div key={value ?? 'none'} className={`reading ${tone} landed`}>
       <span className="value">
         {formatNumber(value)}
         {value !== undefined && unit && <span className="unit">{unit}</span>}

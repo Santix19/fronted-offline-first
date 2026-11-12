@@ -1,0 +1,64 @@
+/* The phone in the middle of the story */
+.story-phone {
+  width: min(280px, 74vw);
+  margin: var(--space-5) auto;
+  border: 1px solid var(--ink);
+  border-radius: 28px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+/* Pinned: it floats over the chapters, centred under their copy */
+.story-pinned .story-phone {
+  position: absolute;
+  left: 50%;
+  bottom: 12svh;
+  margin: 0;
+  translate: -50% 0;
+}
+
+.phone-bar {
+  position: relative;
+  min-height: 32px;
+  padding: var(--space-2) var(--space-4);
+  background: var(--ink);
+  color: var(--mist);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.phone-bar > span {
+  position: absolute;
+  inset: var(--space-2) var(--space-4);
+}
+
+.phone-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.phone-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 32px;
+}
+
+.phone-row .chip {
+  position: absolute;
+  left: 0;
+}
+
+.phone-queue {
+  margin-left: auto;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+.phone-queue strong {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}

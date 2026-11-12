@@ -24,6 +24,11 @@ export function AuthScreen({ title, subtitle, children, footer, mascot = true }:
         <p className="muted">{subtitle}</p>
         {children}
         {footer && <div className="auth-footer">{footer}</div>}
+        {mascot && (
+          <p className="auth-story">
+            <a className="link" href="#/historia">Ver cómo funciona sin señal</a>
+          </p>
+        )}
       </div>
     </main>
   );

@@ -1,5 +1,7 @@
 import { facade } from '../../facade/PisciculturaFacade';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
+import { HomeDashboard } from '../dashboard/HomeDashboard';
+import { EmptyState } from '../../shared/ui/EmptyState';
 import { Page } from '../../shared/ui/Page';
 import { SyncChip } from '../../shared/ui/SyncChip';
 import { POND_TYPE_LABELS } from './pondTypes';
@@ -16,6 +18,7 @@ export function PondListPage() {
 
   return (
     <Page title="La Cocha">
+      <HomeDashboard />
       <section className="section">
         <div className="section-head">
           <h2>Estanques</h2>
@@ -23,11 +26,12 @@ export function PondListPage() {
         </div>
 
         {data && data.ponds.length === 0 && (
-          <div className="empty">
-            <p>Todavía no hay estanques en este celular.</p>
-            <p className="muted">Si ya existen en el servidor, aparecen al sincronizar. Si no, agrega el primero.</p>
+          <EmptyState
+            title="Todavía no hay estanques en este celular."
+            hint="Si ya existen en el servidor, aparecen al sincronizar. Si no, agrega el primero."
+          >
             <a className="button" href="#/estanques/nuevo">Agregar estanque</a>
-          </div>
+          </EmptyState>
         )}
 
         {data && data.ponds.length > 0 && (

@@ -1,40 +1,34 @@
-/* Los colores de la trucha van aparte de los tokens de la interfaz: son los de un pez, no los de
-   un botón, y si algún día cambia la paleta de la app esta sigue pareciendo una trucha. */
+/* The trout is drawn in the palette of the style: periwinkle back, mint flank, blush belly, a coral
+   stripe and a fine charcoal outline. It is a fish, not a button, so it keeps its own variables. */
 :root {
-  --trout-back: #0b3a4d;
-  --trout-mid: #1b7f9e;
-  --trout-belly: #dff0f4;
-  --trout-fin: #14607a;
-  --trout-edge: #22d3ee;
-  --trout-spot: #04131c;
-  --trout-stripe: #67e8f9;
-  --trout-eye: #04131c;
-  /* Cuánto se ve el banco del fondo. Encima se leen datos de la finca, así que es poco. */
-  --trout-school-opacity: 0.12;
+  --trout-back: #8ea5e6;
+  --trout-mid: #a7fccd;
+  --trout-belly: #f8f3f1;
+  --trout-fin: #fea78c;
+  --trout-edge: #242424;
+  --trout-spot: #242424;
+  --trout-stripe: #fea78c;
+  --trout-eye: #242424;
+  /* How much of the school shows behind the data: a hint, not a pattern */
+  --trout-school-opacity: 0.09;
 }
 
-/* Sobre fondo claro el cian eléctrico desaparece: el contorno se oscurece y el banco necesita
-   algo más de cuerpo para verse. Mismos dos selectores que la paleta de la app. */
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme='dark']) {
-    --trout-back: #0a3346;
-    --trout-mid: #2a86a4;
-    --trout-belly: #f2fafc;
-    --trout-fin: #17708c;
-    --trout-edge: #0e6e8c;
-    --trout-stripe: #7fd4e8;
-    --trout-school-opacity: 0.16;
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --trout-back: #5a6fb5;
+    --trout-mid: #4fae88;
+    --trout-belly: #d9d3cf;
+    --trout-edge: #f6f3f1;
+    --trout-school-opacity: 0.08;
   }
 }
 
-:root[data-theme='light'] {
-  --trout-back: #0a3346;
-  --trout-mid: #2a86a4;
-  --trout-belly: #f2fafc;
-  --trout-fin: #17708c;
-  --trout-edge: #0e6e8c;
-  --trout-stripe: #7fd4e8;
-  --trout-school-opacity: 0.16;
+:root[data-theme='dark'] {
+  --trout-back: #5a6fb5;
+  --trout-mid: #4fae88;
+  --trout-belly: #d9d3cf;
+  --trout-edge: #f6f3f1;
+  --trout-school-opacity: 0.08;
 }
 
 /* La grande del inicio de sesión: entra saltando una sola vez y se queda quieta. */

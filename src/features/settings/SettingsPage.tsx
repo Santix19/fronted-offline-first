@@ -55,6 +55,7 @@ export function SettingsPage() {
       <ThemePicker />
       <ConnectionTest />
       <StorageInfo />
+      <a className="button secondary block" href="#/historia">Ver cómo funciona sin señal</a>
     </Page>
   );
 }

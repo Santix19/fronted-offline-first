@@ -1,4 +1,5 @@
-import { formatNumber, timeAgo } from '../../shared/utils/format';
+import { CountUp } from '../../shared/ui/CountUp';
+import { timeAgo } from '../../shared/utils/format';
 import type { Batch } from './batchTypes';
 import { useBatchSummary } from './useBatchSummary';
 
@@ -42,7 +43,7 @@ export function BatchSummaryPanel({ batch }: { batch: Batch }) {
             <div key={f.label}>
               <dt>{f.label}</dt>
               <dd>
-                {formatNumber(f.value, f.decimals ?? 1)} {f.unit}
+                <CountUp value={f.value as number} decimals={f.decimals ?? 1} /> {f.unit}
               </dd>
             </div>
           ))}

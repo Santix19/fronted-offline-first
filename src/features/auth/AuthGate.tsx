@@ -1,5 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { facade } from '../../facade/PisciculturaFacade';
+import { StoryPage } from '../story/StoryPage';
+import { loadStorySeen, useStorySeen } from '../story/storySeen';
 import { useAuthState } from './authStatus';
 import { ChangePasswordPage } from './ChangePasswordPage';
 import { LoginPage } from './LoginPage';
@@ -15,9 +17,11 @@ import { UnlockPage } from './UnlockPage';
 export function AuthGate({ children }: { children: ReactNode }) {
   const auth = useAuthState();
   const [registering, setRegistering] = useState(false);
+  const storySeen = useStorySeen();
 
   useEffect(() => {
     void facade.restoreSession();
+    void loadStorySeen();
   }, []);
 
   switch (auth.status) {
@@ -28,6 +32,10 @@ export function AuthGate({ children }: { children: ReactNode }) {
     case 'must_change_password':
       return <ChangePasswordPage user={auth.user} />;
     case 'signed_out':
+      // Nothing until we know whether the story was watched: no flash of the login behind it
+      if (storySeen === undefined) return null;
+      // First time on this phone: the story comes before signing in or registering
+      if (!storySeen) return <StoryPage />;
       return registering ? (
         <RegisterPage onLogin={() => setRegistering(false)} />
       ) : (

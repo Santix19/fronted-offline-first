@@ -14,7 +14,7 @@ export function CountingTotals({ totals, sensor, warning, problem }: CountingTot
   return (
     <section className="panel" aria-live="polite">
       <div className="count-total">
-        <strong className="number">{formatNumber(totals?.total ?? 0, 0)}</strong>
+        <strong key={totals?.total ?? 0} className="number tick">{formatNumber(totals?.total ?? 0, 0)}</strong>
         <span>alevinos contados{sensor ? ` · ${sensor.label}` : ''}</span>
       </div>
       {warning && <p className="notice warn" role="alert">{warning}</p>}

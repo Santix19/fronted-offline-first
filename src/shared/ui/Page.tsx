@@ -1,4 +1,5 @@
-import { createContext, useContext, type ReactNode } from 'react';
+import { createContext, useContext, useRef, type ReactNode } from 'react';
+import { useStagger } from '../motion/useStagger';
 import { goBack } from './router';
 
 /**
@@ -17,6 +18,8 @@ interface PageProps {
 /** Frame of every screen: top bar with title, optional back button and the connection state. */
 export function Page({ title, backTo, children }: PageProps) {
   const extra = useContext(TopBarExtra);
+  const content = useRef<HTMLElement>(null);
+  useStagger(content);
   return (
     <>
       <header className="top-bar">
@@ -28,7 +31,7 @@ export function Page({ title, backTo, children }: PageProps) {
         <h1>{title}</h1>
         {extra}
       </header>
-      <main className="content">{children}</main>
+      <main className="content" ref={content}>{children}</main>
     </>
   );
 }

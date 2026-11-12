@@ -1,0 +1,120 @@
+/* Home dashboard: four numbers that ask for attention, then the water trend. */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform var(--dur-quick) var(--ease-water), border-color var(--dur-quick) var(--ease-water);
+}
+
+.kpi:active {
+  transform: scale(0.97);
+}
+
+.kpi-value {
+  font-family: var(--font-display);
+  font-size: var(--text-xxl);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.kpi-label {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+.kpi.warn {
+  border-color: var(--warn);
+  background: var(--warn-soft);
+}
+
+.kpi.danger {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.trend {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-color: var(--ink);
+  gap: var(--space-2);
+}
+
+/* The benefit-card light: a blurred ellipse leaking in from the upper-left, behind the chart */
+.trend::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -80px;
+  left: -110px;
+  width: 376px;
+  height: 238px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--halo-mint), var(--halo-periwinkle));
+  filter: blur(60px);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.trend-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.trend-now {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.sparkline {
+  width: 100%;
+  height: auto;
+}
+
+.spark-line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.spark-area {
+  fill: var(--halo-mint);
+  stroke: none;
+  opacity: 0.35;
+}
+
+.spark-dot {
+  fill: var(--halo-coral);
+  stroke: var(--ink);
+  stroke-width: 1.25;
+}
+
+@media (min-width: 720px) {
+  .kpi-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
