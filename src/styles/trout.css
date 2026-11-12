@@ -10,7 +10,7 @@
   --trout-stripe: #fea78c;
   --trout-eye: #242424;
   /* How much of the school shows behind the data: a hint, not a pattern */
-  --trout-school-opacity: 0.2;
+  --trout-school-opacity: 0.09;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,7 +19,7 @@
     --trout-mid: #4fae88;
     --trout-belly: #d9d3cf;
     --trout-edge: #f6f3f1;
-    --trout-school-opacity: 0.16;
+    --trout-school-opacity: 0.08;
   }
 }
 
@@ -28,7 +28,7 @@
   --trout-mid: #4fae88;
   --trout-belly: #d9d3cf;
   --trout-edge: #f6f3f1;
-  --trout-school-opacity: 0.16;
+  --trout-school-opacity: 0.08;
 }
 
 /* La grande del inicio de sesión: entra saltando una sola vez y se queda quieta. */
