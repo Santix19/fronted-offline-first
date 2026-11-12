@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { AuthGate } from '../features/auth/AuthGate';
+import { StoryPage } from '../features/story/StoryPage';
 import { ConnectionPill } from '../features/sync/ConnectionPill';
 import { loadSavedSyncStatus } from '../features/sync/syncStatus';
 import { useAutoSync } from '../features/sync/useAutoSync';
@@ -11,6 +12,8 @@ import { renderRoute } from './routes';
 
 /** App shell: the current screen, the bottom navigation and automatic sync in the background. */
 export function App() {
+  // The story is public: it explains the app before anyone has signed in
+  if (usePath() === '/historia') return <StoryPage />;
   return (
     <AuthGate>
       <SignedInApp />
