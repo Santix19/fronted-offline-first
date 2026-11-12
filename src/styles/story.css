@@ -72,8 +72,85 @@
   color: var(--lake-strong);
 }
 
-.ch-enter .button {
-  align-self: flex-start;
+/* One strong change of scene: the count chapter is the periwinkle field, rounded like a band */
+.ch-count {
+  background: #cfdaf5;
+  border-radius: 40px;
+}
+
+.story-pinned .ch-count {
+  inset: var(--space-4);
+  padding-inline: var(--space-5);
+}
+
+.story-pinned .ch-route {
+  justify-content: flex-start;
+  padding-top: 15svh;
+}
+
+.ch-count .story-big,
+.ch-count .display,
+.ch-count .story-lede {
+  color: #242424;
+}
+
+/* The warm invitation: an outlined 40px panel with amber light rising from below, not a dark slab */
+.ch-enter {
+  align-items: stretch;
+  justify-content: center;
+}
+
+.invitation {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-4) calc(var(--space-6) * 2);
+  border: 1px solid var(--ink);
+  border-radius: 40px;
+  text-align: center;
+}
+
+.invitation::before,
+.invitation::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  width: 120%;
+  height: 160px;
+  translate: -50% 0;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.invitation::before {
+  top: -110px;
+  background: var(--halo-gold);
+  opacity: 0.55;
+}
+
+.invitation::after {
+  bottom: -90px;
+  background: var(--halo-amber);
+  opacity: 0.7;
+}
+
+.invitation .story-lede {
+  max-width: 30ch;
+}
+
+.story-footer {
+  margin-top: var(--space-5);
+  text-align: center;
+  font-size: var(--text-sm);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
 }
 
 .story-progress {
