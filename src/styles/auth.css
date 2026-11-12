@@ -12,15 +12,32 @@
 .auth-card {
   width: 100%;
   max-width: 420px;
-  background: var(--surface);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid var(--ink);
   border-radius: var(--radius-md);
   padding: var(--space-5);
-  box-shadow: 0 1px 3px rgb(21 38 43 / 12%);
+}
+
+/* Light falling on paper: one blurred ellipse in the corner, behind everything, never over the words */
+.auth-card::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -90px;
+  left: -120px;
+  width: 376px;
+  height: 238px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--halo-periwinkle), var(--halo-mint));
+  filter: blur(60px);
+  opacity: 0.7;
+  pointer-events: none;
 }
 
 .auth-card h1 {
   margin: 0;
-  color: var(--lake);
   font-size: var(--text-xl);
 }
 
@@ -31,7 +48,7 @@
 .auth-footer {
   margin-top: var(--space-5);
   padding-top: var(--space-4);
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--rule);
   text-align: center;
 }
 
@@ -45,9 +62,9 @@
   background: none;
   padding: 0;
   font: inherit;
-  font-weight: 500;
-  color: var(--lake);
+  color: var(--ink);
   text-decoration: underline;
+  text-underline-offset: 3px;
   cursor: pointer;
 }
 
