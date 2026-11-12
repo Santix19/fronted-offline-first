@@ -17,7 +17,7 @@ export function PondListPage() {
   const data = useLiveQuery(loadHome, ['ponds', 'records', 'alerts']);
 
   return (
-    <Page title="La Cocha">
+    <Page title="Tu finca, hoy">
       <HomeDashboard />
       <section className="section">
         <div className="section-head">

@@ -2,11 +2,19 @@
 .story-phone {
   width: min(280px, 74vw);
   margin: var(--space-5) auto;
-  border: 1px solid var(--ink);
-  border-radius: 28px;
-  background: var(--surface);
+  border-radius: 32px 32px 18px 18px;
+  background: #0a0a0a;
+  color: #ffffff;
   overflow: hidden;
+  box-shadow: 0 30px 60px -20px rgb(10 10 10 / 45%);
 }
+
+/* The black interface: white numerals, slate captions */
+.story-phone .reading { background: #17181b; color: #ffffff; }
+.story-phone .reading .value { color: var(--lime); }
+.story-phone .label,
+.story-phone .phone-demo,
+.story-phone .phone-queue { color: var(--chapter-muted); }
 
 /* Pinned: it floats over the chapters, centred under their copy */
 .story-pinned .story-phone {
@@ -21,8 +29,8 @@
   position: relative;
   min-height: 32px;
   padding: var(--space-2) var(--space-4);
-  background: var(--ink);
-  color: var(--mist);
+  background: #17181b;
+  color: #ffffff;
   font-size: var(--text-sm);
   font-weight: 500;
 }

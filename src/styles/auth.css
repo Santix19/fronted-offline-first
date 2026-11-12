@@ -9,36 +9,47 @@
   background: var(--mist);
 }
 
-.auth-card {
-  width: 100%;
-  max-width: 420px;
+.auth {
   position: relative;
   overflow: hidden;
-  isolation: isolate;
-  border: 1px solid var(--ink);
+}
+
+/* Flat white card, one chamfered corner, no shadow: the backdrop moves around it, not through it */
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  z-index: 1;
+  background: var(--surface);
   border-radius: var(--radius-md);
-  padding: var(--space-5);
+  padding: var(--space-6) var(--space-5) var(--space-5);
 }
 
-/* Light falling on paper: one blurred ellipse in the corner, behind everything, never over the words */
-.auth-card::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  top: -90px;
-  left: -120px;
-  width: 376px;
-  height: 238px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--halo-periwinkle), var(--halo-mint));
-  filter: blur(60px);
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.auth-card h1 {
+.auth-title {
   margin: 0;
-  font-size: var(--text-xl);
+  font-size: var(--text-title);
+  line-height: 0.88;
+  letter-spacing: -0.02em;
+}
+
+/* The objects sit above the card's top edge on a phone, beside it on a wide screen */
+.auth-objects {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.auth-fish { position: absolute; top: max(2vh, 8px); right: -24px; }
+.auth-drop { position: absolute; top: 9vh; left: 6vw; }
+
+@media (min-width: 900px) {
+  .auth-fish { top: 18vh; right: calc(50% - 440px); }
+  .auth-drop { bottom: 18vh; left: calc(50% - 400px); }
+}
+
+@media (max-width: 899px) {
+  .auth { align-items: flex-end; padding-top: 220px; }
 }
 
 .auth-card > .muted {
