@@ -118,9 +118,9 @@
 }
 
 .spark-area {
-  fill: var(--violet);
+  fill: var(--blue);
   stroke: none;
-  opacity: 0.45;
+  opacity: 0.5;
 }
 
 .spark-dot {

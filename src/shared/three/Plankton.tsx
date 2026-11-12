@@ -42,7 +42,7 @@ const VERTEX = /* glsl */ `
     gl_Position = projectionMatrix * mv;
     gl_PointSize = aSeed.z * uPixelRatio * (9.0 / -mv.z);
 
-    vec3 c = aSeed.w < 0.32 ? uViolet : aSeed.w < 0.62 ? uBlue : aSeed.w < 0.85 ? uLime : uPeach;
+    vec3 c = aSeed.w < 0.32 ? uViolet : aSeed.w < 0.62 ? uBlue : aSeed.w < 0.9 ? uLime : uPeach;
     vColor = c;
     // Nearer specks are stronger; far ones fade into the water
     vAlpha = clamp(0.25 + (p.z + 4.0) * 0.12, 0.2, 0.75);
@@ -66,7 +66,14 @@ const FRAGMENT = /* glsl */ `
   }
 `;
 
-export function Plankton({ count }: { count: number }) {
+/** Speck colours. Sky (signed-in screens): blues with a few lime specks, never violet. */
+const SPECK_PALETTES = {
+  story: ['#c66ef5', '#73a6ff', '#b8e23a', '#ff9f7a'],
+  sky: ['#8fb9ff', '#5b93f5', '#b9d6ff', '#c9ec5a'],
+} as const;
+
+export function Plankton({ count, palette = 'story' }: { count: number; palette?: keyof typeof SPECK_PALETTES }) {
+  const [s1, s2, s3, s4] = SPECK_PALETTES[palette];
   const viewport = useThree((s) => s.viewport);
   const dpr = useThree((s) => s.viewport.dpr);
 
@@ -93,10 +100,10 @@ export function Plankton({ count }: { count: number }) {
       uPointer: { value: new THREE.Vector2(99, 99) },
       uHalf: { value: new THREE.Vector2(4, 4) },
       uPixelRatio: { value: 1 },
-      uViolet: { value: new THREE.Color('#c66ef5') },
-      uBlue: { value: new THREE.Color('#73a6ff') },
-      uLime: { value: new THREE.Color('#b8e23a') },
-      uPeach: { value: new THREE.Color('#ff9f7a') },
+      uViolet: { value: new THREE.Color(s1) },
+      uBlue: { value: new THREE.Color(s2) },
+      uLime: { value: new THREE.Color(s3) },
+      uPeach: { value: new THREE.Color(s4) },
       uInk: { value: new THREE.Color('#0a0a0a') },
     }),
     [],

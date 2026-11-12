@@ -8,6 +8,8 @@ interface BackdropProps {
   tone?: Tone;
   /** fixed: behind the whole app. local: inside a positioned stage (story, sign-in) */
   fixed?: boolean;
+  /** Signed-in screens: every shape in light blues, no violet or coral */
+  sky?: boolean;
 }
 
 const SHAPES: { cls: string; tone: Tone }[] = [
@@ -21,7 +23,7 @@ const SHAPES: { cls: string; tone: Tone }[] = [
  * long loop (CSS), and lean towards the pointer on devices that have one (GSAP quickTo).
  * Decoration only: aria-hidden, no pointer events, still under reduced motion.
  */
-export function Backdrop({ tone = 'convert', fixed = true }: BackdropProps) {
+export function Backdrop({ tone = 'convert', fixed = true, sky = false }: BackdropProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useGsap(
@@ -52,7 +54,7 @@ export function Backdrop({ tone = 'convert', fixed = true }: BackdropProps) {
   const ordered = [...SHAPES.filter((s) => s.tone === tone), ...SHAPES.filter((s) => s.tone !== tone)];
 
   return (
-    <div ref={ref} className={`backdrop ${fixed ? 'backdrop-fixed' : 'backdrop-local'}`} aria-hidden="true">
+    <div ref={ref} className={`backdrop ${fixed ? 'backdrop-fixed' : 'backdrop-local'} ${sky ? 'backdrop-sky' : ''}`} aria-hidden="true">
       {ordered.map((s, i) => (
         <div key={s.cls} className={`backdrop-shape backdrop-${i} tone-${s.tone}`}>
           <div className="backdrop-fill" />

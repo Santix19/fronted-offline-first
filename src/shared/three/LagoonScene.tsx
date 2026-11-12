@@ -79,7 +79,14 @@ function scrollProgress(): number {
   return max > 0 ? window.scrollY / max : 0;
 }
 
-function Liquid({ clearStrength, column }: { clearStrength: number; column: boolean }) {
+/** The four liquid colours. Story: the design.md set. App (Nico, 2026-11-12): light blues, no violet. */
+const LIQUID_PALETTES = {
+  story: ['#c66ef5', '#73a6ff', '#e3ff89', '#ffc0a5'],
+  sky: ['#a9cbff', '#73a6ff', '#d9e9ff', '#c4defc'],
+} as const;
+
+function Liquid({ clearStrength, column, palette }: { clearStrength: number; column: boolean; palette: keyof typeof LIQUID_PALETTES }) {
+  const [c1, c2, c3, c4] = LIQUID_PALETTES[palette];
   const size = useThree((s) => s.size);
   const uniforms = useMemo(
     () => ({
@@ -88,10 +95,10 @@ function Liquid({ clearStrength, column }: { clearStrength: number; column: bool
       uPointer: { value: new THREE.Vector2(0.4, 0.2) },
       uAspect: { value: 1 },
       uCanvas: { value: new THREE.Color('#f5f5f5') },
-      uViolet: { value: new THREE.Color('#c66ef5') },
-      uBlue: { value: new THREE.Color('#73a6ff') },
-      uLime: { value: new THREE.Color('#e3ff89') },
-      uPeach: { value: new THREE.Color('#ffc0a5') },
+      uViolet: { value: new THREE.Color(c1) },
+      uBlue: { value: new THREE.Color(c2) },
+      uLime: { value: new THREE.Color(c3) },
+      uPeach: { value: new THREE.Color(c4) },
       uClear: { value: clearStrength },
       uColumn: { value: column ? 1 : 0 },
     }),
@@ -250,10 +257,10 @@ export default function LagoonScene({ mode = 'story' }: { mode?: LagoonMode }) {
       eventPrefix="client"
       aria-hidden="true"
     >
-      <Liquid clearStrength={app ? 0.9 : 0.7} column={app} />
-      <hemisphereLight args={['#ffffff', '#c66ef5', 1.2]} />
+      <Liquid clearStrength={app ? 0.9 : 0.7} column={app} palette={app ? 'sky' : 'story'} />
+      <hemisphereLight args={['#ffffff', app ? '#a9cbff' : '#c66ef5', 1.2]} />
       <directionalLight position={[-4, 6, 5]} intensity={2} />
-      <Plankton count={app ? (narrow ? 1800 : 6000) : narrow ? 1500 : 4000} />
+      <Plankton count={app ? (narrow ? 1800 : 6000) : narrow ? 1500 : 4000} palette={app ? 'sky' : 'story'} />
       {!app && (
         <Suspense fallback={null}>
           <Floaters />

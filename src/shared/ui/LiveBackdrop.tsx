@@ -31,7 +31,8 @@ class Fallback extends Component<{ children: ReactNode; fallback: ReactNode }, {
  */
 export function LiveBackdrop({ mode = 'story' }: { mode?: 'story' | 'app' }) {
   const reduced = useReducedMotion();
-  const flat = <Backdrop fixed />;
+  // The flat fallback follows the same rule: blue and lime when signed in, the violet set in the story
+  const flat = <Backdrop fixed sky={mode === 'app'} />;
   if (reduced || !hasWebGL()) return flat;
   return (
     <div className="lagoon" aria-hidden="true">
