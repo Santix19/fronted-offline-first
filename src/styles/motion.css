@@ -109,3 +109,14 @@
   45% { transform: translate(0, -8px) rotate(-12deg); opacity: 1; }
   100% { transform: translate(0, 0) rotate(0); opacity: 1; }
 }
+
+/* The lone trout of an empty screen bobs slowly; there is nothing else to look at, so it can take its time */
+.empty-trout {
+  opacity: 0.55;
+  animation: bob 5s ease-in-out infinite alternate;
+}
+
+@keyframes bob {
+  from { transform: translateY(-4px) rotate(-1.5deg); }
+  to { transform: translateY(5px) rotate(1.5deg); }
+}
