@@ -63,6 +63,13 @@
   flex: 1 1 140px;
 }
 
+/* Side by side on a phone there is no room for the full pill padding */
+.button-row > .button,
+.section-head .button {
+  padding-inline: var(--space-4);
+  text-align: center;
+}
+
 /* Plain list of rows (ponds, batches, records): rows, not a grid of cards */
 .list {
   margin: 0;
