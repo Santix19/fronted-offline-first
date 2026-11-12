@@ -44,7 +44,7 @@
 }
 
 .display.small {
-  font-size: clamp(2.25rem, 9vw, 4rem);
+  font-size: var(--text-title);
 }
 
 .story-lede {
@@ -55,7 +55,7 @@
 
 .story-big {
   font-family: var(--font-display);
-  font-size: clamp(5rem, 28vw, 12rem);
+  font-size: var(--text-hero);
   font-weight: 400;
   line-height: 0.95;
   letter-spacing: -0.03em;
@@ -74,7 +74,7 @@
 
 /* One strong change of scene: the count chapter is the periwinkle field, rounded like a band */
 .ch-count {
-  background: #cfdaf5;
+  background: var(--band);
   border-radius: 40px;
 }
 
@@ -91,7 +91,7 @@
 .ch-count .story-big,
 .ch-count .display,
 .ch-count .story-lede {
-  color: #242424;
+  color: var(--on-band);
 }
 
 /* The warm invitation: an outlined 40px panel with amber light rising from below, not a dark slab */

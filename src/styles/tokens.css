@@ -30,6 +30,10 @@
   /* The one saturated blue: a single small action, never a fill */
   --action-blue: #3155c5;
 
+  /* The periwinkle field of the story: one chromatic change of scene. It stays light in dark mode, so its ink does too. */
+  --band: #cfdaf5;
+  --on-band: #242424;
+
   /* Light, never a fill: pastel halos behind the thing that matters */
   --halo-mint: #a7fccd;
   --halo-periwinkle: #a0b5eb;
@@ -54,6 +58,10 @@
   --text-xl: 1.75rem;
   --text-xxl: 2.5rem;
   --text-display: clamp(2.75rem, 12vw, 5rem);
+  /* The three fluid sizes the story and the water tiles need, named instead of scattered */
+  --text-hero: clamp(5rem, 28vw, 12rem);
+  --text-title: clamp(2.25rem, 9vw, 4rem);
+  --text-reading: clamp(1.75rem, 8.4vw, var(--text-xxl));
 
   --space-1: 4px;
   --space-2: 8px;
@@ -69,9 +77,12 @@
 
   /* Motion: one curve and three speeds, so every animation in the app feels like the same water. */
   --ease-water: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-loop: ease-in-out; /* for things that breathe, not arrive */
   --dur-quick: 180ms;
+  --dur-state: 240ms; /* a screen or a tab changing: UI motion stays under 300ms */
   --dur-calm: 600ms;
   --dur-slow: 1100ms;
+  --dur-ambient: 5s;
 }
 
 /* The same system after dark: warm charcoal paper, the pastels turn into glow. */
