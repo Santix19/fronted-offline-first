@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { withViewTransition } from '../motion/viewTransition';
 
 /**
  * Minimal hash router (#/estanques/123). Hash URLs work from the offline cache without
@@ -9,8 +10,9 @@ function currentPath(): string {
 }
 
 function subscribe(listener: () => void): () => void {
-  window.addEventListener('hashchange', listener);
-  return () => window.removeEventListener('hashchange', listener);
+  const onHashChange = () => withViewTransition(listener);
+  window.addEventListener('hashchange', onHashChange);
+  return () => window.removeEventListener('hashchange', onHashChange);
 }
 
 export function usePath(): string {

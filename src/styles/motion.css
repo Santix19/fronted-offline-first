@@ -29,3 +29,20 @@
 .mask-word > span {
   display: inline-block;
 }
+
+/* Route changes: the old screen leaves faster than the new one arrives */
+::view-transition-old(root) {
+  animation: var(--dur-quick) var(--ease-water) both fade-out;
+}
+
+::view-transition-new(root) {
+  animation: var(--dur-calm) var(--ease-water) both fade-in;
+}
+
+@keyframes fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+}
