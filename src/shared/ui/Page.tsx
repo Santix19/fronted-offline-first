@@ -1,4 +1,5 @@
 import { createContext, useContext, type ReactNode } from 'react';
+import { MaskedText } from './MaskedText';
 import { goBack } from './router';
 
 /**
@@ -25,7 +26,9 @@ export function Page({ title, backTo, children }: PageProps) {
             ‹
           </button>
         )}
-        <h1>{title}</h1>
+        <h1>
+          <MaskedText text={title} />
+        </h1>
         {extra}
       </header>
       <main className="content">{children}</main>
