@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { Fragment, useRef } from 'react';
 import { duration, ease } from '../motion/presets';
 import { useGsap } from '../motion/useGsap';
 
@@ -21,10 +21,13 @@ export function MaskedText({ text }: { text: string }) {
   return (
     <span ref={ref} aria-label={text}>
       {text.split(' ').map((word, i) => (
-        <span key={`${word}-${i}`} className="mask-word" aria-hidden="true">
-          <span>{word}</span>
+        <Fragment key={`${word}-${i}`}>
+          <span className="mask-word" aria-hidden="true">
+            <span>{word}</span>
+          </span>
+          {/* The space lives outside the mask: inside an inline-block it collapses and words glue together */}
           {' '}
-        </span>
+        </Fragment>
       ))}
     </span>
   );
