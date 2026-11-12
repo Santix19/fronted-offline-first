@@ -3,6 +3,16 @@
 Read before editing UI. Tokens live in `src/styles/tokens.css`; a value that is not a token is a
 new decision and gets a line here.
 
+## 2026-11-12: loud restyle to `design.md` (whole app; supersedes the Monad direction below)
+
+- **Why:** the team found the app too quiet; Nico chose a whole-app restyle to `design.md` ("cutout kinetic optimism") and asked for it "really really loud".
+- **Type:** Oswald 700 (stand-in for GrotzecCondensedLatin, per design.md) for headings and numbers; Inter for everything else. Caslon and Plex Mono removed.
+- **Colour:** canvas `#f5f5f5`, flat white cards with no border or shadow, near-black pills; lime / cornflower / peach as object and card colours, never full-page bands. One black chapter per flow: the home trend, the batch summary, the story's sync scene.
+- **Kept against the map:** status colours (ok / warn / danger) stay coloured, not black; the focus ring stays ink (cornflower is 2.4:1 on the canvas) with a blue halo; taps keep 180ms feedback.
+- **Supersedes "UI motion under 300ms" and "screen titles appear instantly":** every screen title rises word by word (`MaskedText`), cards rise from a tilt with a 0.08s stagger capped at 6, objects drop in with a bounce. Reduced motion turns all of it off (checked: 0 moving elements).
+- **Signature pieces** (`src/shared/ui`): `Backdrop` (drifting chamfered gradients, pointer parallax), `CapsuleRibbon` (60s marquee of real records), `GlossyObject` (layered SVG with an extruded edge; Canva was not connected for rendered 3D).
+- **Detector:** the violet-to-blue gradient, bounce easing and count-ups are marked `avoid-ai-design-ignore`: the brief chose them.
+
 ## 2026-11-11: craft audit against `checking-project-decisions/craft.md`
 
 - **Muted ink is `#6b6968`**, not the reference's `#797776`: 4.03:1 on paper fails small text; this is 4.94:1.

@@ -1,67 +1,80 @@
-/* Design tokens: warm paper, charcoal ink and a little pastel light, after the Monad style from
-   Refero (user-chosen reference, 2026-11-11): a bookish serif for headlines, monospace for the
-   words that explain, 1px outlines instead of shadows, pill buttons and soft halos of colour.
+/* Design tokens: "cutout kinetic optimism" (design.md, adopted 2026-11-12 for the whole app).
+   Condensed poster headlines and plain grotesk copy on a pale grey canvas; colour lives in objects
+   and bounded stages (lime, cornflower, peach), one black chapter, chamfered cuts on art.
 
    The names are the ones the rest of the CSS already used (lake, mist, surface, ink), so a screen
-   changes look without being touched. "lake" is now the primary action colour: charcoal on paper.
-
-   Light is the default, because the app lives outdoors. Dark is the same system turned around, and
-   Ajustes can force either one. Two selectors, one palette: what the phone prefers, and what was chosen. */
+   changes look without being touched. "lake" is the primary action: near-black pills. */
 :root {
-  /* Primary action and the colour of links and lines: charcoal ink */
-  --lake: #242424;
+  --lake: #0a0a0a;
   --lake-strong: #000000;
-  --lake-soft: #e8edfa; /* periwinkle paper, for quiet fills */
-  --on-lake: #f6f3f1;
-  /* Warm paper, and the card on it */
-  --mist: #f6f3f1;
-  --surface: #f8f3f1; /* blush paper: cards and fields, one breath lighter than the page */
-  --ink: #242424;
-  --ink-soft: #4e4d4d;
-  /* The reference's muted charcoal (#797776) is 4.03:1 on paper, under the 4.5:1 small text needs; this is 4.94:1 */
-  --ink-faint: #6b6968;
-  --line: #cecac8; /* card edge */
-  --rule: #e3dedd; /* separators */
-  --field: #dcdcdf; /* input border */
-  --bar: #f6f3f1;
-  --on-bar: #242424;
-  /* Keyboard focus is charcoal, not the reference's #9c9998: that gray is about 2.5:1 on paper, under the 3:1 a focus ring needs */
+  --lake-soft: #e9edf6; /* cool hairline: quiet fills */
+  --on-lake: #ffffff;
+  --mist: #f5f5f5; /* the pale canvas, uninterrupted */
+  --surface: #ffffff; /* flat white cards, no shadow */
+  --ink: #0a0a0a;
+  --ink-soft: #393d46;
+  --ink-faint: #6c6c6c; /* 4.9:1 on the canvas, 5.3:1 on white */
+  --line: #e9edf6;
+  --rule: #e9edf6;
+  --field: #8a909c; /* input edge: 3.2:1 on white, the 3:1 a control boundary needs */
+  --bar: #f5f5f5;
+  --on-bar: #0a0a0a;
+  /* design.md asks for a cornflower ring; it is 2.4:1 on the canvas, so the ring is ink with a blue halo */
   --focus: var(--ink);
-  /* The one saturated blue: a single small action, never a fill */
-  --action-blue: #3155c5;
+  --focus-halo: #73a6ff;
+  --action-blue: #73a6ff;
 
-  /* The periwinkle field of the story: one chromatic change of scene. It stays light in dark mode, so its ink does too. */
-  --band: #cfdaf5;
-  --on-band: #242424;
+  /* Object colours: they fill cards and art, never full-page bands */
+  --lime: #e3ff89;
+  --blue: #73a6ff;
+  --peach: #ffc0a5;
+  --violet: #c66ef5;
+  --badge: #baf24a;
+  --coral: #ffa680;
+  /* The clipped conversion panel and the drifting backdrop shapes. Chosen, not default: design.md line 181
+     specifies violet #c66ef5 to cornflower #73a6ff at 198.8deg. avoid-ai-design-ignore: C1 */
+  --grad-convert: linear-gradient(198.8deg, var(--violet) 32%, var(--blue) 87%); /* avoid-ai-design-ignore: C1 */
+  --grad-warm: linear-gradient(160deg, var(--coral) 10%, var(--violet) 90%); /* avoid-ai-design-ignore: C1 */
+  --grad-fresh: linear-gradient(200deg, var(--lime) 15%, var(--blue) 95%);
 
-  /* Light, never a fill: pastel halos behind the thing that matters */
-  --halo-mint: #a7fccd;
-  --halo-periwinkle: #a0b5eb;
-  --halo-coral: #fea78c;
-  --halo-amber: #f59e4f;
-  --halo-gold: #e2c161;
+  /* The black chapter: one strong interruption per flow */
+  --chapter: #0a0a0a;
+  --on-chapter: #ffffff;
+  --chapter-muted: #a1a8b7;
+
+  /* The story field. Violet stays light in dark mode, so its ink stays black */
+  --band: var(--violet);
+  --on-band: #0a0a0a;
+
+  /* Old halo names now point at the object colours */
+  --halo-mint: var(--lime);
+  --halo-periwinkle: var(--blue);
+  --halo-coral: var(--peach);
+  --halo-amber: var(--coral);
+  --halo-gold: var(--badge);
 
   --ok: #1c6b43;
-  --ok-soft: #dff7ea;
+  --ok-soft: #e3ff89;
   --warn: #8a4b00;
-  --warn-soft: #fdebd3;
+  --warn-soft: #ffe2d4;
   --danger: #b3361a;
-  --danger-soft: #fde4db;
+  --danger-soft: #ffd9cc;
 
-  --font: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  --font-display: 'Libre Caslon Text', 'Iowan Old Style', Georgia, serif;
+  --font: 'Inter', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  --font-display: 'Oswald', 'Arial Narrow', 'Helvetica Neue Condensed', Arial, sans-serif;
+  --display-weight: 700; /* Oswald needs 700 to match the poster darkness (design.md) */
   --tracking: -0.02em;
-  --text-xs: 0.75rem;
-  --text-sm: 0.85rem;
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
   --text-md: 1rem;
   --text-lg: 1.25rem;
-  --text-xl: 1.75rem;
-  --text-xxl: 2.5rem;
-  --text-display: clamp(2.75rem, 12vw, 5rem);
-  /* The three fluid sizes the story and the water tiles need, named instead of scattered */
-  --text-hero: clamp(5rem, 28vw, 12rem);
-  --text-title: clamp(2.25rem, 9vw, 4rem);
-  --text-reading: clamp(1.75rem, 8.4vw, var(--text-xxl));
+  --text-xl: 2rem; /* compact heading, stat */
+  --text-xxl: 2.625rem; /* card heading */
+  --text-display: clamp(2.75rem, 13vw, 4.5rem); /* section heading */
+  --text-hero: clamp(4rem, 21vw, 11.25rem); /* the poster headline */
+  --text-title: clamp(2.5rem, 12vw, 4.75rem); /* chapter heading */
+  --text-closing: clamp(3.25rem, 17vw, 7.75rem); /* the closing statement */
+  --text-reading: clamp(2rem, 10vw, 3.625rem); /* big readings: feature-stat */
 
   --space-1: 4px;
   --space-2: 8px;
@@ -69,69 +82,83 @@
   --space-4: 16px;
   --space-5: 24px;
   --space-6: 32px;
+  --space-7: 48px;
 
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-pill: 999px;
+  --radius-sm: 8px; /* feature cards, image panels */
+  --radius-md: 16px; /* proof and white cards */
+  --radius-card: 17px; /* capability cards */
+  --radius-pill: 100px;
   --touch: 52px; /* buttons stay big enough for wet hands and gloves */
+  --touch-hero: 64px;
+  /* Chamfers: the hard diagonal that meets the soft pills */
+  --cut: 48px;
+  --cut-sm: 20px;
 
-  /* Motion: one curve and three speeds, so every animation in the app feels like the same water. */
+  /* Motion. Taps stay quick; arrivals are loud and long (design.md Motion) */
   --ease-water: cubic-bezier(0.19, 1, 0.22, 1);
-  --ease-loop: ease-in-out; /* for things that breathe, not arrive */
-  --dur-quick: 180ms;
-  --dur-state: 240ms; /* a screen or a tab changing: UI motion stays under 300ms */
+  --ease-proof: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-loop: ease-in-out;
+  --dur-quick: 180ms; /* press feedback */
+  --dur-state: 240ms; /* tab pill */
   --dur-calm: 600ms;
-  --dur-slow: 1100ms;
-  --dur-ambient: 5s;
+  --dur-reveal: 750ms; /* clip-path reveals */
+  --dur-slow: 1200ms; /* objects and cards arriving */
+  --dur-ambient: 5s; /* floats */
+  --dur-drift: 24s; /* backdrop shapes */
+  --dur-ribbon: 60s; /* the capsule ribbon */
 }
 
-/* The same system after dark: warm charcoal paper, the pastels turn into glow. */
+/* After dark: the same system on near-black; the object colours stay as they are. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --lake: #f6f3f1;
+    --lake: #ffffff;
     --lake-strong: #ffffff;
-    --lake-soft: #2a2f4a;
-    --on-lake: #1b1a19;
-    --mist: #1b1a19;
-    --surface: #242322;
-    --ink: #f6f3f1;
-    --ink-soft: #cfcbc8;
-    --ink-faint: #9c9998;
-    --line: #3f3d3c;
-    --rule: #2e2c2b;
-    --field: #4a4847;
-    --bar: #1b1a19;
-    --on-bar: #f6f3f1;
+    --lake-soft: #23262d;
+    --on-lake: #0a0a0a;
+    --mist: #0a0a0a;
+    --surface: #17181b;
+    --ink: #ffffff;
+    --ink-soft: #c9ced8;
+    --ink-faint: #a1a8b7;
+    --line: #2a2d33;
+    --rule: #2a2d33;
+    --field: #6b7280;
+    --bar: #0a0a0a;
+    --on-bar: #ffffff;
+    --focus-halo: #73a6ff;
+    --chapter: #17181b;
 
-    --ok: #6fdc9f;
-    --ok-soft: #12301f;
-    --warn: #f5b560;
-    --warn-soft: #3a2810;
+    --ok: #b6ec6a;
+    --ok-soft: #1f2a10;
+    --warn: #ffc0a5;
+    --warn-soft: #3a2418;
     --danger: #ff9a7e;
     --danger-soft: #3d1d15;
   }
 }
 
 :root[data-theme='dark'] {
-  --lake: #f6f3f1;
+  --lake: #ffffff;
   --lake-strong: #ffffff;
-  --lake-soft: #2a2f4a;
-  --on-lake: #1b1a19;
-  --mist: #1b1a19;
-  --surface: #242322;
-  --ink: #f6f3f1;
-  --ink-soft: #cfcbc8;
-  --ink-faint: #9c9998;
-  --line: #3f3d3c;
-  --rule: #2e2c2b;
-  --field: #4a4847;
-  --bar: #1b1a19;
-  --on-bar: #f6f3f1;
+  --lake-soft: #23262d;
+  --on-lake: #0a0a0a;
+  --mist: #0a0a0a;
+  --surface: #17181b;
+  --ink: #ffffff;
+  --ink-soft: #c9ced8;
+  --ink-faint: #a1a8b7;
+  --line: #2a2d33;
+  --rule: #2a2d33;
+  --field: #6b7280;
+  --bar: #0a0a0a;
+  --on-bar: #ffffff;
+  --focus-halo: #73a6ff;
+  --chapter: #17181b;
 
-  --ok: #6fdc9f;
-  --ok-soft: #12301f;
-  --warn: #f5b560;
-  --warn-soft: #3a2810;
+  --ok: #b6ec6a;
+  --ok-soft: #1f2a10;
+  --warn: #ffc0a5;
+  --warn-soft: #3a2418;
   --danger: #ff9a7e;
   --danger-soft: #3d1d15;
 }

@@ -19,17 +19,23 @@
   padding-top: max(var(--space-3), env(safe-area-inset-top));
   /* Paper that fades out below the row, so content scrolls under it without a hard edge */
   padding-bottom: var(--space-5);
-  background: linear-gradient(var(--bar) 48%, color-mix(in srgb, var(--bar) 85%, transparent) 70%, transparent);
+  background: linear-gradient(var(--bar) 48%, color-mix(in srgb, var(--bar) 70%, transparent) 70%, transparent);
   color: var(--on-bar);
 }
 
-.top-bar h1 {
+.top-bar .wordmark {
   flex: 1;
-  /* Detail-heading size: long names ("Nuevo estanque", "Lote L-2026-01") must fit beside the back arrow and the pill */
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
   font-size: var(--text-lg);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.content-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
 }
 
 .top-bar .back {
@@ -64,7 +70,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   padding-bottom: env(safe-area-inset-bottom);
-  background: var(--mist);
+  background: var(--surface);
   border-top: 1px solid var(--rule);
 }
 
@@ -78,8 +84,7 @@
   gap: 2px;
   color: var(--ink-faint);
   font-size: var(--text-xs);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-weight: 500;
   text-decoration: none;
 }
 
@@ -99,11 +104,27 @@
   top: 0;
   left: 0;
   width: 25%;
-  height: 3px;
-  background: var(--lake);
+  height: 100%;
+  pointer-events: none;
   transform: translateX(calc(var(--tab, 0) * 100%));
-  transition: transform var(--dur-state) var(--ease-water);
+  transition: transform var(--dur-calm) cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+/* The active tab's capsule: lime, behind the icon, bouncing over to the next tab (loud brief). avoid-ai-design-ignore: M4 */
+.bottom-nav .nav-pill::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 60px;
+  height: 32px;
+  translate: -50% 0;
+  border-radius: var(--radius-pill);
+  background: var(--lime);
+}
+
+.bottom-nav .icon { position: relative; z-index: 1; }
+.bottom-nav a[aria-current='page'] .icon { color: #0a0a0a; }
 
 .bottom-nav .nav-pill[data-hidden='true'] {
   opacity: 0;
