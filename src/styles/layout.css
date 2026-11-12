@@ -78,12 +78,28 @@
 .bottom-nav a[aria-current='page'] {
   color: var(--lake);
   font-weight: 700;
-  box-shadow: inset 0 3px 0 var(--lake);
 }
 
 .bottom-nav .icon {
-  font-size: 1.375rem;
-  line-height: 1;
+  display: grid;
+  place-items: center;
+  height: 24px;
+}
+
+/* One bar under the tabs that glides to the active one instead of jumping */
+.bottom-nav .nav-pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 25%;
+  height: 3px;
+  background: var(--lake);
+  transform: translateX(calc(var(--tab, 0) * 100%));
+  transition: transform var(--dur-calm) var(--ease-water);
+}
+
+.bottom-nav .nav-pill[data-hidden='true'] {
+  opacity: 0;
 }
 
 .bottom-nav .count {
