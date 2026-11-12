@@ -89,3 +89,17 @@
   --danger: #be123c;
   --danger-soft: #fbdde3;
 }
+
+/* Display type: Bricolage Grotesque, self-hosted so it loads with no signal. */
+:root {
+  --font-display: 'Bricolage Grotesque Variable', var(--font);
+  --text-display: clamp(2.75rem, 13vw, 5.5rem);
+}
+
+/* Motion: one curve and three speeds, so every animation in the app feels like the same water. */
+:root {
+  --ease-water: cubic-bezier(0.19, 1, 0.22, 1);
+  --dur-quick: 180ms;
+  --dur-calm: 600ms;
+  --dur-slow: 1100ms;
+}
