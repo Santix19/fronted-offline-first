@@ -1,7 +1,12 @@
 import { flushSync } from 'react-dom';
 import { prefersReducedMotion } from './reducedMotion';
 
-type Doc = Document & { startViewTransition?: (update: () => void) => unknown };
+interface Transition {
+  ready: Promise<void>;
+  finished: Promise<void>;
+  updateCallbackDone: Promise<void>;
+}
+type Doc = Document & { startViewTransition?: (update: () => void) => Transition };
 
 /**
  * Run a state change inside a same-document View Transition so the old screen dissolves into the new one.
@@ -13,5 +18,7 @@ export function withViewTransition(update: () => void): void {
     update();
     return;
   }
-  doc.startViewTransition(() => flushSync(update));
+  const transition = doc.startViewTransition(() => flushSync(update));
+  // Navigating again mid-transition skips the old one and rejects its promises. That is normal, not an error.
+  for (const promise of [transition.ready, transition.finished, transition.updateCallbackDone]) promise.catch(() => {});
 }
