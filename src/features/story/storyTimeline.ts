@@ -1,4 +1,5 @@
 import type { gsap } from 'gsap';
+import { ScrollTrigger } from '../../shared/motion/gsapSetup';
 import { ease } from '../../shared/motion/presets';
 import { addRoute } from './routeTimeline';
 
@@ -49,4 +50,6 @@ export function buildStory(g: G, root: HTMLElement): void {
   } }, 7.6);
   swap(tl, '.ch-count', '.ch-enter', 8.8);
   tl.fromTo('.story-progress-bar', { scaleX: 0 }, { scaleX: 1, ease: 'none', duration: 9.4 }, 0);
+  // The serif and mono load after first paint and change line breaks: measure the pin again once they are in
+  void document.fonts?.ready.then(() => ScrollTrigger.refresh());
 }

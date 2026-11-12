@@ -24,6 +24,11 @@
 }
 
 /* Pinned: every chapter sits on the same screen and the timeline decides which one shows */
+.story-pinned .chapter,
+.story-pinned .story-phone {
+  will-change: transform, opacity;
+}
+
 .story-pinned .story-stage {
   height: 100svh;
 }
