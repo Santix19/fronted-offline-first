@@ -1,5 +1,6 @@
 import { facade } from '../../facade/PisciculturaFacade';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
+import { HomeDashboard } from '../dashboard/HomeDashboard';
 import { EmptyState } from '../../shared/ui/EmptyState';
 import { Page } from '../../shared/ui/Page';
 import { SyncChip } from '../../shared/ui/SyncChip';
@@ -17,6 +18,7 @@ export function PondListPage() {
 
   return (
     <Page title="La Cocha">
+      <HomeDashboard />
       <section className="section">
         <div className="section-head">
           <h2>Estanques</h2>

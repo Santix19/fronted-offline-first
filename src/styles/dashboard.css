@@ -1,0 +1,102 @@
+/* Home dashboard: four numbers that ask for attention, then the water trend. */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform var(--dur-quick) var(--ease-water), border-color var(--dur-quick) var(--ease-water);
+}
+
+.kpi:active {
+  transform: scale(0.97);
+}
+
+.kpi-value {
+  font-family: var(--font-display);
+  font-size: var(--text-xxl);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.kpi-label {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+.kpi.warn {
+  border-color: var(--warn);
+  background: var(--warn-soft);
+}
+
+.kpi.danger {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.trend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.trend-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.trend-now {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  color: var(--lake);
+}
+
+.sparkline {
+  width: 100%;
+  height: auto;
+}
+
+.spark-line {
+  fill: none;
+  stroke: var(--lake);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.spark-area {
+  fill: var(--lake-soft);
+  stroke: none;
+  opacity: 0.8;
+}
+
+.spark-dot {
+  fill: var(--lake);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+@media (min-width: 720px) {
+  .kpi-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
