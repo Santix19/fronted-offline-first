@@ -11,6 +11,7 @@ const CHAPTERS = ['.ch-lake', '.ch-write', '.ch-save', '.ch-sync', '.ch-route', 
  * jump up tilted out of their masks and its glossy object drops in spinning.
  */
 function swap(tl: gsap.core.Timeline, from: string, to: string, at: number): void {
+  const has = (selector: string) => document.querySelector(selector) !== null;
   tl.to(from, { autoAlpha: 0, yPercent: -12, scale: 0.94, duration: 0.5 }, at);
   tl.fromTo(
     to,
@@ -18,8 +19,8 @@ function swap(tl: gsap.core.Timeline, from: string, to: string, at: number): voi
     { autoAlpha: 1, yPercent: 0, clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', duration: 0.6, ease: ease.out },
     at + 0.3,
   );
-  tl.from(`${to} .mask-word > span`, { yPercent: 120, rotate: 10, transformOrigin: '0% 100%', stagger: 0.06, duration: 0.5, ease: ease.out }, at + 0.45);
-  tl.from(`${to} .glossy`, { y: 90, rotate: -40, scale: 0.5, autoAlpha: 0, duration: 0.7, ease: 'back.out(2)' }, at + 0.5);
+  if (has(`${to} .mask-word`)) tl.from(`${to} .mask-word > span`, { yPercent: 120, rotate: 10, transformOrigin: '0% 100%', stagger: 0.06, duration: 0.5, ease: ease.out }, at + 0.45);
+  if (has(`${to} .glossy`)) tl.from(`${to} .glossy`, { y: 90, rotate: -40, scale: 0.5, autoAlpha: 0, duration: 0.7, ease: 'back.out(2)' }, at + 0.5);
 }
 
 /**
@@ -40,10 +41,8 @@ export function buildStory(g: G, root: HTMLElement): void {
   g.set('.story-queue', { textContent: 3 });
   g.set('.diagram-dot', { autoAlpha: 0 });
 
-  // The lake's objects rise and scatter as the first scroll begins
-  tl.to('.lake-fish', { x: -120, y: -180, rotate: -30, duration: 1.2, ease: 'none' }, 0);
-  tl.to('.lake-drop', { x: 80, y: -260, rotate: 40, duration: 1.2, ease: 'none' }, 0);
-  tl.to('.lake-thermo', { x: 140, y: 120, rotate: 30, duration: 1.2, ease: 'none' }, 0);
+  // The poster headline tips back and lifts away as the first scroll begins
+  tl.to('.ch-lake .display', { yPercent: -20, rotate: -4, duration: 1, ease: 'none' }, 0);
   swap(tl, '.ch-lake', '.ch-write', 1);
   tl.fromTo('.story-phone', { rotate: -14, scale: 0.8 }, { autoAlpha: 1, y: 0, rotate: -4, scale: 1, duration: 0.7, ease: ease.out }, 1.4);
   tl.fromTo('.story-backing', { autoAlpha: 0, scale: 0.6, rotate: 20 }, { autoAlpha: 1, scale: 1, rotate: 0, duration: 0.7, ease: ease.out }, 1.3);

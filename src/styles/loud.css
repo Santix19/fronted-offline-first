@@ -221,3 +221,18 @@
   object-fit: contain;
   user-select: none;
 }
+
+/* ---------- The live 3D lagoon (story and sign-in) ---------- */
+.lagoon {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.lagoon-canvas,
+.lagoon canvas {
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+}

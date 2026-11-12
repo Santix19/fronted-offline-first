@@ -3,6 +3,13 @@
 Read before editing UI. Tokens live in `src/styles/tokens.css`; a value that is not a token is a
 new decision and gets a line here.
 
+## 2026-11-12: live 3D lagoon behind the story and sign-in
+
+- **Why:** Nico wanted the background louder; React Three Fiber, scoped to the two screens a caretaker sees once (story, sign-in). App screens keep the CSS `Backdrop` so cold field phones stay fast.
+- **Scene** (`src/shared/three/LagoonScene.tsx`): a posterised liquid shader in violet/blue/lime/peach that ripples towards the pointer and shifts with scroll, the six Gemini object renders swimming and floating at depth (sized to the viewport), and instanced glossy bubbles.
+- **Loading:** `LiveBackdrop` lazy-loads three.js in its own chunk (252 KB gzip; main bundle unchanged). Reduced motion, no WebGL, loading, or a crash all show the CSS backdrop.
+- **Readability:** story ledes and footer moved to full ink (charcoal is under 4.5:1 on violet); the lake chapter's own objects were removed, the lagoon has them.
+
 ## 2026-11-12: loud restyle to `design.md` (whole app; supersedes the Monad direction below)
 
 - **Why:** the team found the app too quiet; Nico chose a whole-app restyle to `design.md` ("cutout kinetic optimism") and asked for it "really really loud".

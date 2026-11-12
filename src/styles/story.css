@@ -55,7 +55,9 @@
 .story-lede {
   max-width: 28ch;
   font-size: var(--text-lg);
-  color: var(--ink-soft);
+  font-weight: 500;
+  /* Full ink, not charcoal: the live lagoon behind can be violet, where charcoal drops under 4.5:1 */
+  color: var(--ink);
 }
 
 .story-big {
@@ -84,10 +86,6 @@
   z-index: 1;
 }
 
-.lake-objects > * { position: absolute; }
-.lake-fish { top: 6svh; right: -40px; }
-.lake-drop { top: 14svh; left: 6vw; }
-.lake-thermo { bottom: 6svh; right: 10vw; }
 
 /* ---------- The phone's backing: a chamfered gradient slab behind the black interface ---------- */
 .story-backing {
@@ -171,7 +169,8 @@
   font-size: var(--text-sm);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  font-weight: 600;
+  color: var(--ink); /* over the live lagoon, the faint grey is unreadable */
 }
 
 .story-progress {
