@@ -7,9 +7,9 @@
 
 .reading {
   padding: var(--space-3);
+  border: 1px solid var(--line);
   border-radius: var(--radius-md);
   background: var(--lake-soft);
-  border-bottom: 5px solid var(--lake);
 }
 
 .reading .value {
@@ -36,9 +36,9 @@
   color: var(--ink-soft);
 }
 
-.reading.ok { background: var(--ok-soft); border-color: var(--ok); }
-.reading.warn { background: var(--warn-soft); border-color: var(--warn); }
-.reading.danger { background: var(--danger-soft); border-color: var(--danger); }
+.reading.ok { background: var(--ok-soft); border-color: color-mix(in srgb, var(--ok) 45%, transparent); }
+.reading.warn { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
+.reading.danger { background: var(--danger-soft); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
 .reading.none .value { color: var(--ink-soft); }
 
 /* Pond row on the home screen: name on top, its water band below */
