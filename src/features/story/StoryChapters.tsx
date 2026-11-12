@@ -1,5 +1,7 @@
 import { MaskedText } from '../../shared/ui/MaskedText';
 import { Trout } from '../../shared/ui/Trout';
+import { LocalTime } from './LocalTime';
+import { StoryDiagram } from './StoryDiagram';
 
 const FISH = [
   // Kept off the headline band (roughly 30-55% of the screen) so the fish never sit on the words
@@ -51,6 +53,16 @@ export function SyncChapter() {
   );
 }
 
+export function RouteChapter() {
+  return (
+    <section className="chapter ch-route">
+      <h2 className="display small">Cada registro sabe a dónde va.</h2>
+      <p className="story-lede">Cuatro tipos de registro entran al celular y salen juntos hacia el servidor.</p>
+      <StoryDiagram />
+    </section>
+  );
+}
+
 export function CountChapter() {
   return (
     <section className="chapter ch-count">
@@ -64,8 +76,12 @@ export function CountChapter() {
 export function EnterChapter() {
   return (
     <section className="chapter ch-enter">
-      <h2 className="display small">A trabajar.</h2>
-      <a className="button" href="#/">Entrar a La Cocha</a>
+      <div className="invitation">
+        <h2 className="display small">A trabajar.</h2>
+        <p className="story-lede">Entra con tu documento y tu clave. Sin señal, tu PIN abre la app igual.</p>
+        <a className="button" href="#/">Entrar a La Cocha</a>
+      </div>
+      <LocalTime />
     </section>
   );
 }

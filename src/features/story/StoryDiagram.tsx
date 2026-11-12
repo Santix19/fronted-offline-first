@@ -17,13 +17,13 @@ export function StoryDiagram() {
       <svg viewBox="0 0 320 340" className="diagram-svg">
         {INPUTS.map((node, i) => (
           <g key={node.label}>
-            <path id={`route-${i}`} className="diagram-path" d={`M${node.x + 72} ${node.y + 32} C ${node.x + 72} 130, 160 120, 160 170`} />
+            <path id={`route-${i}`} className="diagram-path" pathLength={1} d={`M${node.x + 72} ${node.y + 32} C ${node.x + 72} 130, 160 120, 160 170`} />
             <rect className="diagram-capsule" x={node.x} y={node.y} width="144" height="32" rx="16" />
             <text className="diagram-label" x={node.x + 72} y={node.y + 20} textAnchor="middle">{node.label}</text>
             <circle id={`dot-${i}`} className="diagram-dot" r="4" cx={node.x + 72} cy={node.y + 32} />
           </g>
         ))}
-        <path id="route-out" className="diagram-path" d="M160 218 L160 292" />
+        <path id="route-out" className="diagram-path" pathLength={1} d="M160 218 L160 292" />
         <g className="diagram-core">
           <rect x="136" y="164" width="48" height="48" rx="12" transform="rotate(45 160 188)" className="diagram-diamond back" />
           <rect x="140" y="168" width="40" height="40" rx="10" transform="rotate(45 160 188)" className="diagram-diamond" />

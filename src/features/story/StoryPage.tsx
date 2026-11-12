@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useGsap } from '../../shared/motion/useGsap';
 import { useLenis } from '../../shared/motion/useLenis';
 import { useReducedMotion } from '../../shared/motion/reducedMotion';
-import { CountChapter, EnterChapter, LakeChapter, SaveChapter, SyncChapter, WriteChapter } from './StoryChapters';
+import { CountChapter, EnterChapter, LakeChapter, RouteChapter, SaveChapter, SyncChapter, WriteChapter } from './StoryChapters';
 import { StoryPhone } from './StoryPhone';
 import { buildStory } from './storyTimeline';
 
@@ -35,6 +35,7 @@ export function StoryPage() {
         <SaveChapter />
         <SyncChapter />
         <StoryPhone />
+        <RouteChapter />
         <CountChapter />
         <EnterChapter />
       </div>
