@@ -11,9 +11,9 @@
 }
 
 .field label {
-  /* Editorial labels: serif, sentence case, not a row of tiny uppercase micro-labels */
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
+  /* Form heading recipe: Inter 600, sentence case, not a row of tiny uppercase micro-labels */
+  font-weight: 600;
+  font-size: var(--text-md);
 }
 
 .field .hint {

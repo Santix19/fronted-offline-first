@@ -47,3 +47,17 @@ Protect: the single-primary rule and the system diagram.
 
 *This assesses craft and taste, not whether the app works (usability, accessibility: run a UX
 critique) or whether it was worth building. Tasteful is not the same as ready to ship.*
+
+## Craft audit (checking-project-decisions / craft.md), after fixes
+
+PASS: 1 no raw colour outside tokens (trout.css is the fish's own palette) · 2 durations read from
+tokens (scrubbed story timelines use scroll-relative units, not clock time) · 3 two CSS easings, three
+JS curves · 4 transform and opacity only · 5 reduced motion stops loops, tweens, Lenis and view
+transitions (tested) · 6 hover gated · 7 stagger 40ms, 5 items · 8 press feedback · 9 KPI strip fixed ·
+10 tabular numbers · 11 screenshots opened at 375 and 1440 · 12 contrast measured · 14 states ·
+15 no dead affordances · 16 route error mapped · 17 claims backed, demo data labelled · 18 no
+placeholders · 19 tests only added.
+
+FAIL: 13 touch targets spot-checked, not every control (bottom nav 64, buttons 52, inputs 56, Skip 44).
+
+Vitals (dev server, 375px): story LCP 1.2s, CLS 0; home LCP 0.4s, CLS 0.023.

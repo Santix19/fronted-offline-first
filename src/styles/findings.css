@@ -49,7 +49,7 @@
   margin-right: 0.4em;
   border-radius: 50%;
   background: currentColor;
-  animation: latido 2s ease-in-out infinite;
+  animation: latido calc(var(--dur-slow) * 2) var(--ease-loop) infinite;
 }
 
 @keyframes latido {

@@ -30,7 +30,7 @@ export function AlertsPage() {
       <section className="section">
         <h2>Umbrales cruzados</h2>
         {data && data.alerts.length === 0 && (
-          <EmptyState
+          <EmptyState object="bell" color="violet"
             title="No hay alertas pendientes."
             hint="Cuando una lectura salga del rango para la trucha, la alerta aparece aquí después de sincronizar."
           />

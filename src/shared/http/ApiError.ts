@@ -32,6 +32,10 @@ export class ApiError extends Error {
       // read: saying "check Settings" to someone who mistyped their document sends them nowhere
       return new ApiError('auth', detail ?? 'La clave del servidor no es correcta (revisa Ajustes)', response.status);
     }
+    // "ruta no encontrada" names an internal (a route), not something a caretaker can act on
+    if (response.status === 404 && (!detail || /ruta no encontrada/i.test(detail))) {
+      return new ApiError('client', 'El servidor todavía no tiene esta función. La app sigue funcionando sin ella.', 404);
+    }
     const kind = response.status >= 500 ? 'server' : 'client';
     return new ApiError(kind, detail ?? `Error ${response.status} del servidor`, response.status);
   }

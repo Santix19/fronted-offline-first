@@ -25,6 +25,7 @@ export function StoryPhone() {
             En cola: <strong className="story-queue">0</strong>
           </span>
         </div>
+        <p className="phone-demo">Datos de ejemplo</p>
       </div>
     </div>
   );

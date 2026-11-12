@@ -1,14 +1,14 @@
 /* The trout is drawn in the palette of the style: periwinkle back, mint flank, blush belly, a coral
    stripe and a fine charcoal outline. It is a fish, not a button, so it keeps its own variables. */
 :root {
-  --trout-back: #8ea5e6;
-  --trout-mid: #a7fccd;
-  --trout-belly: #f8f3f1;
-  --trout-fin: #fea78c;
-  --trout-edge: #242424;
-  --trout-spot: #242424;
-  --trout-stripe: #fea78c;
-  --trout-eye: #242424;
+  --trout-back: #73a6ff;
+  --trout-mid: #e3ff89;
+  --trout-belly: #ffffff;
+  --trout-fin: #ffc0a5;
+  --trout-edge: #0a0a0a;
+  --trout-spot: #0a0a0a;
+  --trout-stripe: #c66ef5;
+  --trout-eye: #0a0a0a;
   /* How much of the school shows behind the data: a hint, not a pattern */
   --trout-school-opacity: 0.09;
 }
@@ -36,7 +36,7 @@
   display: block;
   margin: 0 auto var(--space-4);
   filter: drop-shadow(0 6px 18px rgb(34 211 238 / 25%));
-  animation: trout-jump 900ms ease-out;
+  animation: trout-jump var(--dur-slow) var(--ease-water);
 }
 
 @keyframes trout-jump {
