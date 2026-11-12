@@ -62,3 +62,11 @@
   color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
+
+.phone-demo {
+  margin: 0;
+  font-size: var(--text-xs);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}

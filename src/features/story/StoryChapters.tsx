@@ -40,7 +40,7 @@ export function SaveChapter() {
   return (
     <section className="chapter ch-save">
       <h2 className="display small">Se guarda en el celular.</h2>
-      <p className="story-lede">Queda como «Por subir». Nada se pierde y nada se anota dos veces.</p>
+      <p className="story-lede">Queda como «Por subir» hasta que haya señal. Si se reenvía, no se duplica.</p>
     </section>
   );
 }
@@ -58,7 +58,7 @@ export function RouteChapter() {
   return (
     <section className="chapter ch-route">
       <h2 className="display small">Cada registro sabe a dónde va.</h2>
-      <p className="story-lede">Cuatro tipos de registro entran al celular y salen juntos hacia el servidor.</p>
+      <p className="story-lede">Registros como estos entran al celular y salen juntos hacia el servidor.</p>
       <StoryDiagram />
     </section>
   );
