@@ -18,7 +18,8 @@
   --surface: #f8f3f1; /* blush paper: cards and fields, one breath lighter than the page */
   --ink: #242424;
   --ink-soft: #4e4d4d;
-  --ink-faint: #797776;
+  /* The reference's muted charcoal (#797776) is 4.03:1 on paper, under the 4.5:1 small text needs; this is 4.94:1 */
+  --ink-faint: #6b6968;
   --line: #cecac8; /* card edge */
   --rule: #e3dedd; /* separators */
   --field: #dcdcdf; /* input border */
@@ -46,6 +47,7 @@
   --font: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --font-display: 'Libre Caslon Text', 'Iowan Old Style', Georgia, serif;
   --tracking: -0.02em;
+  --text-xs: 0.75rem;
   --text-sm: 0.85rem;
   --text-md: 1rem;
   --text-lg: 1.25rem;
