@@ -55,3 +55,23 @@
 @keyframes tick {
   from { transform: scale(1.12); }
 }
+
+/* A reading that lands sends one ring out from its tile, like a drop on the pond */
+.reading {
+  position: relative;
+}
+
+.reading.landed::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid var(--lake);
+  pointer-events: none;
+  animation: ripple var(--dur-slow) var(--ease-water) both;
+}
+
+@keyframes ripple {
+  from { opacity: 0.7; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.12); }
+}
