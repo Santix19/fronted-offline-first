@@ -25,3 +25,24 @@ const STAGGER_CAP = 5;
 export function staggerDelay(index: number): number {
   return Math.min(index, STAGGER_CAP) * STAGGER_STEP;
 }
+
+/**
+ * The loud vocabulary (design.md, 2026-11-12): arrivals are big, tilted and long-tailed; taps stay quick.
+ * Every heading, backdrop and object reads from here, so nobody writes an ad hoc animation.
+ */
+export const loud = {
+  /** A heading's words rise tilted through their masks */
+  words: { yPercent: 120, rotate: 8, transformOrigin: '0% 100%', duration: 0.95, ease: 'expo.out', stagger: 0.06 },
+  /** Poster headlines: every letter jumps in from below with a small overshoot */
+  chars: { yPercent: 130, rotate: -12, scaleY: 1.4, transformOrigin: '50% 100%', duration: 1.1, ease: 'expo.out', stagger: 0.025 },
+  /** Cards and art panels open through a diagonal clip */
+  clip: {
+    clipPath: 'polygon(0% 100%, 0% 100%, 0% 100%, 0% 100%)',
+    duration: 0.75,
+    ease: 'expo.out',
+  },
+  /** Glossy objects drop in with a spin and settle. Loud brief (2026-11-12) wants toy-like bounce: avoid-ai-design-ignore: M4 */
+  object: { y: 80, rotate: -25, scale: 0.6, autoAlpha: 0, duration: 1.2, ease: 'elastic.out(1, 0.6)' },
+  /** List items and cards: up from a tilt, staggered */
+  card: { y: 48, rotate: 2, autoAlpha: 0, duration: 0.9, ease: 'expo.out', stagger: 0.08 },
+} as const;

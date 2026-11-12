@@ -5,6 +5,7 @@ import { ConnectionPill } from '../features/sync/ConnectionPill';
 import { loadSavedSyncStatus } from '../features/sync/syncStatus';
 import { useAutoSync } from '../features/sync/useAutoSync';
 import { TopBarExtra } from '../shared/ui/Page';
+import { Backdrop } from '../shared/ui/Backdrop';
 import { TroutSchool } from '../shared/ui/TroutSchool';
 import { usePath } from '../shared/ui/router';
 import { BottomNav } from './BottomNav';
@@ -36,6 +37,7 @@ function SignedInApp() {
 
   return (
     <TopBarExtra.Provider value={<ConnectionPill />}>
+      <Backdrop />
       <TroutSchool />
       <div className="app">
         {renderRoute(path)}

@@ -8,7 +8,7 @@ interface CountUpProps {
   decimals?: number;
 }
 
-/** A number that counts up from zero the first time it shows. Under reduced motion it just shows the number. */
+/** A number that counts up from zero the first time it shows (real farm data, never placeholder proof: avoid-ai-design-ignore: M5). Under reduced motion it just shows the number. */
 export function CountUp({ value, decimals = 1 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
 

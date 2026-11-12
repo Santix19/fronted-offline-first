@@ -1,5 +1,6 @@
 import { createContext, useContext, useRef, type ReactNode } from 'react';
 import { useStagger } from '../motion/useStagger';
+import { MaskedText } from './MaskedText';
 import { goBack } from './router';
 
 /**
@@ -18,7 +19,7 @@ interface PageProps {
 /** Frame of every screen: top bar with title, optional back button and the connection state. */
 export function Page({ title, backTo, children }: PageProps) {
   const extra = useContext(TopBarExtra);
-  const content = useRef<HTMLElement>(null);
+  const content = useRef<HTMLDivElement>(null);
   useStagger(content);
   return (
     <>
@@ -28,10 +29,16 @@ export function Page({ title, backTo, children }: PageProps) {
             ‹
           </button>
         )}
-        <h1>{title}</h1>
+        <span className="wordmark" aria-hidden="true">La Cocha</span>
         {extra}
       </header>
-      <main className="content" ref={content}>{children}</main>
+      <main className="content">
+        {/* key: the words rise again whenever the screen changes */}
+        <h1 className="page-title" key={title}>
+          <MaskedText text={title} />
+        </h1>
+        <div className="content-body" ref={content}>{children}</div>
+      </main>
     </>
   );
 }
