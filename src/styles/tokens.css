@@ -15,7 +15,7 @@
   --on-lake: #f6f3f1;
   /* Warm paper, and the card on it */
   --mist: #f6f3f1;
-  --surface: #fbf9f8;
+  --surface: #f8f3f1; /* blush paper: cards and fields, one breath lighter than the page */
   --ink: #242424;
   --ink-soft: #4e4d4d;
   --ink-faint: #797776;
@@ -24,8 +24,10 @@
   --field: #dcdcdf; /* input border */
   --bar: #f6f3f1;
   --on-bar: #242424;
-  /* The one saturated blue, kept for keyboard focus only */
-  --focus: #3155c5;
+  /* Keyboard focus is charcoal, not the reference's #9c9998: that gray is about 2.5:1 on paper, under the 3:1 a focus ring needs */
+  --focus: var(--ink);
+  /* The one saturated blue: a single small action, never a fill */
+  --action-blue: #3155c5;
 
   /* Light, never a fill: pastel halos behind the thing that matters */
   --halo-mint: #a7fccd;
@@ -86,7 +88,6 @@
     --field: #4a4847;
     --bar: #1b1a19;
     --on-bar: #f6f3f1;
-    --focus: #8da6f0;
 
     --ok: #6fdc9f;
     --ok-soft: #12301f;
@@ -112,7 +113,6 @@
   --field: #4a4847;
   --bar: #1b1a19;
   --on-bar: #f6f3f1;
-  --focus: #8da6f0;
 
   --ok: #6fdc9f;
   --ok-soft: #12301f;
