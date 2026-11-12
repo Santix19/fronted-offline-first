@@ -29,19 +29,21 @@
 // ---------------------------------------------------------------- cómo está armado el sensor
 /*
  * Hay dos formas de armar la barrera, y esta línea decide cuál se usa. Las dos cuentan igual: lo
- * que cambia es cuántas piezas hay que conectar.
+ * que cambia es quién decide a partir de qué sombra hay un pez.
  *
- *   true  (recomendado)  El fototransistor va directo a la placa y el umbral lo decide el
- *                        programa. Cuatro piezas, seis conexiones, sin chip y sin potenciómetro.
- *                        Es el armado de la guía de conexiones.
+ *   false (el armado de la guía)  Con el comparador LM393 y el potenciómetro. El umbral lo
+ *                        decide el hardware y se ajusta girando un tornillo, sin recompilar.
+ *                        Es el montaje de CONEXIONES.md y del PDF de conexiones, y el que usa
+ *                        todas las piezas que se compraron.
  *
- *   false                Con el comparador LM393 y el potenciómetro, que deciden el umbral por
- *                        hardware. Seis piezas y el doble de cables. Queda disponible por si el
- *                        armado simple diera problemas en campo.
+ *   true                 El fototransistor va directo a la placa y el umbral lo decide este
+ *                        programa, con los dos números de más abajo. Dos piezas menos, pero hay
+ *                        que recompilar para cambiar el umbral. Queda disponible por si el
+ *                        LM393 o el potenciómetro fallan lejos de una tienda de electrónica.
  */
-#define SENSOR_ANALOGICO true
+#define SENSOR_ANALOGICO false
 
-// ---- si SENSOR_ANALOGICO es true ----
+// ---- si SENSOR_ANALOGICO es true (el armado reducido, de respaldo) ----
 /*
  * Pin donde entra la señal del fototransistor. Tiene que ser uno del ADC1: del 32 al 39.
  *
@@ -84,8 +86,14 @@
  */
 #define MOSTRAR_LECTURAS false
 
-// ---- si SENSOR_ANALOGICO es false (el armado con LM393) ----
-// Pin donde entra la salida del comparador. Casi cualquiera sirve de interrupción.
+// ---- si SENSOR_ANALOGICO es false (el armado de la guía, con LM393) ----
+/*
+ * Pin donde entra la salida del comparador.
+ *
+ * Aquí casi cualquier pin sirve, y eso es mérito del LM393: lo que llega es una señal digital,
+ * un 0 o un 1, no un voltaje que haya que medir. Con el fototransistor conectado directo habría
+ * que usar un pin del ADC1 (del 32 al 39), porque el WiFi se apropia del segundo conversor.
+ */
 #define PIN_BARRERA 4
 // Si tu módulo entrega HIGH al cortar el haz en vez de LOW, pon esto en true.
 #define BARRERA_INVERTIDA false
