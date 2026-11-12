@@ -1,4 +1,5 @@
 import type { gsap } from 'gsap';
+import { ease } from '../../shared/motion/presets';
 import { addRoute } from './routeTimeline';
 
 type G = typeof gsap;
@@ -17,7 +18,7 @@ function swap(tl: gsap.core.Timeline, from: string, to: string, at: number): voi
 export function buildStory(g: G, root: HTMLElement): void {
   const stage = root.querySelector('.story-stage');
   const tl = g.timeline({
-    defaults: { ease: 'power1.inOut' },
+    defaults: { ease: ease.fluid },
     scrollTrigger: { trigger: stage, start: 'top top', end: '+=520%', scrub: 0.6, pin: true, anticipatePin: 1 },
   });
 
