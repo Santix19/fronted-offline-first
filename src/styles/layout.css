@@ -25,7 +25,8 @@
 
 .top-bar h1 {
   flex: 1;
-  font-size: var(--text-xl);
+  /* Detail-heading size: long names ("Nuevo estanque", "Lote L-2026-01") must fit beside the back arrow and the pill */
+  font-size: 1.4rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
