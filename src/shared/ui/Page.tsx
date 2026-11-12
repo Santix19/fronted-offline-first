@@ -1,6 +1,5 @@
 import { createContext, useContext, useRef, type ReactNode } from 'react';
 import { useStagger } from '../motion/useStagger';
-import { MaskedText } from './MaskedText';
 import { goBack } from './router';
 
 /**
@@ -29,9 +28,7 @@ export function Page({ title, backTo, children }: PageProps) {
             ‹
           </button>
         )}
-        <h1>
-          <MaskedText text={title} />
-        </h1>
+        <h1>{title}</h1>
         {extra}
       </header>
       <main className="content" ref={content}>{children}</main>
