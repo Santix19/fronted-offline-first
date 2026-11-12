@@ -17,21 +17,21 @@ export function StoryDiagram() {
       <svg viewBox="0 0 320 340" className="diagram-svg">
         {INPUTS.map((node, i) => (
           <g key={node.label}>
-            <path id={`route-${i}`} className="diagram-path" pathLength={1} d={`M${node.x + 72} ${node.y + 32} C ${node.x + 72} 124, 160 112, 160 154`} />
+            <path id={`route-${i}`} className="diagram-path" pathLength={1} d={`M${node.x + 72} ${node.y + 32} C ${node.x + 72} 124, 160 108, 160 148`} />
             <rect className="diagram-capsule" x={node.x} y={node.y} width="144" height="32" rx="16" />
             <text className="diagram-label" x={node.x + 72} y={node.y + 20} textAnchor="middle">{node.label}</text>
             <circle id={`dot-${i}`} className="diagram-dot" r="4" cx={node.x + 72} cy={node.y + 32} />
           </g>
         ))}
-        <path id="route-out" className="diagram-path" pathLength={1} d="M160 226 L160 292" />
+        <path id="route-out" className="diagram-path" pathLength={1} d="M160 232 L160 292" />
         <g className="diagram-core">
-          <rect x="134" y="162" width="52" height="52" rx="14" transform="rotate(45 160 188)" className="diagram-diamond back" />
-          <rect x="139" y="167" width="42" height="42" rx="11" transform="rotate(45 160 188)" className="diagram-diamond" />
+          <rect x="129" y="157" width="62" height="62" rx="16" transform="rotate(45 160 188)" className="diagram-diamond back" />
+          <rect x="134" y="162" width="52" height="52" rx="13" transform="rotate(45 160 188)" className="diagram-diamond" />
           <text className="diagram-label" x="160" y="192" textAnchor="middle">Celular</text>
         </g>
         <rect className="diagram-capsule" x="96" y="292" width="128" height="32" rx="16" />
         <text className="diagram-label" x="160" y="312" textAnchor="middle">Servidor</text>
-        <circle id="dot-out" className="diagram-dot" r="4" cx="160" cy="226" />
+        <circle id="dot-out" className="diagram-dot" r="4" cx="160" cy="232" />
       </svg>
     </div>
   );
