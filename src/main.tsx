@@ -22,6 +22,7 @@ import './styles/motion.css';
 import './styles/dashboard.css';
 import './styles/story.css';
 import './styles/story-phone.css';
+import './styles/story-diagram.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
