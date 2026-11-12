@@ -17,9 +17,10 @@
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   padding-top: max(var(--space-3), env(safe-area-inset-top));
-  background: var(--bar);
+  /* Paper that fades out below the row, so content scrolls under it without a hard edge */
+  padding-bottom: var(--space-5);
+  background: linear-gradient(var(--bar) 48%, color-mix(in srgb, var(--bar) 85%, transparent) 70%, transparent);
   color: var(--on-bar);
-  border-bottom: 1px solid var(--rule);
 }
 
 .top-bar h1 {
@@ -75,13 +76,14 @@
   justify-content: center;
   gap: 2px;
   color: var(--ink-faint);
-  font-size: var(--text-sm);
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   text-decoration: none;
 }
 
 .bottom-nav a[aria-current='page'] {
-  color: var(--lake);
-  font-weight: 500;
+  color: var(--ink);
 }
 
 .bottom-nav .icon {
