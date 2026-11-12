@@ -16,6 +16,7 @@ import './styles/counting.css';
 import './styles/findings.css';
 import './styles/auth.css';
 import './styles/trout.css';
+import './styles/motion.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

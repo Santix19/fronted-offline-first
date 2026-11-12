@@ -1,0 +1,17 @@
+/* Feedback motion: short, transform and opacity only, same curve everywhere. */
+.button,
+.list > li > a,
+.bottom-nav a {
+  transition:
+    transform var(--dur-quick) var(--ease-water),
+    background-color var(--dur-quick) var(--ease-water),
+    color var(--dur-quick) var(--ease-water);
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.list > li > a:active {
+  transform: translateX(3px);
+}
