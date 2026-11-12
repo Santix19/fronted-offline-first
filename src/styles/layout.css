@@ -18,12 +18,13 @@
   padding: var(--space-3) var(--space-4);
   padding-top: max(var(--space-3), env(safe-area-inset-top));
   background: var(--bar);
-  color: #fff;
+  color: var(--on-bar);
+  border-bottom: 1px solid var(--rule);
 }
 
 .top-bar h1 {
   flex: 1;
-  font-size: var(--text-lg);
+  font-size: var(--text-xl);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -61,8 +62,8 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   padding-bottom: env(safe-area-inset-bottom);
-  background: var(--surface);
-  border-top: 1px solid var(--line);
+  background: var(--mist);
+  border-top: 1px solid var(--rule);
 }
 
 .bottom-nav a {
@@ -73,14 +74,14 @@
   align-items: center;
   justify-content: center;
   gap: 2px;
-  color: var(--ink-soft);
+  color: var(--ink-faint);
   font-size: var(--text-sm);
   text-decoration: none;
 }
 
 .bottom-nav a[aria-current='page'] {
   color: var(--lake);
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .bottom-nav .icon {
@@ -113,9 +114,9 @@
   padding: 0 6px;
   border-radius: 10px;
   background: var(--danger);
-  color: #fff;
+  color: var(--surface);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 20px;
 }
 
@@ -139,11 +140,12 @@
   gap: 6px;
   min-height: 36px;
   padding: 0 var(--space-3);
-  border-radius: 18px;
-  background: rgb(255 255 255 / 0.14);
-  color: #fff;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
   font-size: var(--text-sm);
-  font-weight: 700;
+  font-weight: 500;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -152,13 +154,13 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #7ee0a1;
+  background: var(--ok);
 }
 
-.connection-pill.busy .dot { background: #ffd27a; }
-.connection-pill.error .dot { background: #ff9b94; }
-.connection-pill.offline { background: rgb(0 0 0 / 0.3); }
-.connection-pill.offline .dot { background: #b8c4c7; }
+.connection-pill.busy .dot { background: var(--warn); }
+.connection-pill.error .dot { background: var(--danger); }
+.connection-pill.offline { background: var(--rule); }
+.connection-pill.offline .dot { background: var(--ink-faint); }
 
 .section-head .button {
   flex-shrink: 0;

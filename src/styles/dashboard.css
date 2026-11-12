@@ -31,9 +31,9 @@
 .kpi-value {
   font-family: var(--font-display);
   font-size: var(--text-xxl);
-  font-weight: 800;
+  font-weight: 400;
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
 
 .kpi-label {
@@ -66,8 +66,8 @@
 .trend-now {
   font-family: var(--font-display);
   font-size: var(--text-xl);
-  font-weight: 800;
-  color: var(--lake);
+  font-weight: 400;
+  color: var(--ink);
 }
 
 .sparkline {

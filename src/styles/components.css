@@ -10,7 +10,7 @@
   border-radius: var(--radius-md);
   background: var(--lake);
   color: var(--on-lake);
-  font-weight: 700;
+  font-weight: 500;
   text-decoration: none;
   cursor: pointer;
 }
@@ -76,7 +76,7 @@
 }
 
 .row-title {
-  font-weight: 700;
+  font-weight: 500;
 }
 
 /* Small state chip (sync state, alert level, batch status) */
@@ -85,7 +85,7 @@
   padding: 2px var(--space-2);
   border-radius: var(--radius-sm);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 500;
   white-space: nowrap;
 }
 
@@ -120,7 +120,7 @@
 .facts dd {
   margin: 0;
   font-size: var(--text-lg);
-  font-weight: 700;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 

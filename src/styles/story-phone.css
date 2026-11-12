@@ -24,7 +24,7 @@
   background: var(--bar);
   color: #fff;
   font-size: var(--text-sm);
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .phone-bar > span {

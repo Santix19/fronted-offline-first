@@ -15,8 +15,9 @@
 .reading .value {
   display: block;
   /* Three tiles share a 375px screen: the number shrinks before the unit can spill out of its tile */
+  font-family: var(--font-display);
   font-size: clamp(1.75rem, 8.4vw, var(--text-xxl));
-  font-weight: 800;
+  font-weight: 400;
   line-height: 1;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
@@ -58,6 +59,7 @@
 
 .pond-row .name {
   flex: 1;
-  font-size: var(--text-lg);
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 400;
 }

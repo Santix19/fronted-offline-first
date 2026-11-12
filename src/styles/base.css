@@ -12,7 +12,8 @@ body {
   margin: 0;
   font-family: var(--font);
   font-size: var(--text-md);
-  line-height: 1.5;
+  line-height: 1.4;
+  letter-spacing: var(--tracking);
   color: var(--ink);
   background: var(--mist);
 }
@@ -36,12 +37,22 @@ h3 {
   font-size: var(--text-md);
 }
 
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
 p {
   margin: 0;
 }
 
 a {
-  color: var(--lake);
+  color: var(--ink);
+  text-underline-offset: 3px;
 }
 
 button,
@@ -53,7 +64,7 @@ textarea {
 }
 
 :focus-visible {
-  outline: 3px solid var(--lake);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -81,25 +92,11 @@ textarea {
   }
 }
 
-/* Display type for titles: Bricolage Grotesque, tight and heavy, like a name painted on a boat. */
-h1,
-h2,
+/* The big serif: regular weight on purpose. Bold geometric display type is exactly what this style is not. */
 .display {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
-}
-
-h1 {
-  font-weight: 700;
-}
-
-h2 {
-  font-weight: 600;
-}
-
-.display {
   font-size: var(--text-display);
-  font-weight: 800;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }

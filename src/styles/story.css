@@ -56,9 +56,9 @@
 .story-big {
   font-family: var(--font-display);
   font-size: clamp(5rem, 28vw, 12rem);
-  font-weight: 800;
-  line-height: 0.9;
-  letter-spacing: -0.05em;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
   color: var(--lake);
 }
 
@@ -99,5 +99,5 @@
   min-height: 44px;
   display: inline-flex;
   align-items: center;
-  font-weight: 700;
+  font-weight: 500;
 }
