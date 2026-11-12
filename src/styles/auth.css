@@ -50,3 +50,8 @@
   text-decoration: underline;
   cursor: pointer;
 }
+
+.auth-story {
+  margin-top: var(--space-3);
+  text-align: center;
+}
