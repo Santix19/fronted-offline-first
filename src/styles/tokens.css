@@ -1,37 +1,54 @@
-/* Design tokens: the colours of a rainbow trout under the water of the lagoon.
-   Deep blue water, electric cyan where something needs to be seen, bone white for what is read.
+/* Design tokens: warm paper, charcoal ink and a little pastel light, after the Monad style from
+   Refero (user-chosen reference, 2026-11-11): a bookish serif for headlines, monospace for the
+   words that explain, 1px outlines instead of shadows, pill buttons and soft halos of colour.
 
-   Dark by default, which is what the water looks like. A phone set to light mode gets the same
-   palette turned around, and Settings can force either one: under the sun at the lagoon the light
-   theme reads better, indoors the dark one is easier on the eyes. Nobody is stuck with a guess. */
+   The names are the ones the rest of the CSS already used (lake, mist, surface, ink), so a screen
+   changes look without being touched. "lake" is now the primary action colour: charcoal on paper.
+
+   Light is the default, because the app lives outdoors. Dark is the same system turned around, and
+   Ajustes can force either one. Two selectors, one palette: what the phone prefers, and what was chosen. */
 :root {
-  /* The cyan that outlines the fish: the brand, and the one colour that pulls the eye */
-  --lake: #22d3ee;
-  --lake-strong: #67e8f9;
-  --lake-soft: #0e3c4e;
-  /* The water: deep below, a little lighter where the fish swims */
-  --mist: #061a24;
-  --surface: #0b2a38;
-  /* The belly of the trout */
-  --ink: #e6eef0;
-  --ink-soft: #92aeb8;
-  --line: #1a4254;
-  --bar: #04131c;
-  --on-lake: #04131c;
+  /* Primary action and the colour of links and lines: charcoal ink */
+  --lake: #242424;
+  --lake-strong: #000000;
+  --lake-soft: #e8edfa; /* periwinkle paper, for quiet fills */
+  --on-lake: #f6f3f1;
+  /* Warm paper, and the card on it */
+  --mist: #f6f3f1;
+  --surface: #fbf9f8;
+  --ink: #242424;
+  --ink-soft: #4e4d4d;
+  --ink-faint: #797776;
+  --line: #cecac8; /* card edge */
+  --rule: #e3dedd; /* separators */
+  --field: #dcdcdf; /* input border */
+  --bar: #f6f3f1;
+  --on-bar: #242424;
+  /* The one saturated blue, kept for keyboard focus only */
+  --focus: #3155c5;
 
-  --ok: #34d399;
-  --ok-soft: #0a3a32;
-  --warn: #fbbf24;
-  --warn-soft: #3a2e0b;
-  --danger: #fb7185;
-  --danger-soft: #42151f;
+  /* Light, never a fill: pastel halos behind the thing that matters */
+  --halo-mint: #a7fccd;
+  --halo-periwinkle: #a0b5eb;
+  --halo-coral: #fea78c;
+  --halo-amber: #f59e4f;
 
-  --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --text-sm: 0.875rem;
+  --ok: #1c6b43;
+  --ok-soft: #dff7ea;
+  --warn: #8a4b00;
+  --warn-soft: #fdebd3;
+  --danger: #b3361a;
+  --danger-soft: #fde4db;
+
+  --font: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-display: 'Libre Caslon Text', 'Iowan Old Style', Georgia, serif;
+  --tracking: -0.02em;
+  --text-sm: 0.85rem;
   --text-md: 1rem;
   --text-lg: 1.25rem;
-  --text-xl: 1.625rem;
+  --text-xl: 1.75rem;
   --text-xxl: 2.5rem;
+  --text-display: clamp(2.75rem, 12vw, 5rem);
 
   --space-1: 4px;
   --space-2: 8px;
@@ -40,66 +57,67 @@
   --space-5: 24px;
   --space-6: 32px;
 
-  --radius-sm: 6px;
-  --radius-md: 12px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-pill: 999px;
   --touch: 52px; /* buttons stay big enough for wet hands and gloves */
-}
 
-/* The same trout seen from above, with the sun on the water. Cyan goes darker here because the
-   electric one is unreadable on white, and the sun at the lagoon is already hard enough.
-   Two selectors, one palette: what the phone prefers, and what Settings chose by hand. */
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme='dark']) {
-    --lake: #0e6e8c;
-    --lake-strong: #073d52;
-    --lake-soft: #cdeaf2;
-    --mist: #e8f1f4;
-    --surface: #ffffff;
-    --ink: #06202b;
-    --ink-soft: #456673;
-    --line: #bbd6df;
-    --bar: #0a2e3f;
-    --on-lake: #ffffff;
-
-    --ok: #15803d;
-    --ok-soft: #d7f0e0;
-    --warn: #8a5a00;
-    --warn-soft: #fbecc9;
-    --danger: #be123c;
-    --danger-soft: #fbdde3;
-  }
-}
-
-:root[data-theme='light'] {
-  --lake: #0e6e8c;
-  --lake-strong: #073d52;
-  --lake-soft: #cdeaf2;
-  --mist: #e8f1f4;
-  --surface: #ffffff;
-  --ink: #06202b;
-  --ink-soft: #456673;
-  --line: #bbd6df;
-  --bar: #0a2e3f;
-  --on-lake: #ffffff;
-
-  --ok: #15803d;
-  --ok-soft: #d7f0e0;
-  --warn: #8a5a00;
-  --warn-soft: #fbecc9;
-  --danger: #be123c;
-  --danger-soft: #fbdde3;
-}
-
-/* Display type: Bricolage Grotesque, self-hosted so it loads with no signal. */
-:root {
-  --font-display: 'Bricolage Grotesque Variable', var(--font);
-  --text-display: clamp(2.75rem, 13vw, 5.5rem);
-}
-
-/* Motion: one curve and three speeds, so every animation in the app feels like the same water. */
-:root {
+  /* Motion: one curve and three speeds, so every animation in the app feels like the same water. */
   --ease-water: cubic-bezier(0.19, 1, 0.22, 1);
   --dur-quick: 180ms;
   --dur-calm: 600ms;
   --dur-slow: 1100ms;
+}
+
+/* The same system after dark: warm charcoal paper, the pastels turn into glow. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --lake: #f6f3f1;
+    --lake-strong: #ffffff;
+    --lake-soft: #2a2f4a;
+    --on-lake: #1b1a19;
+    --mist: #1b1a19;
+    --surface: #242322;
+    --ink: #f6f3f1;
+    --ink-soft: #cfcbc8;
+    --ink-faint: #9c9998;
+    --line: #3f3d3c;
+    --rule: #2e2c2b;
+    --field: #4a4847;
+    --bar: #1b1a19;
+    --on-bar: #f6f3f1;
+    --focus: #8da6f0;
+
+    --ok: #6fdc9f;
+    --ok-soft: #12301f;
+    --warn: #f5b560;
+    --warn-soft: #3a2810;
+    --danger: #ff9a7e;
+    --danger-soft: #3d1d15;
+  }
+}
+
+:root[data-theme='dark'] {
+  --lake: #f6f3f1;
+  --lake-strong: #ffffff;
+  --lake-soft: #2a2f4a;
+  --on-lake: #1b1a19;
+  --mist: #1b1a19;
+  --surface: #242322;
+  --ink: #f6f3f1;
+  --ink-soft: #cfcbc8;
+  --ink-faint: #9c9998;
+  --line: #3f3d3c;
+  --rule: #2e2c2b;
+  --field: #4a4847;
+  --bar: #1b1a19;
+  --on-bar: #f6f3f1;
+  --focus: #8da6f0;
+
+  --ok: #6fdc9f;
+  --ok-soft: #12301f;
+  --warn: #f5b560;
+  --warn-soft: #3a2810;
+  --danger: #ff9a7e;
+  --danger-soft: #3d1d15;
 }
