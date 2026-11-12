@@ -1,6 +1,7 @@
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
 import { Suspense, useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { Plankton } from './Plankton';
 
 /**
  * The live lagoon behind the story and the sign-in (2026-11-12, "make the background louder").
@@ -26,6 +27,8 @@ const LIQUID_FRAGMENT = /* glsl */ `
   uniform vec2 uPointer;
   uniform float uAspect;
   uniform vec3 uCanvas, uViolet, uBlue, uLime, uPeach;
+  uniform float uClear;
+  uniform float uColumn;
 
   float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   float noise(vec2 p) {
@@ -63,7 +66,9 @@ const LIQUID_FRAGMENT = /* glsl */ `
     // Keep the copy readable: the canvas grey wins in a diagonal band through the middle-left
     float diag = (uv.x * 0.9 + (1.0 - uv.y) * 0.35);
     float clear = smoothstep(0.18, 0.42, diag) * (1.0 - smoothstep(0.62, 0.86, diag));
-    col = mix(col, uCanvas, clear * 0.7);
+    // App mode: a canvas-clean column where the cards and numbers live; colour stays at the edges
+    float column = uColumn * (1.0 - smoothstep(0.3, 0.5, abs(uv.x - 0.5)));
+    col = mix(col, uCanvas, max(clear, column) * uClear);
 
     gl_FragColor = vec4(col, 1.0);
   }
@@ -74,7 +79,7 @@ function scrollProgress(): number {
   return max > 0 ? window.scrollY / max : 0;
 }
 
-function Liquid() {
+function Liquid({ clearStrength, column }: { clearStrength: number; column: boolean }) {
   const size = useThree((s) => s.size);
   const uniforms = useMemo(
     () => ({
@@ -87,6 +92,8 @@ function Liquid() {
       uBlue: { value: new THREE.Color('#73a6ff') },
       uLime: { value: new THREE.Color('#e3ff89') },
       uPeach: { value: new THREE.Color('#ffc0a5') },
+      uClear: { value: clearStrength },
+      uColumn: { value: column ? 1 : 0 },
     }),
     [],
   );
@@ -222,11 +229,20 @@ function Bubbles() {
   );
 }
 
-export default function LagoonScene() {
+export type LagoonMode = 'story' | 'app';
+
+/**
+ * story: the full lagoon (liquid, swimming renders, bubbles, specks) for the screens seen once.
+ * app: behind the data all day, so the liquid stays pale through the content column and the
+ * loudness comes from the particle current; no big renders crossing the numbers.
+ */
+export default function LagoonScene({ mode = 'story' }: { mode?: LagoonMode }) {
+  const narrow = window.innerWidth < 700;
+  const app = mode === 'app';
   return (
     <Canvas
       className="lagoon-canvas"
-      dpr={[1, 1.5]}
+      dpr={app ? 1 : [1, 1.5]}
       camera={{ position: [0, 0, 6], fov: 50 }}
       gl={{ antialias: false, alpha: false, powerPreference: 'low-power' }}
       // The canvas sits behind the copy and takes no taps; the pointer is read from the whole page
@@ -234,12 +250,15 @@ export default function LagoonScene() {
       eventPrefix="client"
       aria-hidden="true"
     >
-      <Liquid />
+      <Liquid clearStrength={app ? 0.9 : 0.7} column={app} />
       <hemisphereLight args={['#ffffff', '#c66ef5', 1.2]} />
       <directionalLight position={[-4, 6, 5]} intensity={2} />
-      <Suspense fallback={null}>
-        <Floaters />
-      </Suspense>
+      <Plankton count={app ? (narrow ? 1800 : 6000) : narrow ? 1500 : 4000} />
+      {!app && (
+        <Suspense fallback={null}>
+          <Floaters />
+        </Suspense>
+      )}
       <Bubbles />
     </Canvas>
   );

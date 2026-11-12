@@ -29,7 +29,7 @@ class Fallback extends Component<{ children: ReactNode; fallback: ReactNode }, {
  * The loud background for the story and the sign-in: the live 3D lagoon where the phone can
  * draw it, the CSS backdrop otherwise (reduced motion, no WebGL, still loading, or a crash).
  */
-export function LiveBackdrop() {
+export function LiveBackdrop({ mode = 'story' }: { mode?: 'story' | 'app' }) {
   const reduced = useReducedMotion();
   const flat = <Backdrop fixed />;
   if (reduced || !hasWebGL()) return flat;
@@ -37,7 +37,7 @@ export function LiveBackdrop() {
     <div className="lagoon" aria-hidden="true">
       <Fallback fallback={flat}>
         <Suspense fallback={flat}>
-          <LagoonScene />
+          <LagoonScene mode={mode} />
         </Suspense>
       </Fallback>
     </div>
