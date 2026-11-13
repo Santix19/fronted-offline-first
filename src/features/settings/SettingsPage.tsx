@@ -45,13 +45,17 @@ export function SettingsPage() {
   return (
     <Page title="Ajustes">
       <AccountPanel />
+      {/* Folded: set once when the phone is prepared, not something a caretaker opens every day */}
+      <details className="fold">
+        <summary>Servidor</summary>
       <form className="form" onSubmit={submit} noValidate>
         <Field label="Dirección del servidor" type="url" value={config.apiUrl} onChange={set('apiUrl')} error={errors.apiUrl} hint="Por ejemplo https://lacocha-backend.onrender.com" />
-        <Field label="Clave del servidor" type="password" value={config.apiKey} onChange={set('apiKey')} hint="La misma API_KEY configurada en el backend" autoComplete="off" />
+        <Field label="Clave del servidor" type="password" value={config.apiKey} onChange={set('apiKey')} hint="La clave que entrega quien instaló el servidor" autoComplete="off" />
         <Field label="Nombre de este celular" value={config.deviceId} onChange={set('deviceId')} error={errors.deviceId} hint="Así aparece en el servidor. Ejemplo: cel-cuidador-1" />
         {saved && <p className="notice ok" role="status">Ajustes guardados.</p>}
         <button className="button block" type="submit">Guardar ajustes</button>
       </form>
+      </details>
       <ThemePicker />
       <ConnectionTest />
       <StorageInfo />

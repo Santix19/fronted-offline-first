@@ -13,7 +13,7 @@ export function ConnectionPill() {
   let tone = 'ok';
   if (!online) [text, tone] = ['Sin señal', 'offline'];
   else if (running) [text, tone] = ['Subiendo', 'busy'];
-  else if (rejected) [text, tone] = ['Revisar', 'error'];
+  else if (rejected) [text, tone] = [rejected === 1 ? '1 rechazado' : `${rejected} rechazados`, 'error'];
   else if (pending) [text, tone] = ['Pendiente', lastError ? 'error' : 'busy'];
   const detail = `${pending} por subir, ${rejected} rechazados`;
 
