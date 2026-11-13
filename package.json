@@ -10,8 +10,6 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test src/**/*.test.ts",
-    "test:story": "node tools/rediseno/story-review.mjs && node tools/rediseno/story-interactions.mjs && node tools/rediseno/live.mjs && node tools/rediseno/story-gallery.mjs",
-    "test:ui": "node tools/rediseno/review.mjs && node tools/rediseno/auth-review.mjs && node tools/rediseno/alerts-review.mjs && node tools/rediseno/flows.mjs && node tools/rediseno/states.mjs && npm run test:story && node tools/rediseno/pwa.mjs && node tools/rediseno/gallery.mjs",
     "mock-api": "node mock-api/server.mjs"
   },
   "dependencies": {

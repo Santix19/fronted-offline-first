@@ -5,3 +5,7 @@ dist
 
 # Source art kept out of the build (the app uses the optimized copies in public/models)
 assets-src/
+
+# Working notes and local review scripts, kept on this machine only
+docs/
+tools/rediseno/

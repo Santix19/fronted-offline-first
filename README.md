@@ -278,8 +278,6 @@ La dirección y la clave también se pueden cambiar desde la pantalla *Ajustes* 
 ```bash
 npm test          # datos, cuenta, contador, corrección de rechazos y comportamiento de la trucha
 npm run typecheck # revisa los tipos de TypeScript
-npm run test:ui   # capturas, axe y flujos; requiere Vite en 5173 y mock separado en 8091
-npm run test:story # historia: escenas, encuadres, teclado, respaldos y cruces del canal
 ```
 
 Las pruebas cubren lo más delicado: cómo se divide la cola en envíos, cómo se leen las respuestas del push,
@@ -287,16 +285,6 @@ quién gana cuando dos celulares editan lo mismo y las validaciones de cada regi
 del contador (tramas con ruido, tramas repetidas, placas que no miden cortes) y la sesión de conteo completa:
 retomar un conteo a medias, corregir a mano, cerrarlo y descartarlo, todo sin IndexedDB y sin placa gracias al
 Bridge.
-
-La suite visual usa Edge instalado, cuentas ficticias y un contexto desechable. En PowerShell, el
-mock separado se inicia con `$env:PORT='8091'; npm run mock-api`. Ejecuta `npm run build` antes de
-`npm run test:ui`: la prueba PWA sirve esa compilación en 4173 y la cierra al terminar. No usa los
-datos del navegador personal. Resultados y capturas: `assets-src/revision-20261113/`, fuera de git.
-Alcance y pruebas de campo pendientes: `docs/rediseno/evaluacion.md`.
-La nueva historia tiene su galería en `assets-src/historia-la-cocha/revision.html`; el paisaje de
-La Corota es vectorial y permanece sin WebGL. Al bajar, un río llena la pantalla con las truchas
-sumergidas. El cauce nace ancho en la entrada y continúa al desplazar, con trece peces y tarjetas
-seguidas. Resultado vigente y pruebas: `docs/rediseno/rio-continuo-y-peces-sumergidos.md`.
 
 El flujo completo también se probó en un navegador real: registrar sin señal, cerrar y abrir la app sin señal,
 volver a tener señal y verificar en el servidor que llegó todo, la alerta del sistema experto, atender una

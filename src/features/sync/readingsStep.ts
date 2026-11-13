@@ -32,8 +32,8 @@ export async function refreshReadings(): Promise<void> {
 /**
  * These downloads only add what devices sent on their own; by this step everything was already
  * uploaded and pulled. A backend version without one of these lists answers 404, and that used to
- * mark the whole sync as failed with "the server does not have this function" (E6 in
- * docs/rediseno/inventario.md). Now that list is skipped; any other error still stops the sync.
+ * mark the whole sync as failed with "the server does not have this function". Now that list is
+ * skipped; any other error still stops the sync.
  */
 async function ifTheServerHasIt<T>(request: Promise<T[]>): Promise<T[]> {
   try {

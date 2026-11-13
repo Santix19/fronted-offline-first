@@ -22,7 +22,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Only at start-up. Watching the story from Ajustes unmounts this gate, and coming back must not
-    // lock a session that is already open (E4 in docs/rediseno/inventario.md)
+    // lock a session that is already open
     if (getAuthState().status === 'loading') void facade.restoreSession();
     void loadStorySeen();
   }, []);

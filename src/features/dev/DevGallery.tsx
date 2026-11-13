@@ -21,7 +21,7 @@ const reading = (tempC: number, ph: number, oxygenMgL: number) =>
 
 /**
  * #/dev/ui, only in development: every shared piece in each of its states, on one page, to check
- * a change to the system without visiting every screen (fase 3 of docs/plan-rediseno.md).
+ * a change to the system without visiting every screen.
  */
 export default function DevGallery() {
   const [text, setText] = useState('');

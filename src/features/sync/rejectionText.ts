@@ -2,7 +2,7 @@
  * The backend explains a refusal as "campo: motivo", written for whoever reads the logs (for example
  * "registrado_en: fecha anterior a 2024 (reloj sin configurar)"). The caretaker gets the same reason
  * in plain words and with what to do about it. Anything not recognised is shown as it came, without
- * the field name in front, which means nothing outside the backend (E6 in docs/rediseno/inventario.md).
+ * the field name in front, which means nothing outside the backend.
  */
 const KNOWN: [RegExp, string][] = [
   [/anterior a 2024|reloj sin configurar/i, 'La fecha es de antes de 2024: el reloj del celular estaba mal. Revisa la fecha y la hora del celular y vuelve a registrarlo.'],

@@ -12,7 +12,7 @@ interface PersonRowProps {
 export function PersonRow({ person, busy, onResetPassword, onToggleActive }: PersonRowProps) {
   return (
     // Who on top with the state beside it, the two actions on their own line: on a phone the
-    // three side by side broke the name word by word (E3 in docs/rediseno/inventario.md)
+    // three side by side broke the name word by word
     <li className="row person-row">
       <div className="row-main">
         <p className="row-title">{person.name}</p>

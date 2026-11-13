@@ -8,7 +8,7 @@ import { TroutLabPanel } from './TroutLabPanel';
 import './troutLab.css';
 
 /**
- * #/dev/trucha, only in development (fase 0b of docs/plan-rediseno.md): the school alone, with live
+ * #/dev/trucha, only in development: the school alone, with live
  * controls, to judge on a real phone whether the swimming looks like a trout before it goes anywhere.
  * Touch the water: the nearest fish curl into a C and shoot off, and the panic spreads.
  */
