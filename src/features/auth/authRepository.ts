@@ -1,7 +1,7 @@
 import { getMeta, setMeta } from '../../shared/db/repository';
 import { setSessionToken } from '../../shared/http/sessionToken';
 import { decryptToken, encryptToken, fromBase64, randomBytes, toBase64 } from './pinCrypto';
-import type { StoredSession, User } from './authTypes';
+import type { StoredSession } from './authTypes';
 import type { OpenedSession } from './authApi';
 
 const KEY = 'session';
@@ -50,8 +50,6 @@ export async function forgetSession(): Promise<void> {
   await setMeta<StoredSession | undefined>(KEY, undefined);
   setSessionToken(undefined);
 }
-
-export const sessionUser = (stored: StoredSession | undefined): User | undefined => stored?.user;
 
 /** An expired session cannot be unlocked: the backend would refuse its token anyway. */
 export const hasExpired = (stored: StoredSession, now = new Date()): boolean =>

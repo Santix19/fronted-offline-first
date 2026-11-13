@@ -1,79 +1,69 @@
-/* Design tokens: "cutout kinetic optimism" (design.md, adopted 2026-11-12 for the whole app).
-   Condensed poster headlines and plain grotesk copy on a pale grey canvas; colour lives in objects
-   and bounded stages (lime, cornflower, peach), one black chapter, chamfered cuts on art.
-
-   The names are the ones the rest of the CSS already used (lake, mist, surface, ink), so a screen
-   changes look without being touched. "lake" is the primary action: near-black pills. */
+/* Barniz de Pasto: primitive palette, then semantic roles. Ratios use WCAG relative luminance. */
 :root {
-  --lake: #0a0a0a;
-  --lake-strong: #000000;
-  --lake-soft: #e9edf6; /* cool hairline: quiet fills */
-  --on-lake: #ffffff;
-  --mist: #f5f5f5; /* the pale canvas, uninterrupted */
-  --surface: #ffffff; /* flat white cards, no shadow */
-  --ink: #0a0a0a;
-  --ink-soft: #393d46;
-  --ink-faint: #6c6c6c; /* 4.9:1 on the canvas, 5.3:1 on white */
-  --line: #e9edf6;
-  --rule: #e9edf6;
-  --field: #8a909c; /* input edge: 3.2:1 on white, the 3:1 a control boundary needs */
-  --bar: #f5f5f5;
-  --on-bar: #0a0a0a;
-  /* design.md asks for a cornflower ring; it is 2.4:1 on the canvas, so the ring is ink with a blue halo */
-  --focus: var(--ink);
-  --focus-halo: #73a6ff;
-  --action-blue: #73a6ff;
+  --hueso: #f3ebdd;
+  --laca: #1b1413;
+  --papel: #fffaf0;
+  --rosa: #e8386f;
+  --oliva: #a9b83a;
+  --lila: #b9b0ee;
+  --durazno: #ff9e5e;
+  --rosa-texto: #a3123f;
+  --oliva-texto: #40530a;
+  --oliva-claro: #c9d65a;
+  --tinta-suave: #5a4a40;
+  --tinta-suave-laca: #cdbfae;
+  --madera: #e8ddca;
+  --papel-oscuro: #261c1a;
+  --borde: #d9cdb9;
+  --borde-oscuro: #3a2d2a;
+  --bueno-suave: #e3e9b4;
+  --aviso-texto: #8a4b00;
+  --aviso-suave: #ffe0c7;
+  --peligro-suave: #fbd3df;
+  --rosa-claro: #ff7a9e;
+  --bueno-oscuro: #2a2e12;
+  --aviso-oscuro: #3a2418;
+  --peligro-oscuro: #3d1522;
 
-  /* Object colours: they fill cards and art, never full-page bands */
-  --lime: #e3ff89;
-  --blue: #73a6ff;
-  --peach: #ffc0a5;
-  --violet: #c66ef5;
-  --badge: #baf24a;
-  --coral: #ffa680;
-  /* The clipped conversion panel and the drifting backdrop shapes. Chosen, not default: design.md line 181
-     specifies violet #c66ef5 to cornflower #73a6ff at 198.8deg. avoid-ai-design-ignore: C1 */
-  --grad-convert: linear-gradient(198.8deg, var(--violet) 32%, var(--blue) 87%); /* avoid-ai-design-ignore: C1 */
-  --grad-warm: linear-gradient(160deg, var(--coral) 10%, var(--violet) 90%); /* avoid-ai-design-ignore: C1 */
-  --grad-fresh: linear-gradient(200deg, var(--lime) 15%, var(--blue) 95%);
-
-  /* The black chapter: one strong interruption per flow */
-  --chapter: #0a0a0a;
-  --on-chapter: #ffffff;
-  --chapter-muted: #a1a8b7;
-
-  /* The story field. Violet stays light in dark mode, so its ink stays black */
-  --band: var(--violet);
-  --on-band: #0a0a0a;
-
-  /* Old halo names now point at the object colours */
-  --halo-mint: var(--lime);
-  --halo-periwinkle: var(--blue);
-  --halo-coral: var(--peach);
-  --halo-amber: var(--coral);
-  --halo-gold: var(--badge);
-
-  --ok: #1c6b43;
-  --ok-soft: #e3ff89;
-  --warn: #8a4b00;
-  --warn-soft: #ffe2d4;
-  --danger: #b3361a;
-  --danger-soft: #ffd9cc;
-
-  --font: 'Inter', Arial, 'Helvetica Neue', Helvetica, sans-serif;
-  --font-display: 'Oswald', 'Arial Narrow', 'Helvetica Neue Condensed', Arial, sans-serif;
-  --display-weight: 700; /* Oswald needs 700 to match the poster darkness (design.md) */
-  --tracking: -0.02em;
-  --text-xs: 0.8125rem;
-  --text-sm: 0.875rem;
+  --lake: var(--laca);
+  --lake-strong: var(--laca);
+  --lake-soft: var(--madera);
+  --on-lake: var(--hueso); /* 15.34:1 sobre laca (claro) */
+  --mist: var(--hueso);
+  --surface: var(--papel);
+  --ink: var(--laca); /* 17.46:1 sobre papel (claro) */
+  --ink-soft: var(--tinta-suave); /* 8.11:1 sobre papel (claro) */
+  --ink-faint: var(--tinta-suave); /* 8.11:1 sobre papel (claro) */
+  --line: var(--borde);
+  --rule: var(--laca); /* 17.46:1 sobre papel (claro) */
+  --field: var(--laca); /* 17.46:1 sobre papel (claro) */
+  --bar: var(--hueso);
+  --on-bar: var(--laca); /* 15.34:1 sobre hueso (claro) */
+  --focus: var(--laca); /* 17.46:1 sobre papel (claro) */
+  --focus-halo: var(--laca); /* 17.46:1 sobre papel (claro) */
+  --chapter: var(--laca);
+  --on-chapter: var(--hueso); /* 15.34:1 sobre laca (claro) */
+  --chapter-muted: var(--tinta-suave-laca); /* 10.09:1 sobre laca (claro) */
+  --ok: var(--oliva-texto); /* 6.74:1 sobre bueno-suave (claro) */
+  --ok-soft: var(--bueno-suave);
+  --warn: var(--aviso-texto); /* 5.42:1 sobre aviso-suave (claro) */
+  --warn-soft: var(--aviso-suave);
+  --danger: var(--rosa-texto); /* 5.70:1 sobre peligro-suave (claro) */
+  --danger-soft: var(--peligro-suave);
+  --font: 'Atkinson Hyperlegible', Verdana, Arial, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Arial Black', Arial, sans-serif;
+  --display-weight: 800;
+  --tracking: 0;
+  --text-xs: 0.875rem;
+  --text-sm: 0.9375rem;
   --text-md: 1rem;
   --text-lg: 1.25rem;
   --text-xl: 2rem; /* compact heading, stat */
   --text-xxl: 2.625rem; /* card heading */
-  --text-display: clamp(2.75rem, 13vw, 4.5rem); /* section heading */
-  --text-hero: clamp(4rem, 21vw, 11.25rem); /* the poster headline */
-  --text-title: clamp(2.5rem, 12vw, 4.75rem); /* chapter heading */
-  --text-closing: clamp(3.25rem, 17vw, 7.75rem); /* the closing statement */
+  --text-display: clamp(2.375rem, 8vw, 2.5rem);
+  --text-hero: clamp(3.5rem, 17vw, 9rem);
+  --text-title: clamp(2.25rem, 10.5vw, 4rem);
+  --text-closing: clamp(3rem, 15vw, 7rem);
   --text-reading: clamp(2rem, 10vw, 3.625rem); /* big readings: feature-stat */
 
   --space-1: 4px;
@@ -84,81 +74,80 @@
   --space-6: 32px;
   --space-7: 48px;
 
-  --radius-sm: 8px; /* feature cards, image panels */
-  --radius-md: 16px; /* proof and white cards */
-  --radius-card: 17px; /* capability cards */
-  --radius-pill: 100px;
+  --radius-sm: 6px;
+  --radius-md: 6px;
+  --radius-card: 6px;
+  --radius-pill: 6px;
   --touch: 52px; /* buttons stay big enough for wet hands and gloves */
   --touch-hero: 64px;
   /* Chamfers: the hard diagonal that meets the soft pills */
   --cut: 48px;
   --cut-sm: 20px;
 
-  /* Motion. Taps stay quick; arrivals are loud and long (design.md Motion) */
-  --ease-water: cubic-bezier(0.19, 1, 0.22, 1);
-  --ease-proof: cubic-bezier(0.215, 0.61, 0.355, 1);
+  /* Feedback completes within 250 ms; ambient motion is confined to the story. */
+  --ease-water: cubic-bezier(0.2, 0, 0.2, 1);
+  --ease-proof: cubic-bezier(0.2, 0, 0.2, 1);
   --ease-loop: ease-in-out;
-  --dur-quick: 180ms; /* press feedback */
-  --dur-state: 240ms; /* tab pill */
-  --dur-calm: 600ms;
-  --dur-reveal: 750ms; /* clip-path reveals */
-  --dur-slow: 1200ms; /* objects and cards arriving */
-  --dur-ambient: 5s; /* floats */
-  --dur-drift: 24s; /* backdrop shapes */
-  --dur-ribbon: 60s; /* the capsule ribbon */
+  --dur-quick: 180ms;
+  --dur-state: 240ms;
+  --dur-calm: 240ms;
+  --dur-reveal: 240ms;
+  --dur-slow: 240ms;
 }
 
-/* After dark: the same system on near-black; the object colours stay as they are. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --lake: #ffffff;
-    --lake-strong: #ffffff;
-    --lake-soft: #23262d;
-    --on-lake: #0a0a0a;
-    --mist: #0a0a0a;
-    --surface: #17181b;
-    --ink: #ffffff;
-    --ink-soft: #c9ced8;
-    --ink-faint: #a1a8b7;
-    --line: #2a2d33;
-    --rule: #2a2d33;
-    --field: #6b7280;
-    --bar: #0a0a0a;
-    --on-bar: #ffffff;
-    --focus-halo: #73a6ff;
-    --chapter: #17181b;
-
-    --ok: #b6ec6a;
-    --ok-soft: #1f2a10;
-    --warn: #ffc0a5;
-    --warn-soft: #3a2418;
-    --danger: #ff9a7e;
-    --danger-soft: #3d1d15;
+  --lake: var(--hueso);
+  --lake-strong: var(--papel);
+  --lake-soft: var(--borde-oscuro);
+  --on-lake: var(--laca); /* 15.34:1 sobre hueso (oscuro) */
+  --mist: var(--laca);
+  --surface: var(--papel-oscuro);
+  --ink: var(--hueso); /* 14.04:1 sobre papel-oscuro (oscuro) */
+  --ink-soft: var(--tinta-suave-laca); /* 9.23:1 sobre papel-oscuro (oscuro) */
+  --ink-faint: var(--tinta-suave-laca); /* 9.23:1 sobre papel-oscuro (oscuro) */
+  --line: var(--borde-oscuro);
+  --rule: var(--hueso); /* 14.04:1 sobre papel-oscuro (oscuro) */
+  --field: var(--tinta-suave-laca); /* 9.23:1 sobre papel-oscuro (oscuro) */
+  --bar: var(--laca);
+  --on-bar: var(--hueso); /* 15.34:1 sobre laca (oscuro) */
+  --focus: var(--lila); /* 8.32:1 sobre papel-oscuro (oscuro) */
+  --focus-halo: var(--lila); /* 8.32:1 sobre papel-oscuro (oscuro) */
+  --chapter: var(--laca);
+  --on-chapter: var(--hueso); /* 15.34:1 sobre laca (oscuro) */
+  --chapter-muted: var(--tinta-suave-laca); /* 10.09:1 sobre laca (oscuro) */
+  --ok: var(--oliva-claro); /* 8.85:1 sobre bueno-oscuro (oscuro) */
+  --ok-soft: var(--bueno-oscuro);
+  --warn: var(--durazno); /* 7.13:1 sobre aviso-oscuro (oscuro) */
+  --warn-soft: var(--aviso-oscuro);
+  --danger: var(--rosa-claro); /* 6.42:1 sobre peligro-oscuro (oscuro) */
+  --danger-soft: var(--peligro-oscuro);
   }
 }
-
 :root[data-theme='dark'] {
-  --lake: #ffffff;
-  --lake-strong: #ffffff;
-  --lake-soft: #23262d;
-  --on-lake: #0a0a0a;
-  --mist: #0a0a0a;
-  --surface: #17181b;
-  --ink: #ffffff;
-  --ink-soft: #c9ced8;
-  --ink-faint: #a1a8b7;
-  --line: #2a2d33;
-  --rule: #2a2d33;
-  --field: #6b7280;
-  --bar: #0a0a0a;
-  --on-bar: #ffffff;
-  --focus-halo: #73a6ff;
-  --chapter: #17181b;
-
-  --ok: #b6ec6a;
-  --ok-soft: #1f2a10;
-  --warn: #ffc0a5;
-  --warn-soft: #3a2418;
-  --danger: #ff9a7e;
-  --danger-soft: #3d1d15;
+  --lake: var(--hueso);
+  --lake-strong: var(--papel);
+  --lake-soft: var(--borde-oscuro);
+  --on-lake: var(--laca); /* 15.34:1 sobre hueso (oscuro) */
+  --mist: var(--laca);
+  --surface: var(--papel-oscuro);
+  --ink: var(--hueso); /* 14.04:1 sobre papel-oscuro (oscuro) */
+  --ink-soft: var(--tinta-suave-laca); /* 9.23:1 sobre papel-oscuro (oscuro) */
+  --ink-faint: var(--tinta-suave-laca); /* 9.23:1 sobre papel-oscuro (oscuro) */
+  --line: var(--borde-oscuro);
+  --rule: var(--hueso); /* 14.04:1 sobre papel-oscuro (oscuro) */
+  --field: var(--tinta-suave-laca); /* 9.23:1 sobre papel-oscuro (oscuro) */
+  --bar: var(--laca);
+  --on-bar: var(--hueso); /* 15.34:1 sobre laca (oscuro) */
+  --focus: var(--lila); /* 8.32:1 sobre papel-oscuro (oscuro) */
+  --focus-halo: var(--lila); /* 8.32:1 sobre papel-oscuro (oscuro) */
+  --chapter: var(--laca);
+  --on-chapter: var(--hueso); /* 15.34:1 sobre laca (oscuro) */
+  --chapter-muted: var(--tinta-suave-laca); /* 10.09:1 sobre laca (oscuro) */
+  --ok: var(--oliva-claro); /* 8.85:1 sobre bueno-oscuro (oscuro) */
+  --ok-soft: var(--bueno-oscuro);
+  --warn: var(--durazno); /* 7.13:1 sobre aviso-oscuro (oscuro) */
+  --warn-soft: var(--aviso-oscuro);
+  --danger: var(--rosa-claro); /* 6.42:1 sobre peligro-oscuro (oscuro) */
+  --danger-soft: var(--peligro-oscuro);
 }

@@ -5,17 +5,18 @@ import { formatDateTime, timeAgo } from '../../shared/utils/format';
 import { RejectedList } from './RejectedList';
 import { useSyncStatus } from './syncStatus';
 import { usePendingCounts } from './usePendingCounts';
+import { LoadingState } from '../../shared/ui/LoadingState';
 
 /** Where the caretaker checks that everything reached the backend, and fixes what did not. */
 export function SyncPage() {
   const online = useOnline();
   const { running, lastSuccessAt, lastError, lastUploaded } = useSyncStatus();
-  const { pending, rejected } = usePendingCounts();
+  const { pending, rejected, loading } = usePendingCounts();
 
   return (
-    <Page title="Sincronización">
-      <section className="panel" aria-live="polite">
-        <dl className="facts">
+    <Page title="Sincronización" wide layout="sync">
+      <section className="panel sync-panel" aria-live="polite" aria-busy={running}>
+        {loading ? <LoadingState /> : <dl className="sync-figures">
           <div>
             <dt>Por subir</dt>
             <dd>{pending}</dd>
@@ -24,11 +25,8 @@ export function SyncPage() {
             <dt>Rechazados</dt>
             <dd>{rejected}</dd>
           </div>
-          <div>
-            <dt>Última sincronización</dt>
-            <dd title={formatDateTime(lastSuccessAt)}>{timeAgo(lastSuccessAt)}</dd>
-          </div>
-        </dl>
+        </dl>}
+        <p className="sync-last">Última sincronización <strong title={formatDateTime(lastSuccessAt)}>{timeAgo(lastSuccessAt)}</strong></p>
         {!online && (
           <p className="notice warn">
             No hay señal. Todo lo que registres queda guardado en el celular y se sube solo cuando vuelva la conexión.
@@ -38,7 +36,7 @@ export function SyncPage() {
         {online && !lastError && lastUploaded !== undefined && lastUploaded > 0 && (
           <p className="notice ok">Se subieron {lastUploaded} registros en la última sincronización.</p>
         )}
-        <button className="button block" onClick={() => facade.sync()} disabled={!online || running}>
+        <button className="button block" onClick={() => facade.sync()} disabled={!online || running || loading}>
           {running ? 'Sincronizando…' : 'Sincronizar ahora'}
         </button>
       </section>

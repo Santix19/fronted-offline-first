@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react';
-import { LiveBackdrop } from '../../shared/ui/LiveBackdrop';
-import { GlossyObject } from '../../shared/ui/GlossyObject';
-import { MaskedText } from '../../shared/ui/MaskedText';
+import { TroutImage } from '../../shared/ui/TroutImage';
 
 interface AuthScreenProps {
   title: string;
@@ -20,16 +18,14 @@ interface AuthScreenProps {
 export function AuthScreen({ title, subtitle, children, footer, mascot = true }: AuthScreenProps) {
   return (
     <main className="auth">
-      <LiveBackdrop />
       {mascot && (
         <div className="auth-objects" aria-hidden="true">
-          <GlossyObject kind="fish" color="blue" size={220} tilt={-14} className="float auth-fish" />
-          <GlossyObject kind="drop" color="lime" size={110} tilt={12} className="float float-slow auth-drop" />
+          <TroutImage width={240} className="auth-fish" />
         </div>
       )}
-      <div className="auth-card cut-corner">
+      <div className="auth-card">
         <h1 className="auth-title">
-          <MaskedText text={title} mode="chars" />
+          {title}
         </h1>
         <p className="muted">{subtitle}</p>
         {children}

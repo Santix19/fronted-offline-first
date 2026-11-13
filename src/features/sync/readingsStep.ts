@@ -1,4 +1,5 @@
 import { getAll, putMany, removeMany } from '../../shared/db/repository';
+import { ApiError } from '../../shared/http/ApiError';
 import { fetchRecentCounts } from '../batches/batchesApi';
 import type { Batch } from '../batches/batchTypes';
 import { fetchRecentReadings } from '../ponds/pondsApi';
@@ -18,14 +19,29 @@ const KEEP_PER_POND = 50;
 export async function refreshReadings(): Promise<void> {
   const ponds = (await getAll<Pond>('ponds')).filter((p) => p.active && p.syncState === 'synced');
   for (const pond of ponds) {
-    await putMany('records', await fetchRecentReadings(pond.id));
+    await putMany('records', await ifTheServerHasIt(fetchRecentReadings(pond.id)));
   }
 
   const batches = (await getAll<Batch>('batches')).filter((b) => b.status === 'activo' && b.syncState === 'synced');
   for (const batch of batches) {
-    await putMany('records', await fetchRecentCounts(batch.id));
+    await putMany('records', await ifTheServerHasIt(fetchRecentCounts(batch.id)));
   }
   await pruneOldReadings();
+}
+
+/**
+ * These downloads only add what devices sent on their own; by this step everything was already
+ * uploaded and pulled. A backend version without one of these lists answers 404, and that used to
+ * mark the whole sync as failed with "the server does not have this function". Now that list is
+ * skipped; any other error still stops the sync.
+ */
+async function ifTheServerHasIt<T>(request: Promise<T[]>): Promise<T[]> {
+  try {
+    return await request;
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) return [];
+    throw error;
+  }
 }
 
 async function pruneOldReadings(): Promise<void> {

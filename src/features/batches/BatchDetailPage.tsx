@@ -1,5 +1,6 @@
 import { facade } from '../../facade/PisciculturaFacade';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
+import { LoadingState } from '../../shared/ui/LoadingState';
 import { Page } from '../../shared/ui/Page';
 import { SyncChip } from '../../shared/ui/SyncChip';
 import { formatDate, formatNumber } from '../../shared/utils/format';
@@ -20,13 +21,14 @@ async function loadBatch(batchId: string) {
 
 export function BatchDetailPage({ batchId }: { batchId: string }) {
   const data = useLiveQuery(() => loadBatch(batchId), ['batches', 'ponds', 'records'], [batchId]);
-  if (!data) return <Page title="Lote" backTo="/">{null}</Page>;
+  if (!data) return <Page title="Lote" backTo="/"><LoadingState /></Page>;
   const { batch, pond, records } = data;
   if (!batch) return <Page title="Lote" backTo="/"><p className="notice warn">Este lote no existe en el celular.</p></Page>;
   const back = `/estanques/${batch.pondId}`;
 
   return (
-    <Page title={`Lote ${batch.code}`} backTo={back}>
+    <Page title={`Lote ${batch.code}`} backTo={back} wide>
+      <div className="detail-column">
       <section className="section">
         <div className="section-head">
           <p className="muted">
@@ -42,15 +44,16 @@ export function BatchDetailPage({ batchId }: { batchId: string }) {
       {/* Lo que el resumen no dice: hacia dónde va, y qué encontró el análisis */}
       <ProjectionPanel batchId={batch.id} />
       <FindingsPanel batchId={batch.id} />
-
+      </div>
+      <div className="detail-column">
       {batch.status === 'activo' && (
         <section className="section">
           <h2>Registrar</h2>
           <div className="button-row">
             {BATCH_RECORDS.map((type) => (
-              <a key={type} className="button secondary" href={`#/registrar/${type}?lote=${batch.id}`}>{RECORD_LABELS[type]}</a>
+              <a key={type} className={type === 'feeding' ? 'button' : 'button secondary'} href={`#/registrar/${type}?lote=${batch.id}`}>{RECORD_LABELS[type]}</a>
             ))}
-            <a className="button" href={`#/lotes/${batch.id}/conteo`}>Contar con el contador</a>
+            <a className="button secondary" href={`#/lotes/${batch.id}/conteo`}>Contar con el contador</a>
           </div>
         </section>
       )}
@@ -62,6 +65,7 @@ export function BatchDetailPage({ batchId }: { batchId: string }) {
         </div>
         <RecordList records={records} empty="Aún no hay registros de este lote." />
       </section>
+      </div>
     </Page>
   );
 }

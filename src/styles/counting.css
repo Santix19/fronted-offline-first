@@ -1,21 +1,134 @@
 /* Counting screen: the running total has to be readable at arm's length, standing over the
-   channel, with the phone wet and the sun on the screen. */
-.count-total {
-  text-align: center;
-  padding: var(--space-5) var(--space-3);
+   channel, with the phone wet and the sun on the screen (a lacquer panel in both themes). */
+.count-panel {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: #1b1413;
+  color: #f3ebdd;
 }
 
-.count-total strong {
-  display: block;
-  font-size: var(--text-xxl);
+.count-label {
+  color: #cdbfae;
+  font-weight: 700;
+}
+
+.count-number {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-size: clamp(2rem, calc(160cqi / var(--count-digits, 4)), 7rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
-  line-height: 1.1;
-  color: var(--lake);
 }
 
-.count-total span {
-  color: var(--ink-soft);
+/* Progress towards the fry stocked, filled with the trout's spots */
+.count-bar {
+  height: 22px;
+  border-radius: 4px;
+  background: #3a2d2a;
+  overflow: hidden;
+}
+
+.count-bar span {
+  display: block;
+  height: 100%;
+  background: radial-gradient(circle, #1b1413 2px, transparent 2.5px) 0 0 / 14px 11px, #a9b83a;
+  transition: width var(--dur-state) var(--ease-water);
+}
+
+.count-progress {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.count-progress span:last-child { color: #cdbfae; }
+
+/* The gate: a bone window with the counter's barrier; one trout crosses per count */
+.count-gate {
+  position: relative;
+  height: 96px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: radial-gradient(circle, #ddd0bc 1.6px, transparent 2px) 0 0 / 18px 18px, #f3ebdd;
+}
+
+.count-gate::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 62%;
+  width: 6px;
+  background: repeating-linear-gradient(#e8386f 0 12px, #1b1413 12px 24px);
+}
+
+.count-fish {
+  position: absolute;
+  top: 20px;
+  left: 8%;
+  transform: scaleX(-1);
+}
+
+.count-fish.crossing {
+  animation: cross-gate 240ms var(--ease-proof) both;
+}
+
+@keyframes cross-gate {
+  from { left: -35%; }
+  to { left: 105%; }
+}
+
+.count-facts {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.count-facts div {
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid #5a4a40;
+  border-radius: var(--radius-sm);
+}
+
+.count-facts dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-size: 1.25rem;
+  line-height: 1.15;
+}
+
+.count-facts dt {
+  color: #cdbfae;
   font-size: var(--text-sm);
+}
+
+/* A folded section: its title is a full-width, 48 px row to tap */
+.fold {
+  border: 2px solid var(--rule);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-4);
+}
+
+.fold > summary {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-size: var(--text-lg);
+  cursor: pointer;
+}
+
+.fold[open] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
 }
 
 /* Frame log: a diagnosis aid while calibrating, so it stays small and does not compete. */

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-const base = { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.75, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true } as const;
+const base = { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.2, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true } as const;
 
 /** Four line icons in one stroke weight. The wave is the water of the ponds; the others are plain on purpose. */
 export const NAV_ICONS: Record<string, ReactNode> = {

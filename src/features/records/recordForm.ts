@@ -7,27 +7,29 @@ export interface FieldSpec {
   key: string;
   label: string;
   hint?: string;
+  /** Shown beside the number, so the label stays short */
+  unit?: string;
   kind: 'number' | 'text';
 }
 
 export const RECORD_FIELDS: Record<RecordType, FieldSpec[]> = {
   water_reading: [
-    { key: 'tempC', label: 'Temperatura (°C)', kind: 'number', hint: 'Óptimo para trucha: 10 a 16 °C' },
-    { key: 'ph', label: 'pH', kind: 'number', hint: 'Óptimo: 6,5 a 8,5' },
-    { key: 'oxygenMgL', label: 'Oxígeno disuelto (mg/L)', kind: 'number', hint: 'Opcional. Mínimo recomendado: 6' },
+    { key: 'tempC', label: 'Temperatura', unit: '°C', kind: 'number', hint: 'Ideal: 10 a 16 °C' },
+    { key: 'ph', label: 'pH', kind: 'number', hint: 'Ideal: 6,5 a 8,5' },
+    { key: 'oxygenMgL', label: 'Oxígeno', unit: 'mg/L', kind: 'number', hint: 'Opcional. Mínimo: 6 mg/L' },
   ],
   fry_count: [
     { key: 'total', label: 'Total contado', kind: 'number' },
-    { key: 'multipleCuts', label: 'Cortes múltiples', kind: 'number', hint: 'Opcional. Lo indica la máquina contadora' },
+    { key: 'multipleCuts', label: 'Pasaron dos juntos', kind: 'number', hint: 'Opcional. Pasos ambiguos que la máquina contó como un solo pez' },
   ],
   mortality: [
     { key: 'quantity', label: 'Peces muertos', kind: 'number' },
     { key: 'cause', label: 'Causa', kind: 'text', hint: 'Opcional. Por ejemplo: hongos, falta de oxígeno' },
   ],
-  feeding: [{ key: 'kg', label: 'Alimento entregado (kg)', kind: 'number' }],
+  feeding: [{ key: 'kg', label: 'Alimento entregado', unit: 'kg', kind: 'number' }],
   biometry: [
-    { key: 'avgWeightG', label: 'Peso promedio (g)', kind: 'number' },
-    { key: 'sampleSize', label: 'Peces pesados (muestra)', kind: 'number', hint: 'Opcional' },
+    { key: 'avgWeightG', label: 'Peso promedio', unit: 'g', kind: 'number' },
+    { key: 'sampleSize', label: 'Peces pesados', kind: 'number', hint: 'Opcional. Cuántos se pesaron' },
   ],
 };
 

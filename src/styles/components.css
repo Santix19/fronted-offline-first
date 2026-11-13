@@ -109,6 +109,19 @@
   min-width: 0;
 }
 
+/* A person: name and state on top, the actions on their own line so nothing gets squeezed */
+.person-row {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.person-actions {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
 .row-title {
   font-family: var(--font-display);
   font-weight: 600;

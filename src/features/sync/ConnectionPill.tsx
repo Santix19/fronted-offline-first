@@ -6,14 +6,15 @@ import { usePendingCounts } from './usePendingCounts';
 export function ConnectionPill() {
   const online = useOnline();
   const { running, lastError } = useSyncStatus();
-  const { pending, rejected } = usePendingCounts();
+  const { pending, rejected, loading } = usePendingCounts();
 
   // Short text so the screen title keeps its room; the counts are on the bottom tab and in the label
   let text = 'Al día';
   let tone = 'ok';
-  if (!online) [text, tone] = ['Sin señal', 'offline'];
+  if (loading) [text, tone] = ['Cargando', 'busy'];
+  else if (!online) [text, tone] = ['Sin señal', 'offline'];
   else if (running) [text, tone] = ['Subiendo', 'busy'];
-  else if (rejected) [text, tone] = ['Revisar', 'error'];
+  else if (rejected) [text, tone] = [rejected === 1 ? '1 rechazado' : `${rejected} rechazados`, 'error'];
   else if (pending) [text, tone] = ['Pendiente', lastError ? 'error' : 'busy'];
   const detail = `${pending} por subir, ${rejected} rechazados`;
 

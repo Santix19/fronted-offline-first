@@ -1,0 +1,99 @@
+/* All content participates in reflow, including long farm names and native date controls. */
+.content, .content-body, .row-main, .section, .panel, .field, .field-text { min-width: 0; }
+.row-title, .wordmark, .person-row, .notice, .section-head h2 { overflow-wrap: anywhere; }
+.field input { min-width: 0; max-width: 100%; }
+.section-head, .panel-head, .button-row { flex-wrap: wrap; }
+.row { flex-wrap: wrap; }
+.row-main { flex: 1 1 160px; }
+.field-big { grid-template-columns: minmax(0, 1fr) minmax(4.5rem, 7.25rem) auto; }
+.field-big .unit:empty { display: none; }
+.page-title { line-height: 1.05; }
+.page-title:focus { outline: none; }
+.section-head .button, .alert-row .button { min-height: 48px; }
+.top-bar .wordmark { min-width: 0; }
+.bottom-nav a, .connection-pill, .link { min-height: 48px; }
+.top-bar, .bottom-nav { --focus: var(--lila); }
+.content { scroll-padding-bottom: 110px; }
+html { scroll-padding-block: 110px; }
+a, button, input, summary, [tabindex] { scroll-margin-block: 110px; }
+.skip-content { position: fixed; top: 12px; left: 12px; z-index: 10; padding: 16px; background: var(--surface); color: var(--ink); transform: translateY(-160%); }
+.skip-content:focus { transform: none; }
+.loading-state { display: grid; gap: 16px; min-height: 150px; padding: 16px; border: 2px solid var(--rule); border-radius: 6px; }
+.loading-state .skeleton { display: grid; gap: 12px; }
+.saved-trout { position: absolute; top: 12px; right: 8px; }
+.count-help { color: var(--tinta-suave-laca); font-size: var(--text-sm); }
+.count-panel { --focus: var(--lila); }
+.sync-panel { display: grid; gap: 24px; }
+.sync-figures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 0; }
+.sync-figures div { display: flex; flex-direction: column-reverse; gap: 8px; }
+.sync-figures dd { margin: 0; font: 800 4rem/1 var(--font-display); }
+.sync-figures dt { font-weight: 700; }
+.sync-last { display: grid; gap: 4px; }
+.sync-last strong { font-size: 1.25rem; }
+.sparkline { width: 100%; height: auto; overflow: visible; }
+.sparkline text { fill: var(--tinta-suave-laca); font: 14px var(--font); }
+.spark-axis { stroke: var(--tinta-suave-laca); stroke-width: 1; }
+.spark-line { stroke: var(--oliva-claro); fill: none; stroke-width: 3; }
+.spark-dot { fill: var(--durazno); }
+.network-counts { display: grid; gap: 16px; }
+.network-counts .count-total { display: grid; gap: 8px; }
+.network-counts .count-total strong { font: 800 3rem/1 var(--font-display); }
+.count-number { overflow-wrap: anywhere; }
+.counting-layout, .counting-main, .counting-tools { display: grid; gap: 24px; min-width: 0; }
+.detail-column { display: grid; gap: 24px; min-width: 0; }
+.content-wide:has(.counting-layout) > .content-body { display: flex; }
+.kpi-batches .kpi-value, .kpi-batches .kpi-label { position: relative; align-self: flex-start; background: #1b1413; text-shadow: none; padding-right: 8px; }
+.person-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.settings-column { display: flex; flex-direction: column; gap: var(--space-5); min-width: 0; }
+@media (max-width: 360px) {
+  .field-big { grid-template-columns: minmax(0, 1fr) 5rem auto; padding: 12px; gap: 8px; }
+  .field-big input { font-size: 1.75rem; }
+  .count-facts { grid-template-columns: 1fr; }
+  .connection-pill { padding-inline: 8px; }
+  .choices { flex-wrap: wrap; }
+  .choices label { flex-basis: 40%; }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .app { padding-left: 224px; }
+  .bottom-nav { inset: 0 auto 0 0; translate: none; width: 224px; display: flex; flex-direction: column; padding: 28px 16px 24px; gap: 8px; border-right: 2px solid var(--rule); border-top: 0; }
+  /* The brand moves into the sidebar; the top bar keeps only back and sync state */
+  .bottom-nav::before { content: 'La Cocha'; display: block; margin: 8px 12px 28px; color: #f3ebdd; font: 800 1.5rem/1 var(--font-display); letter-spacing: -.01em; }
+  .bottom-nav a { flex-direction: row; justify-content: flex-start; gap: 16px; padding: 12px; font-size: 1.0625rem; border-radius: 6px; transition: background-color 120ms; }
+  .bottom-nav a:hover:not([aria-current='page']) { background: rgb(255 255 255 / .09); }
+  .bottom-nav a[aria-current='page'] { background: var(--oliva); color: var(--laca); }
+  .bottom-nav .nav-pill { display: none; }
+  .bottom-nav .count { position: static; margin-left: auto; }
+  /* Every screen shares one column, 1240px at most, centred beside the menu; the top bar lines up with it */
+  .top-bar { min-height: 84px; padding-inline: max(40px, calc((100% - 1240px) / 2 + 40px)); }
+  .top-bar .wordmark { visibility: hidden; }
+  .content { padding: 24px 40px 64px; max-width: 1240px; margin-inline: auto; }
+  .page-title { font-size: 2.5rem; }
+  .content-wide > .content-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 32px 40px; }
+  .content-wide > .content-body > :only-child { grid-column: 1 / -1; }
+
+  /* Forms: fields side by side, two per row; notices and choices that need the room take the full row */
+  .content:not(.content-wide) .form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 24px 32px; }
+  .content:not(.content-wide) .form > :not(.field) { grid-column: 1 / -1; }
+  .content:not(.content-wide) .form > button[type='submit'] { grid-column: 1; }
+
+  /* Lists of things to pick (batches, people, alerts): a grid of cut pieces instead of one long strip */
+  .page-cards .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; overflow: visible; background: transparent; border: 0; border-radius: 0; }
+  .page-cards .list > li { overflow: hidden; background: var(--surface); border: 2px solid var(--rule); border-radius: var(--radius-md); }
+  .page-cards .list > li + li { border-top: 2px solid var(--rule); }
+  .page-cards .list > li > .row, .page-cards .list > li.row { height: 100%; }
+
+  /* A short summary column stays in view beside a long list (the pond and its readings) */
+  .detail-sticky { position: sticky; top: 100px; }
+
+  /* Sync: the figures and the button on the left, what was refused and how it works on the right */
+  .page-sync .sync-panel { grid-row: 1 / span 2; }
+
+  /* The batch summary sits in half the screen: its big figures size to that half, not to a phone */
+  .summary .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .summary .facts dd { font-size: clamp(1.75rem, 2.4vw, 2.75rem); }
+  .counting-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+  .counting-main, .counting-tools { display: grid; gap: 24px; min-width: 0; }
+  .counting-main { position: sticky; top: 100px; }
+  a.row:hover, .row:is(a, button):hover { background: var(--lake-soft); }
+}

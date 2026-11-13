@@ -1,0 +1,44 @@
+﻿/* Example components keep bone surfaces in both themes. */
+.lg-demo {
+  --surface: #fffaf0; --mist: #f3ebdd; --rule: #1b1413; --ink: #1b1413;
+  --ink-soft: #3d302b; --ink-faint: #5a4a40; --lake-soft: #e8ddca;
+  --ok: #40530a; --ok-soft: #e3e9b4; --warn: #8a4b00; --warn-soft: #ffe0c7;
+  margin-top: 14px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; color: #1b1413;
+}
+.lg-demo > .field, .lg-demo > .lg-row, .lg-demo > .lg-count { align-self: stretch; }
+/* The pill sits on the card, which is dark in the dark theme: give it its own bone paper */
+.lg-demo .connection-pill:not(.offline) { background: var(--surface); }
+.lg-example { font-size: .875rem; color: var(--ink-soft); }
+.lg-label { font-size: .875rem; font-weight: 700; }
+.lg-value { min-height: 48px; display: grid; place-items: center; border: 2px solid #1b1413; border-radius: 6px; background: #f3ebdd; font: 800 2rem/1 var(--font-display); }
+.lg-demo .field-big { grid-template-columns: minmax(0, 1fr) 4.5rem auto; padding: 8px; gap: 6px; }
+.lg-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border: 2px solid #1b1413; border-radius: 6px; background: #fffaf0; }
+.lg-row > div { min-width: 0; flex: 1 1 140px; }
+.lg-row-title { font: 800 1.25rem/1.2 var(--font-display); }
+.lg-count { display: grid; gap: 12px; padding: 16px; border-radius: 6px; background: #1b1413; color: #f3ebdd; }
+.lg-count-number { font: 800 3.75rem/.95 var(--font-display); letter-spacing: -.04em; }
+.lg-count .count-gate { height: 70px; }
+.lg-count .count-fish { top: 12px; }
+.lg-count .count-fish img { width: 88px; }
+.lg-progress { position: fixed; z-index: 6; inset: auto 0 0; display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); padding: 6px 8px max(6px,env(safe-area-inset-bottom)); background: #1b1413; border-top: 2px solid #f3ebdd; }
+.lg-progress button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-height: 48px; min-width: 0; padding: 6px 4px; background: transparent; color: #f3ebdd; border: 0; border-radius: 6px; font-size: .875rem; font-weight: 700; cursor: pointer; }
+.lg-progress .lg-diamond { display: block; width: 10px; height: 10px; rotate: 45deg; border: 2px solid currentColor; }
+.lg-progress button[aria-current] { color: #c9d65a; }
+.lg-progress button[aria-current] .lg-diamond { background: currentColor; }
+.lg-progress button[data-done='true'] .lg-diamond { background: #f3ebdd; }
+.lg-progress button:focus-visible { outline: 3px solid #b9b0ee; outline-offset: -2px; }
+@media (max-width: 360px) {
+  .lg-piece { padding-inline: 14px; }
+  .lg-piece .lg-example { right: 14px; }
+}
+@media (max-width: 359px) {
+  .lg-demo .field-big { grid-template-columns: minmax(0,1fr) auto; }
+  .lg-demo .field-text { grid-column: 1 / -1; }
+}
+@media (max-width: 1023px), (max-height: 599px) {
+  .lg-count { padding: 12px; }
+  .lg-count-number { font-size: 3rem; }
+}
+@media (min-width: 1024px) and (min-height: 600px) {
+  .lg-progress { padding-inline: 24px; }
+}

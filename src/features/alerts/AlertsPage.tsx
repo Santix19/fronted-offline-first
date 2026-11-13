@@ -1,4 +1,5 @@
 import { facade } from '../../facade/PisciculturaFacade';
+import { LoadingState } from '../../shared/ui/LoadingState';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
 import { EmptyState } from '../../shared/ui/EmptyState';
 import { Page } from '../../shared/ui/Page';
@@ -26,11 +27,12 @@ export function AlertsPage() {
   const data = useLiveQuery(loadAlerts, ['alerts', 'ponds']);
 
   return (
-    <Page title="Alertas">
+    <Page title="Alertas" layout="cards">
       <section className="section">
         <h2>Umbrales cruzados</h2>
+        {!data && <LoadingState />}
         {data && data.alerts.length === 0 && (
-          <EmptyState object="bell" color="violet"
+          <EmptyState
             title="No hay alertas pendientes."
             hint="Cuando una lectura salga del rango para la trucha, la alerta aparece aquí después de sincronizar."
           />

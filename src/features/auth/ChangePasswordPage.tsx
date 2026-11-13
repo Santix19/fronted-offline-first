@@ -5,12 +5,14 @@ import { Field } from '../../shared/ui/Field';
 import { AuthScreen } from './AuthScreen';
 import { onlyErrors, passwordError, type AuthErrors } from './authValidation';
 import type { User } from './authTypes';
+import { useOnline } from '../../shared/ui/useOnline';
 
 /**
  * Lo primero que ve quien entró con la clave que le dio el productor. No hay forma de saltarla:
  * una clave que un tercero conoce no puede quedarse puesta.
  */
 export function ChangePasswordPage({ user }: { user: User }) {
+  const online = useOnline();
   const [current, setCurrent] = useState('');
   const [next, setNext] = useState('');
   const [errors, setErrors] = useState<AuthErrors>({});
@@ -39,12 +41,13 @@ export function ChangePasswordPage({ user }: { user: User }) {
       subtitle="Tu clave es temporal: el productor te la dio. Elige una tuya para seguir."
     >
       <form className="form" onSubmit={submit} noValidate>
+        {!online && <p className="notice warn">Cambiar la clave necesita señal. Inténtalo cuando vuelva la conexión.</p>}
         {errors.form && <p className="notice danger" role="alert">{errors.form}</p>}
         <Field label="Clave que te dieron" type="password" autoComplete="current-password"
           value={current} onChange={setCurrent} error={errors.current} />
         <Field label="Tu clave nueva" type="password" autoComplete="new-password"
           value={next} onChange={setNext} error={errors.next} hint="Mínimo 8 caracteres" />
-        <button className="button block" type="submit" disabled={busy}>
+        <button className="button block" type="submit" disabled={busy || !online}>
           {busy ? 'Guardando…' : 'Guardar mi clave'}
         </button>
       </form>

@@ -1,0 +1,89 @@
+/* Barniz de Pasto, the component layer. Loaded last: it gives the shared pieces their
+   lacquer edges. Fields, navigation, water, home and auth live in their topic sheets. */
+
+/* Lacquer edges: every surface is a cut piece with a 2 px outline, no shadows */
+.list,
+.panel,
+.empty,
+.kpi {
+  border: 2px solid var(--rule);
+}
+
+.panel.stage-chapter,
+.trend {
+  border: 0;
+}
+
+.field input,
+.field select,
+.field textarea {
+  border-width: 2px;
+}
+
+.button {
+  border-width: 2px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.button.secondary,
+.panel .button.secondary,
+.list .button.secondary {
+  border-color: var(--rule);
+  background: transparent;
+}
+
+/* The chamfered corners belonged to the previous style; lacquer pieces are square-cut */
+.cut-corner { clip-path: none; }
+
+/* The trout sits on bone or lacquer and never spills out of its piece */
+.trout-image { height: auto; max-width: 100%; }
+.summary .facts { padding-right: 0; }
+
+/* Icons sit on the text baseline and never shrink inside a flex row */
+.icon-line { flex: none; vertical-align: middle; }
+.top-bar .back { display: grid; place-items: center; min-width: 48px; min-height: 48px; }
+.quick-action span { display: flex; }
+.kpi-icon { position: absolute; top: 12px; left: 14px; display: flex; }
+
+.link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
+}
+
+/* The live pond fills the batches tile, under the number and its label */
+.pond-window {
+  position: absolute;
+  inset: 0;
+}
+
+.kpi-batches .kpi-value,
+.kpi-batches .kpi-label {
+  pointer-events: none;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-size: var(--text-display);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.stage-chapter {
+  background: var(--chapter);
+  color: var(--on-chapter);
+}
+
+.stage-chapter .muted { color: var(--chapter-muted); }
+
+.summary { position: relative; overflow: hidden; }
+.summary .facts dt { color: var(--chapter-muted); }
+.summary .facts dd { color: var(--on-chapter); font-size: var(--text-reading); line-height: 0.92; }
+.summary .facts > div:first-child dd { color: var(--oliva); }
+/* --ink, not a fixed black: in the dark theme the notice turns dark brown and black text read at 1.36:1 (E2) */
+.summary .notice { color: var(--ink); }
+.empty-object { margin: 0 auto var(--space-3); }

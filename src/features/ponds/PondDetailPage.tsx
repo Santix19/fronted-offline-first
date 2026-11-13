@@ -1,5 +1,6 @@
 import { facade } from '../../facade/PisciculturaFacade';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
+import { LoadingState } from '../../shared/ui/LoadingState';
 import { Page } from '../../shared/ui/Page';
 import { SyncChip } from '../../shared/ui/SyncChip';
 import { formatNumber } from '../../shared/utils/format';
@@ -18,12 +19,14 @@ async function loadPond(pondId: string) {
 /** One pond: water state, its alerts, its batches and the latest readings. */
 export function PondDetailPage({ pondId }: { pondId: string }) {
   const data = useLiveQuery(() => loadPond(pondId), ['ponds', 'alerts', 'records'], [pondId]);
-  if (!data) return <Page title="Estanque" backTo="/">{null}</Page>;
+  if (!data) return <Page title="Estanque" backTo="/"><LoadingState /></Page>;
   const { pond, alerts, readings } = data;
   if (!pond) return <Page title="Estanque" backTo="/"><p className="notice warn">Este estanque no existe en el celular.</p></Page>;
 
   return (
-    <Page title={pond.name} backTo="/">
+    <Page title={pond.name} backTo="/" wide>
+      {/* Short on purpose: on a wide screen it stays in view while the readings scroll beside it */}
+      <div className="detail-column detail-sticky">
       <section className="section">
         <div className="section-head">
           <p className="muted">
@@ -45,13 +48,15 @@ export function PondDetailPage({ pondId }: { pondId: string }) {
           <ul className="list">{alerts.map((a) => <AlertItem key={a.id} alert={a} />)}</ul>
         </section>
       )}
-
+      </div>
+      <div className="detail-column">
       <BatchList pondId={pond.id} />
 
       <section className="section">
         <h2>Últimas lecturas</h2>
         <RecordList records={readings} empty="Aún no hay lecturas de este estanque." />
       </section>
+      </div>
     </Page>
   );
 }

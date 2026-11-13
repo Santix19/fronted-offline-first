@@ -3,13 +3,17 @@
  * The data is not cached here: it lives in IndexedDB (src/shared/db). Backend calls go straight
  * to the network, because the sync module already handles failures and retries.
  */
-const CACHE = 'lacocha-app-v2';
+const CACHE = 'lacocha-app-v9';
 const SHELL = ['/', '/index.html', '/manifest.webmanifest', '/icons/icon.svg', '/icons/icon-192.png', '/icons/icon-512.png',
-  // The 3D objects of the loud style: cached up front so the first offline open still shows them
-  ...['fish', 'drop', 'thermo', 'bell', 'coin', 'cloud'].map((n) => `/objects/${n}.webp`)];
+  // The trout: its picture and the two 3D models, saved up front so they also show with no signal
+  '/objects/trucha.png', '/models/trucha.glb', '/models/trucha-lod.glb'];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)));
+  event.waitUntil(
+    fetch('/offline-assets.json', { cache: 'no-store' })
+      .then((response) => { if (!response.ok) throw new Error('No se pudo preparar la app sin señal'); return response.json(); })
+      .then((files) => caches.open(CACHE).then((cache) => cache.addAll([...SHELL, ...files]))),
+  );
   self.skipWaiting();
 });
 
@@ -44,7 +48,9 @@ self.addEventListener('fetch', (event) => {
 
   // JS, CSS and icons: Vite gives them a new name on every build, so a saved copy is always valid
   event.respondWith(
-    caches.match(request).then(
+    // These are our versioned static files. A server's Vary: Origin must not make a module
+    // request miss the copy saved at install time (cache.addAll sends a different Origin header).
+    caches.match(request, { ignoreVary: true }).then(
       (cached) =>
         cached ??
         fetch(request).then((response) => {

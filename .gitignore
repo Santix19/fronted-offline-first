@@ -2,3 +2,11 @@ node_modules
 dist
 .env.local
 *.log
+
+# Source art kept out of the build (the app uses the optimized copies in public/models)
+assets-src/
+
+# Working notes and local review scripts, kept on this machine only
+docs/
+design.md
+tools/rediseno/

@@ -41,11 +41,9 @@
 }
 
 .auth-fish { position: absolute; top: max(2vh, 8px); right: -24px; }
-.auth-drop { position: absolute; top: 9vh; left: 6vw; }
 
 @media (min-width: 900px) {
   .auth-fish { top: 18vh; right: calc(50% - 440px); }
-  .auth-drop { bottom: 18vh; left: calc(50% - 400px); }
 }
 
 @media (max-width: 899px) {
@@ -82,4 +80,29 @@
 .auth-story {
   margin-top: var(--space-3);
   text-align: center;
+}
+
+/* Before the app (sign in, register, PIN): a lacquer wall with the trout's spots, the trout above
+   a bone card. No animated background: the PIN screen is opened every day and has to be instant. */
+.auth {
+  background: radial-gradient(circle, #3a2d2a 1.6px, transparent 2px) 0 0 / 18px 18px, #1b1413;
+}
+
+.auth::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 12px;
+  background:
+    linear-gradient(135deg, var(--rosa) 25%, transparent 25%) 0 0 / 24px 24px,
+    linear-gradient(225deg, var(--rosa) 25%, transparent 25%) 0 0 / 24px 24px,
+    #f3ebdd;
+}
+
+.auth-card { border: 2px solid var(--rule); }
+.auth-title { line-height: 0.95; }
+.auth-footer { border-top-width: 2px; }
+
+@media (max-width: 899px) {
+  .auth-fish { top: 48px; right: 50%; translate: 50% 0; }
 }

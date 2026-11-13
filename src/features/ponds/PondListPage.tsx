@@ -1,4 +1,5 @@
 import { facade } from '../../facade/PisciculturaFacade';
+import { LoadingState } from '../../shared/ui/LoadingState';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
 import { HomeDashboard } from '../dashboard/HomeDashboard';
 import { EmptyState } from '../../shared/ui/EmptyState';
@@ -17,14 +18,15 @@ export function PondListPage() {
   const data = useLiveQuery(loadHome, ['ponds', 'records', 'alerts']);
 
   return (
-    <Page title="Tu finca, hoy">
+    <Page title="Tu finca, hoy" wide>
       <HomeDashboard />
-      <section className="section">
+      <section className="section" id="estanques" tabIndex={-1}>
         <div className="section-head">
           <h2>Estanques</h2>
           <a className="button secondary" href="#/estanques/nuevo">Agregar</a>
         </div>
 
+        {!data && <LoadingState />}
         {data && data.ponds.length === 0 && (
           <EmptyState
             title="Todavía no hay estanques en este celular."

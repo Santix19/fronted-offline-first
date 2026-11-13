@@ -5,15 +5,15 @@ import { ConnectionPill } from '../features/sync/ConnectionPill';
 import { loadSavedSyncStatus } from '../features/sync/syncStatus';
 import { useAutoSync } from '../features/sync/useAutoSync';
 import { TopBarExtra } from '../shared/ui/Page';
-import { LiveBackdrop } from '../shared/ui/LiveBackdrop';
 import { usePath } from '../shared/ui/router';
 import { BottomNav } from './BottomNav';
 import { renderRoute } from './routes';
 
 /** App shell: the current screen, the bottom navigation and automatic sync in the background. */
 export function App() {
+  const path = usePath();
   // The story is public: it explains the app before anyone has signed in
-  if (usePath() === '/historia') return <StoryPage />;
+  if (path === '/historia') return <StoryPage />;
   return (
     <AuthGate>
       <SignedInApp />
@@ -36,8 +36,8 @@ function SignedInApp() {
 
   return (
     <TopBarExtra.Provider value={<ConnectionPill />}>
-      <LiveBackdrop mode="app" />
       <div className="app">
+        <a className="skip-content" href="#contenido" onClick={(e) => { e.preventDefault(); document.getElementById('contenido')?.focus(); }}>Ir al contenido</a>
         {renderRoute(path)}
         <BottomNav path={path} />
       </div>

@@ -1,14 +1,10 @@
-import { useRef } from 'react';
 import { facade } from '../../facade/PisciculturaFacade';
-import { useStagger } from '../../shared/motion/useStagger';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
-import { CapsuleRibbon } from '../../shared/ui/CapsuleRibbon';
-import { GlossyObject } from '../../shared/ui/GlossyObject';
 import { Sparkline } from '../../shared/ui/Sparkline';
 import { formatNumber } from '../../shared/utils/format';
 import { buildDashboard } from './dashboardMath';
+import { Icon } from '../../shared/ui/icons';
 import { KpiTile } from './KpiTile';
-import { recordCapsules } from './recordCapsules';
 
 async function load() {
   const [ponds, batches, records, alerts, pending] = await Promise.all([
@@ -18,9 +14,11 @@ async function load() {
     facade.alerts(),
     facade.pendingCounts(),
   ]);
+  const active = batches.filter((b) => b.status === 'activo');
   return {
     ...buildDashboard({ ponds, batches, records, alerts: alerts.length, ...pending, now: Date.now() }),
-    recent: recordCapsules(records),
+    // Feeding is the record made several times a day: one tap with one batch, a short list with more
+    feedHref: active.length === 1 ? `#/registrar/feeding?lote=${active[0].id}` : active.length > 1 ? '#/lotes?registrar=feeding' : undefined,
   };
 }
 
@@ -47,23 +45,20 @@ function DashboardSkeleton() {
 /** The first thing on the home screen: what needs you, then how the water has been. */
 export function HomeDashboard() {
   const data = useLiveQuery(load, ['ponds', 'batches', 'records', 'alerts']);
-  const tiles = useRef<HTMLDivElement>(null);
-  useStagger(tiles, [data !== undefined]);
   if (!data) return <DashboardSkeleton />;
 
   return (
     <section className="dashboard" aria-label="Resumen">
-      <div className="kpi-grid" ref={tiles}>
-        <KpiTile label="Estanques activos" value={data.activePonds} href="#/" color="blue" object="drop" objectColor="lime" />
-        <KpiTile label="Lotes activos" value={data.activeBatches} href="#/" color="lime" object="fish" objectColor="blue" />
-        <KpiTile label="Alertas" value={data.alerts} href="#/alertas" color="peach" object="bell" objectColor="violet"
-          tone={data.alerts > 0 ? 'danger' : undefined} />
-        <KpiTile label="Por subir" value={data.waiting} href="#/sincronizacion" color="white" object="cloud" objectColor="blue"
-          tone={data.waiting > 0 ? 'warn' : undefined} />
+      {data.feedHref && (
+        <a className="button block quick-action" href={data.feedHref}>Registrar alimentación <span><Icon name="arrow" /></span></a>
+      )}
+      <div className="kpi-grid">
+        <KpiTile kind="batches" label="Lotes activos" value={data.activeBatches} href="#/lotes" />
+        <KpiTile kind="alerts" label="Alertas" value={data.alerts} href="#/alertas" tone={data.alerts > 0 ? 'danger' : undefined} />
+        <KpiTile kind="ponds" label="Estanques activos" value={data.activePonds} />
+        <KpiTile kind="pending" label="Por subir" value={data.waiting} href="#/sincronizacion" tone={data.waiting > 0 ? 'warn' : undefined} />
       </div>
-      <CapsuleRibbon items={data.recent} label="Últimos registros" />
-      <div className="panel trend stage-chapter cut-corner">
-        <GlossyObject kind="thermo" color="peach" size={120} tilt={16} className="float trend-object" />
+      <div className="panel trend stage-chapter">
         <div className="trend-head">
           <h2>Temperatura del agua</h2>
           {data.lastTempC !== undefined && <span className="trend-now number">{formatNumber(data.lastTempC)} °C</span>}

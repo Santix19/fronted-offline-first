@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { AlertsPage } from '../features/alerts/AlertsPage';
+import { ActiveBatchesPage } from '../features/batches/ActiveBatchesPage';
 import { BatchDetailPage } from '../features/batches/BatchDetailPage';
 import { BatchFormPage } from '../features/batches/BatchFormPage';
 import { CountingPage } from '../features/counting/CountingPage';
@@ -18,13 +19,14 @@ type Params = Record<string, string>;
 /** Every screen of the app and its address. Order matters: the first match wins. */
 const ROUTES: [string, (p: Params) => ReactNode][] = [
   ['/', () => <PondListPage />],
-  ['/estanques/nuevo', () => <PondFormPage />],
-  ['/estanques/:id/editar', (p) => <PondFormPage pondId={p.id} />],
-  ['/estanques/:id', (p) => <PondDetailPage pondId={p.id} />],
-  ['/lotes/nuevo', (p) => <BatchFormPage pondId={p.estanque} />],
-  ['/lotes/:id/editar', (p) => <BatchFormPage batchId={p.id} />],
-  ['/lotes/:id/conteo', (p) => <CountingPage batchId={p.id} />],
-  ['/lotes/:id', (p) => <BatchDetailPage batchId={p.id} />],
+  ['/estanques/nuevo', () => <PondFormPage key="new-pond" />],
+  ['/estanques/:id/editar', (p) => <PondFormPage key={p.id} pondId={p.id} />],
+  ['/estanques/:id', (p) => <PondDetailPage key={p.id} pondId={p.id} />],
+  ['/lotes', (p) => <ActiveBatchesPage record={p.registrar} />],
+  ['/lotes/nuevo', (p) => <BatchFormPage key={`new-${p.estanque}`} pondId={p.estanque} />],
+  ['/lotes/:id/editar', (p) => <BatchFormPage key={p.id} batchId={p.id} />],
+  ['/lotes/:id/conteo', (p) => <CountingPage key={p.id} batchId={p.id} />],
+  ['/lotes/:id', (p) => <BatchDetailPage key={p.id} batchId={p.id} />],
   ['/registrar/:type', (p) => recordForm(p)],
   ['/alertas', () => <AlertsPage />],
   ['/sincronizacion', () => <SyncPage />],
@@ -37,7 +39,7 @@ function recordForm(p: Params): ReactNode {
   const parentId = type === 'water_reading' ? p.estanque : p.lote;
   if (!(type in RECORD_LABELS) || !parentId) return null;
   // key: a new form (empty) when the address changes
-  return <RecordFormPage key={`${type}-${parentId}`} type={type} parentId={parentId} />;
+  return <RecordFormPage key={`${type}-${parentId}-${p.corregir ?? ''}`} type={type} parentId={parentId} recordId={p.corregir} />;
 }
 
 export function renderRoute(path: string): ReactNode {
