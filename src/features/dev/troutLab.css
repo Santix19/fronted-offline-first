@@ -1,0 +1,65 @@
+/* Dev-only page (#/dev/trucha). Plain on purpose: it is a test bench, not part of the design. */
+.trout-lab {
+  position: fixed;
+  inset: 0;
+  /* A light pond: shallow water near the bottom of the screen, deeper towards the top */
+  background: radial-gradient(120% 90% at 50% 100%, #d7ecfb 0%, #a9d1f0 45%, #6fa7d6 100%);
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+.trout-lab-canvas {
+  position: absolute !important;
+  inset: 0;
+}
+
+.lab-panel {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  max-width: 360px;
+  max-height: 55vh;
+  overflow: auto;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgb(255 255 255 / 0.92);
+  color: #10202e;
+  font: 14px/1.35 system-ui, sans-serif;
+  touch-action: auto;
+}
+
+.lab-panel summary {
+  cursor: pointer;
+  font-weight: 600;
+  min-height: 32px;
+}
+
+.lab-fps {
+  display: block;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: #3d5466;
+}
+
+.lab-range {
+  display: grid;
+  gap: 2px;
+  margin-top: 8px;
+}
+
+.lab-range span {
+  display: flex;
+  justify-content: space-between;
+}
+
+.lab-range input {
+  width: 100%;
+}
+
+.lab-check {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+}
