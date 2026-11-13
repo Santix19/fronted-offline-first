@@ -6,7 +6,7 @@ interface FieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChan
   onChange: (value: string) => void;
   hint?: string;
   error?: string;
-  /** big: the value is one number, typed large on the right with its unit (design.md "Campo") */
+  /** big: the value is one number, typed large on the right with its unit */
   big?: boolean;
   unit?: string;
   /** Something worth knowing before saving that does not stop the save (a reading out of range) */

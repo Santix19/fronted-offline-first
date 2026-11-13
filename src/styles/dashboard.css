@@ -30,17 +30,6 @@
   transform: scale(0.96) rotate(-1deg);
 }
 
-@media (hover: hover) {
-  .kpi:hover .kpi-object { transform: translate(-6px, 6px) rotate(14deg) scale(1.08); }
-}
-
-.kpi-object {
-  position: absolute;
-  top: -18px;
-  right: -22px;
-  transition: transform var(--dur-slow) var(--ease-water);
-}
-
 .kpi-value {
   position: relative;
   font-family: var(--font-display);
@@ -71,7 +60,6 @@
 
 .trend h2 { font-size: var(--text-xl); max-width: 12ch; }
 .trend .muted { color: var(--chapter-muted); }
-.trend-object { position: absolute; top: -10px; right: -16px; }
 
 .trend-head {
   display: flex;

@@ -20,7 +20,7 @@ interface KpiTileProps {
 
 /**
  * A number of the farm you can tap. The batches tile is a window into the pond: one trout per
- * active batch, up to three (design.md: the trout is the only glossy thing on the screen).
+ * active batch, up to three (the trout is the only glossy thing on the screen).
  */
 export function KpiTile({ kind, label, value, href, tone }: KpiTileProps) {
   const trout = kind === 'batches' ? Math.min(value, 3) : 0;

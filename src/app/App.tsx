@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { useEffect } from 'react';
 import { AuthGate } from '../features/auth/AuthGate';
 import { StoryPage } from '../features/story/StoryPage';
 import { ConnectionPill } from '../features/sync/ConnectionPill';
@@ -9,29 +9,11 @@ import { usePath } from '../shared/ui/router';
 import { BottomNav } from './BottomNav';
 import { renderRoute } from './routes';
 
-// Test benches for development only; the production build drops them entirely
-const TroutLab = import.meta.env.DEV ? lazy(() => import('../features/dev/TroutLab')) : null;
-const DevGallery = import.meta.env.DEV ? lazy(() => import('../features/dev/DevGallery')) : null;
-
 /** App shell: the current screen, the bottom navigation and automatic sync in the background. */
 export function App() {
   const path = usePath();
   // The story is public: it explains the app before anyone has signed in
   if (path === '/historia') return <StoryPage />;
-  if (DevGallery && path === '/dev/ui') {
-    return (
-      <Suspense fallback={null}>
-        <DevGallery />
-      </Suspense>
-    );
-  }
-  if (TroutLab && path === '/dev/trucha') {
-    return (
-      <Suspense fallback={null}>
-        <TroutLab />
-      </Suspense>
-    );
-  }
   return (
     <AuthGate>
       <SignedInApp />

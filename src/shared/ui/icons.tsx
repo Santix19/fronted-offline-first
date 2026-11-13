@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
 /**
- * The app's own line icons (design.md: one stroke of 2.2 px, round ends, no fills, never emoji).
+ * The app's own line icons (one stroke of 2.2 px, round ends, no fills, never emoji).
  * They take the colour of the text around them, so they follow the light and dark themes for free.
  */
 const PATHS = {
@@ -27,5 +27,3 @@ export function Icon({ name, size = 24 }: { name: IconName; size?: number }) {
     </svg>
   );
 }
-
-export const ICON_NAMES = Object.keys(PATHS) as IconName[];

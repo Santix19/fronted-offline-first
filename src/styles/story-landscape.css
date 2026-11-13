@@ -15,8 +15,6 @@
 .lg-world-front { z-index: 2; }
 .lg-landscape-front { z-index: 2; pointer-events: none; }
 .lg-corota { transform-origin: 500px 430px; transform: translate(var(--sc-island-shift, 0px), 0px) scale(var(--sc-island-scale, 1)); }
-.lg-channel { visibility: hidden; }
-.laguna[data-current='4'] .lg-channel { visibility: visible; }
 .lg-boat { transform-box: fill-box; transform-origin: center; transition: transform 240ms var(--ease-water); }
 .laguna[data-current='3'] .lg-boat { transform: translate(80px, -28px) rotate(-8deg); }
 /* Two wooden rails across the counting lane; its box comes from storyWaterFrame (paintStoryWorld) */

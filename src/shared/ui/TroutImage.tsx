@@ -6,7 +6,7 @@ interface TroutImageProps {
 
 /**
  * The project's trout as a still picture (public/objects/trucha.png, rendered from the 3D model's
- * reference). It is the only glossy thing in the app (design.md) and purely decorative, so screen
+ * reference). It is the only glossy thing in the app and purely decorative, so screen
  * readers skip it. Where the trout swims, the 3D school takes its place (src/shared/three/fish).
  */
 export function TroutImage({ width, className = '' }: TroutImageProps) {

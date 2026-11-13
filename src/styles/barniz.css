@@ -1,4 +1,4 @@
-/* Barniz de Pasto, the component layer (design.md). Loaded last: it gives the shared pieces their
+/* Barniz de Pasto, the component layer. Loaded last: it gives the shared pieces their
    lacquer edges. Fields, navigation, water, home and auth live in their topic sheets. */
 
 /* Lacquer edges: every surface is a cut piece with a 2 px outline, no shadows */

@@ -8,4 +8,5 @@ assets-src/
 
 # Working notes and local review scripts, kept on this machine only
 docs/
+design.md
 tools/rediseno/

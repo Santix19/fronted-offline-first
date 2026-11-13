@@ -49,7 +49,6 @@ superarlo mientras dividirlos no aporte una frontera clara; no se comprime el c�
 un contador. El CSS se organiza por tema.
 
 Rutas principales: `#/` (inicio), `#/lotes` (lotes activos), `#/historia` (explicación pública).
-En desarrollo también están `#/dev/ui` (galería) y `#/dev/trucha` (nado); no se incluyen en producción.
 
 En cada carpeta de `features/` los archivos siguen el mismo patrón:
 

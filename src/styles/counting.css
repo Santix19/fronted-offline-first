@@ -1,5 +1,5 @@
 /* Counting screen: the running total has to be readable at arm's length, standing over the
-   channel, with the phone wet and the sun on the screen (design.md: a lacquer panel in both themes). */
+   channel, with the phone wet and the sun on the screen (a lacquer panel in both themes). */
 .count-panel {
   container-type: inline-size;
   display: flex;
