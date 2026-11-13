@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { facade } from '../../facade/PisciculturaFacade';
 import { StoryPage } from '../story/StoryPage';
 import { loadStorySeen, useStorySeen } from '../story/storySeen';
-import { useAuthState } from './authStatus';
+import { getAuthState, useAuthState } from './authStatus';
 import { ChangePasswordPage } from './ChangePasswordPage';
 import { LoginPage } from './LoginPage';
 import { RegisterPage } from './RegisterPage';
@@ -20,7 +20,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const storySeen = useStorySeen();
 
   useEffect(() => {
-    void facade.restoreSession();
+    // Only at start-up. Watching the story from Ajustes unmounts this gate, and coming back must not
+    // lock a session that is already open (E4 in docs/rediseno/inventario.md)
+    if (getAuthState().status === 'loading') void facade.restoreSession();
     void loadStorySeen();
   }, []);
 

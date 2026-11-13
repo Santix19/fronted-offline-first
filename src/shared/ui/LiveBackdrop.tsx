@@ -1,6 +1,7 @@
 import { Component, lazy, Suspense, type ReactNode } from 'react';
 import { useReducedMotion } from '../motion/reducedMotion';
 import { Backdrop } from './Backdrop';
+import { useDarkPalette } from './theme';
 
 // three.js only downloads on the screens that use the lagoon, never in the main bundle
 const LagoonScene = lazy(() => import('../three/LagoonScene'));
@@ -31,6 +32,7 @@ class Fallback extends Component<{ children: ReactNode; fallback: ReactNode }, {
  */
 export function LiveBackdrop({ mode = 'story' }: { mode?: 'story' | 'app' }) {
   const reduced = useReducedMotion();
+  const dark = useDarkPalette();
   // The flat fallback follows the same rule: blue and lime when signed in, the violet set in the story
   const flat = <Backdrop fixed sky={mode === 'app'} />;
   if (reduced || !hasWebGL()) return flat;
@@ -38,7 +40,7 @@ export function LiveBackdrop({ mode = 'story' }: { mode?: 'story' | 'app' }) {
     <div className="lagoon" aria-hidden="true">
       <Fallback fallback={flat}>
         <Suspense fallback={flat}>
-          <LagoonScene mode={mode} />
+          <LagoonScene mode={mode} dark={dark} />
         </Suspense>
       </Fallback>
     </div>

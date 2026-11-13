@@ -16,7 +16,9 @@ interface MaskedTextProps {
 
 /**
  * Words rise out of a mask, tilted, one after another, and settle with a long expo tail.
- * The full text stays in aria-label for screen readers, and under reduced motion nothing moves.
+ * Screen readers get the full text once from a hidden copy (an aria-label on a plain span is
+ * ignored, E5 in docs/rediseno/inventario.md); the animated words are hidden from them.
+ * Under reduced motion nothing moves.
  */
 export function MaskedText({ text, mode = 'words', delay = 0, manual = false }: MaskedTextProps) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -32,7 +34,8 @@ export function MaskedText({ text, mode = 'words', delay = 0, manual = false }: 
   );
 
   return (
-    <span ref={ref} aria-label={text} className="masked-text">
+    <span ref={ref} className="masked-text">
+      <span className="visually-hidden">{text}</span>
       {text.split(' ').map((word, i) => (
         <Fragment key={`${word}-${i}`}>
           <span className="mask-word" aria-hidden="true">

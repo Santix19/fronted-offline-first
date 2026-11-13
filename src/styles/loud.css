@@ -209,7 +209,8 @@
 .summary .facts dt { color: var(--chapter-muted); }
 .summary .facts dd { color: var(--on-chapter); font-size: var(--text-reading); line-height: 0.92; }
 .summary .facts > div:first-child dd { color: var(--lime); }
-.summary .notice { color: #0a0a0a; }
+/* --ink, not a fixed black: in the dark theme the notice turns dark brown and black text read at 1.36:1 (E2) */
+.summary .notice { color: var(--ink); }
 .summary-object { position: absolute; top: -34px; right: -34px; width: 84px; height: auto; }
 .summary .facts { padding-right: 36px; }
 

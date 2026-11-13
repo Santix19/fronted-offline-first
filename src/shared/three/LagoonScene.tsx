@@ -1,5 +1,5 @@
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
-import { Suspense, useMemo, useRef } from 'react';
+import { Suspense, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { Plankton } from './Plankton';
 
@@ -79,13 +79,29 @@ function scrollProgress(): number {
   return max > 0 ? window.scrollY / max : 0;
 }
 
-/** The four liquid colours. Story: the design.md set. App (Nico, 2026-11-12): light blues, no violet. */
+/**
+ * The four liquid colours. Story: the design.md set. App (Nico, 2026-11-12): light blues, no violet.
+ * Night: the app in the dark theme. Every one is dark enough for white titles and for the muted
+ * grey (#a1a8b7) at 4.5:1; before, the dark theme painted white text on this light lagoon at about
+ * 1.1:1 (E2 in docs/rediseno/inventario.md).
+ */
 const LIQUID_PALETTES = {
   story: ['#c66ef5', '#73a6ff', '#e3ff89', '#ffc0a5'],
   sky: ['#a9cbff', '#73a6ff', '#d9e9ff', '#c4defc'],
+  night: ['#0d1a30', '#163257', '#183a63', '#112645'],
 } as const;
 
-function Liquid({ clearStrength, column, palette }: { clearStrength: number; column: boolean; palette: keyof typeof LIQUID_PALETTES }) {
+/** The calm middle where the cards sit: the page colour of each theme (--mist). */
+const CANVAS = { light: '#f5f5f5', dark: '#0a0a0a' } as const;
+
+interface LiquidProps {
+  clearStrength: number;
+  column: boolean;
+  palette: keyof typeof LIQUID_PALETTES;
+  canvas: string;
+}
+
+function Liquid({ clearStrength, column, palette, canvas }: LiquidProps) {
   const [c1, c2, c3, c4] = LIQUID_PALETTES[palette];
   const size = useThree((s) => s.size);
   const uniforms = useMemo(
@@ -94,7 +110,7 @@ function Liquid({ clearStrength, column, palette }: { clearStrength: number; col
       uScroll: { value: 0 },
       uPointer: { value: new THREE.Vector2(0.4, 0.2) },
       uAspect: { value: 1 },
-      uCanvas: { value: new THREE.Color('#f5f5f5') },
+      uCanvas: { value: new THREE.Color(canvas) },
       uViolet: { value: new THREE.Color(c1) },
       uBlue: { value: new THREE.Color(c2) },
       uLime: { value: new THREE.Color(c3) },
@@ -104,6 +120,12 @@ function Liquid({ clearStrength, column, palette }: { clearStrength: number; col
     }),
     [],
   );
+
+  // Switching the theme in Ajustes repaints the lagoon at once, without rebuilding the scene
+  useEffect(() => {
+    uniforms.uCanvas.value.set(canvas);
+    [uniforms.uViolet, uniforms.uBlue, uniforms.uLime, uniforms.uPeach].forEach((u, i) => u.value.set(LIQUID_PALETTES[palette][i]));
+  }, [uniforms, palette, canvas]);
 
   useFrame((state, delta) => {
     uniforms.uTime.value += delta;
@@ -243,9 +265,11 @@ export type LagoonMode = 'story' | 'app';
  * app: behind the data all day, so the liquid stays pale through the content column and the
  * loudness comes from the particle current; no big renders crossing the numbers.
  */
-export default function LagoonScene({ mode = 'story' }: { mode?: LagoonMode }) {
+export default function LagoonScene({ mode = 'story', dark = false }: { mode?: LagoonMode; dark?: boolean }) {
   const narrow = window.innerWidth < 700;
   const app = mode === 'app';
+  // The story keeps its own light lagoon in both themes; the app follows the theme (E2)
+  const night = app && dark;
   return (
     <Canvas
       className="lagoon-canvas"
@@ -257,7 +281,12 @@ export default function LagoonScene({ mode = 'story' }: { mode?: LagoonMode }) {
       eventPrefix="client"
       aria-hidden="true"
     >
-      <Liquid clearStrength={app ? 0.9 : 0.7} column={app} palette={app ? 'sky' : 'story'} />
+      <Liquid
+        clearStrength={app ? 0.9 : 0.7}
+        column={app}
+        palette={night ? 'night' : app ? 'sky' : 'story'}
+        canvas={night ? CANVAS.dark : CANVAS.light}
+      />
       <hemisphereLight args={['#ffffff', app ? '#a9cbff' : '#c66ef5', 1.2]} />
       <directionalLight position={[-4, 6, 5]} intensity={2} />
       <Plankton count={app ? (narrow ? 1800 : 6000) : narrow ? 1500 : 4000} palette={app ? 'sky' : 'story'} />

@@ -52,7 +52,9 @@
 
 .field-pair {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* minmax(0, …): a plain 1fr grows to the number input's minimum width and pushed the batch
+     form to 526 px on a 375 px phone (E1 in docs/rediseno/inventario.md) */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
 }
 

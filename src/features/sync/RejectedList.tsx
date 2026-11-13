@@ -2,6 +2,7 @@ import { facade } from '../../facade/PisciculturaFacade';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
 import { RECORD_LABELS } from '../records/recordTypes';
 import { formatDateTime } from '../../shared/utils/format';
+import { rejectionText } from './rejectionText';
 
 interface RejectedItem {
   id: string;
@@ -13,7 +14,7 @@ interface RejectedItem {
 
 async function loadRejected(): Promise<RejectedItem[]> {
   const { ponds, batches, records } = await facade.rejected();
-  const error = (row: { syncError?: string }) => row.syncError ?? 'Rechazado por el servidor';
+  const error = (row: { syncError?: string }) => (row.syncError ? rejectionText(row.syncError) : 'Rechazado por el servidor');
   return [
     ...ponds.map((p) => ({ id: p.id, title: `Estanque ${p.name}`, error: error(p), editHref: `#/estanques/${p.id}/editar` })),
     ...batches.map((b) => ({ id: b.id, title: `Lote ${b.code}`, error: error(b), editHref: `#/lotes/${b.id}/editar` })),
