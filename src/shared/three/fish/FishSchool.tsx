@@ -19,10 +19,14 @@ interface Props {
   shadows?: boolean;
   /** Called with the touched point so the water can ripple there */
   onTouch?: (point: THREE.Vector3) => void;
+  /** Where the sheet of water is, when it is not the world's own floor */
+  space?: THREE.Matrix4;
+  /** canvas: only touches on the canvas. window: the canvas sits behind the page and takes no taps */
+  listenOn?: 'canvas' | 'window';
 }
 
 /** A school of trout in one draw call: one InstancedMesh, the swimming done by the shader. */
-export function FishSchool({ model, count, length, bounds, tuning, uniforms, shadows = true, onTouch }: Props) {
+export function FishSchool({ model, count, length, bounds, tuning, uniforms, shadows = true, onTouch, space, listenOn = 'canvas' }: Props) {
   const asset = use(loadTrout(model));
   const { camera, gl } = useThree();
   const fish = useRef<Fish[]>([]);
@@ -45,27 +49,30 @@ export function FishSchool({ model, count, length, bounds, tuning, uniforms, sha
   // A touch or click scares them; a mouse just passing by is something to swim around
   useEffect(() => {
     const element = gl.domElement;
+    const target: HTMLElement | Window = listenOn === 'window' ? window : element;
     const onDown = (e: PointerEvent) => {
-      const p = pointOnWater(camera, element, e.clientX, e.clientY);
+      const p = pointOnWater(camera, element, e.clientX, e.clientY, space);
       if (!p) return;
       scare(fish.current, p.x, p.z, live.current.tuning);
       onTouch?.(p);
     };
     const onMove = (e: PointerEvent) => {
       if (e.pointerType !== 'mouse') return;
-      const p = pointOnWater(camera, element, e.clientX, e.clientY);
+      const p = pointOnWater(camera, element, e.clientX, e.clientY, space);
       avoid.current = p && { x: p.x, z: p.z };
     };
     const onLeave = () => (avoid.current = null);
-    element.addEventListener('pointerdown', onDown);
-    element.addEventListener('pointermove', onMove);
+    const down = onDown as EventListener;
+    const move = onMove as EventListener;
+    target.addEventListener('pointerdown', down);
+    target.addEventListener('pointermove', move);
     element.addEventListener('pointerleave', onLeave);
     return () => {
-      element.removeEventListener('pointerdown', onDown);
-      element.removeEventListener('pointermove', onMove);
+      target.removeEventListener('pointerdown', down);
+      target.removeEventListener('pointermove', move);
       element.removeEventListener('pointerleave', onLeave);
     };
-  }, [camera, gl, onTouch]);
+  }, [camera, gl, onTouch, space, listenOn]);
 
   const matrix = useMemo(() => new THREE.Matrix4(), []);
   const scratch = useMemo(() => ({ q: new THREE.Quaternion(), e: new THREE.Euler(0, 0, 0, 'YXZ'), p: new THREE.Vector3(), s: new THREE.Vector3() }), []);

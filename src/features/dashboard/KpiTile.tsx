@@ -1,5 +1,10 @@
+import { lazy, Suspense, useState } from 'react';
+import { useLivePond } from '../../shared/three/fish/useLivePond';
 import { CountUp } from '../../shared/ui/CountUp';
 import { Icon } from '../../shared/ui/icons';
+
+// three.js only downloads when a phone is going to draw the trout
+const PondWindow = lazy(() => import('../../shared/three/fish/PondWindow'));
 
 export type KpiKind = 'batches' | 'alerts' | 'ponds' | 'pending';
 
@@ -18,9 +23,18 @@ interface KpiTileProps {
  */
 export function KpiTile({ kind, label, value, href, tone }: KpiTileProps) {
   const trout = kind === 'batches' ? Math.min(value, 3) : 0;
+  const allowed = useLivePond();
+  // still: the picture. live: the school is drawn. off: this phone was too slow, the picture stays
+  const [pond, setPond] = useState<'still' | 'live' | 'off'>('still');
+  const swims = kind === 'batches' && value > 0 && allowed && pond !== 'off';
   return (
     <a className={`kpi kpi-${kind} ${tone ?? ''}`} href={href}>
-      {Array.from({ length: trout }, (_, i) => (
+      {swims && (
+        <Suspense fallback={null}>
+          <PondWindow count={Math.min(value, 6)} onReady={() => setPond('live')} onSlow={() => setPond('off')} />
+        </Suspense>
+      )}
+      {pond !== 'live' && Array.from({ length: trout }, (_, i) => (
         <img key={i} className={`kpi-trout kpi-trout-${i}`} src="/objects/trucha.png" alt="" width={560} height={253} decoding="async" draggable={false} />
       ))}
       {kind === 'alerts' && <span className="kpi-icon"><Icon name="bell" size={28} /></span>}

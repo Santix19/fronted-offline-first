@@ -1,10 +1,10 @@
 import { useFrame, useThree } from '@react-three/fiber';
-import { useCallback, useEffect, useMemo, type RefObject } from 'react';
+import { useCallback, useMemo, type RefObject } from 'react';
 import * as THREE from 'three';
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { FishSchool } from '../../shared/three/fish/FishSchool';
 import { TROUT_MODELS } from '../../shared/three/fish/loadTrout';
 import type { SwimUniforms } from '../../shared/three/fish/swimShader';
+import { TroutStudio } from '../../shared/three/fish/TroutStudio';
 import { TouchRipples, useRippleBus } from '../../shared/three/fish/TouchRipples';
 import type { SchoolTuning } from '../../shared/three/fish/tuning';
 import { visibleWater } from '../../shared/three/fish/waterPlane';
@@ -16,22 +16,6 @@ export interface LabView {
   small: boolean;
   shadows: boolean;
   waves: number;
-}
-
-/** The glossy model needs something to reflect; a generated studio costs one frame at start, nothing after. */
-function Studio() {
-  const { gl, scene } = useThree();
-  useEffect(() => {
-    const pmrem = new THREE.PMREMGenerator(gl);
-    const env = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-    scene.environment = env;
-    return () => {
-      scene.environment = null;
-      env.dispose();
-      pmrem.dispose();
-    };
-  }, [gl, scene]);
-  return null;
 }
 
 /** Frames per second, written straight into the panel so measuring does not cost a React render. */
@@ -68,7 +52,7 @@ export function LabPond({ view, tuning, uniforms, fps }: { view: LabView; tuning
 
   return (
     <>
-      <Studio />
+      <TroutStudio />
       <FrameMeter out={fps} />
       <hemisphereLight args={['#ffffff', '#7fb3e6', 1.1]} />
       <directionalLight position={[-3, 7, 3]} intensity={1.5} />

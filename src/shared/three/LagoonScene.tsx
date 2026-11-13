@@ -1,6 +1,7 @@
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
 import { Suspense, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { StorySchool } from './fish/StorySchool';
 import { Plankton } from './Plankton';
 
 /**
@@ -146,9 +147,6 @@ function Liquid({ clearStrength, column, palette, canvas }: LiquidProps) {
 type Swimmer = { src: string; size: number; z: number; y: number; speed: number; phase: number; swims: boolean };
 
 const SWIMMERS: Swimmer[] = [
-  { src: '/objects/fish.webp', size: 2.4, z: -1, y: 1.6, speed: 0.55, phase: 0, swims: true },
-  { src: '/objects/fish.webp', size: 1.3, z: -4, y: -1.8, speed: 0.35, phase: 3.4, swims: true },
-  { src: '/objects/fish.webp', size: 0.9, z: -6, y: 0.4, speed: 0.25, phase: 1.7, swims: true },
   { src: '/objects/drop.webp', size: 1.1, z: -2, y: -2.6, speed: 0.4, phase: 0.8, swims: false },
   { src: '/objects/thermo.webp', size: 1.0, z: -3, y: 2.8, speed: 0.3, phase: 2.2, swims: false },
   { src: '/objects/cloud.webp', size: 1.4, z: -5, y: 3.4, speed: 0.2, phase: 4.1, swims: false },
@@ -293,6 +291,7 @@ export default function LagoonScene({ mode = 'story', dark = false }: { mode?: L
       {!app && (
         <Suspense fallback={null}>
           <Floaters />
+          <StorySchool narrow={narrow} />
         </Suspense>
       )}
       <Bubbles />

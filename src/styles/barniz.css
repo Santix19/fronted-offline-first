@@ -283,3 +283,15 @@
   align-items: center;
   font-weight: 700;
 }
+
+/* The live pond fills the batches tile, under the number and its label */
+.pond-window {
+  position: absolute;
+  inset: 0;
+}
+
+.kpi-batches .kpi-value,
+.kpi-batches .kpi-label {
+  pointer-events: none;
+  text-shadow: 0 0 6px #1b1413, 0 0 2px #1b1413;
+}
