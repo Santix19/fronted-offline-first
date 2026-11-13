@@ -68,7 +68,7 @@ const FRAGMENT = /* glsl */ `
 
 /** Speck colours. Sky (signed-in screens): blues with a few lime specks, never violet. */
 const SPECK_PALETTES = {
-  story: ['#c66ef5', '#73a6ff', '#b8e23a', '#ff9f7a'],
+  story: ['#e8386f', '#b9b0ee', '#a9b83a', '#ff9e5e'],
   sky: ['#8fb9ff', '#5b93f5', '#b9d6ff', '#c9ec5a'],
 } as const;
 

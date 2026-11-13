@@ -1,50 +1,48 @@
-/* Design tokens: "cutout kinetic optimism" (design.md, adopted 2026-11-12 for the whole app).
-   Condensed poster headlines and plain grotesk copy on a pale grey canvas; colour lives in objects
-   and bounded stages (lime, cornflower, peach), one black chapter, chamfered cuts on art.
+/* Design tokens: "Barniz de Pasto" (design.md, 2026-11-13).
+   Shapes from Nariño's lacquer craft, colours from the project's rainbow trout: a bone ground, lacquer
+   black ink and panels, and flat rose, olive, lilac and peach. No gradients, no shadows.
 
-   The names are the ones the rest of the CSS already used (lake, mist, surface, ink), so a screen
-   changes look without being touched. "lake" is the primary action: near-black pills. */
+   The names are the ones the rest of the CSS already used (lake, mist, surface, ink), so every screen
+   changed look without being touched. "lake" is the primary action: a lacquer button. */
 :root {
-  --lake: #0a0a0a;
+  --lake: #1b1413;
   --lake-strong: #000000;
-  --lake-soft: #e9edf6; /* cool hairline: quiet fills */
-  --on-lake: #ffffff;
-  --mist: #f5f5f5; /* the pale canvas, uninterrupted */
-  --surface: #ffffff; /* flat white cards, no shadow */
-  --ink: #0a0a0a;
-  --ink-soft: #393d46;
-  --ink-faint: #6c6c6c; /* 4.9:1 on the canvas, 5.3:1 on white */
-  --line: #e9edf6;
-  --rule: #e9edf6;
-  --field: #8a909c; /* input edge: 3.2:1 on white, the 3:1 a control boundary needs */
-  --bar: #f5f5f5;
-  --on-bar: #0a0a0a;
-  /* design.md asks for a cornflower ring; it is 2.4:1 on the canvas, so the ring is ink with a blue halo */
+  --lake-soft: #e8ddca;
+  --on-lake: #f3ebdd;
+  --mist: #f3ebdd;
+  --surface: #fffaf0;
+  --ink: #1b1413;
+  --ink-soft: #3d302b;
+  --ink-faint: #5a4a40;
+  --line: #d9cdb9;
+  --rule: #1b1413;
+  --field: #1b1413;
+  --bar: #f3ebdd;
+  --on-bar: #1b1413;
   --focus: var(--ink);
-  --focus-halo: #73a6ff;
-  --action-blue: #73a6ff;
+  --focus-halo: #b9b0ee;
+  --action-blue: #b9b0ee;
 
   /* Object colours: they fill cards and art, never full-page bands */
-  --lime: #e3ff89;
-  --blue: #73a6ff;
-  --peach: #ffc0a5;
-  --violet: #c66ef5;
-  --badge: #baf24a;
-  --coral: #ffa680;
-  /* The clipped conversion panel and the drifting backdrop shapes. Chosen, not default: design.md line 181
-     specifies violet #c66ef5 to cornflower #73a6ff at 198.8deg. avoid-ai-design-ignore: C1 */
-  --grad-convert: linear-gradient(198.8deg, var(--violet) 32%, var(--blue) 87%); /* avoid-ai-design-ignore: C1 */
-  --grad-warm: linear-gradient(160deg, var(--coral) 10%, var(--violet) 90%); /* avoid-ai-design-ignore: C1 */
-  --grad-fresh: linear-gradient(200deg, var(--lime) 15%, var(--blue) 95%);
+  --lime: #a9b83a;
+  --blue: #b9b0ee;
+  --peach: #ff9e5e;
+  --violet: #e8386f;
+  --badge: #a9b83a;
+  --coral: #ff9e5e;
+  /* Old gradient names kept so nothing breaks; they are flat colours now (design.md: no gradients) */
+  --grad-convert: linear-gradient(var(--blue), var(--blue));
+  --grad-warm: linear-gradient(var(--peach), var(--peach));
+  --grad-fresh: linear-gradient(var(--lime), var(--lime));
 
   /* The black chapter: one strong interruption per flow */
-  --chapter: #0a0a0a;
-  --on-chapter: #ffffff;
-  --chapter-muted: #a1a8b7;
+  --chapter: #1b1413;
+  --on-chapter: #f3ebdd;
+  --chapter-muted: #cdbfae;
 
   /* The story field. Violet stays light in dark mode, so its ink stays black */
-  --band: var(--violet);
-  --on-band: #0a0a0a;
+  --band: var(--blue);
+  --on-band: #1b1413;
 
   /* Old halo names now point at the object colours */
   --halo-mint: var(--lime);
@@ -53,27 +51,27 @@
   --halo-amber: var(--coral);
   --halo-gold: var(--badge);
 
-  --ok: #1c6b43;
-  --ok-soft: #e3ff89;
+  --ok: #40530a;
+  --ok-soft: #e3e9b4;
   --warn: #8a4b00;
-  --warn-soft: #ffe2d4;
-  --danger: #b3361a;
-  --danger-soft: #ffd9cc;
+  --warn-soft: #ffe0c7;
+  --danger: #a3123f;
+  --danger-soft: #fbd3df;
 
-  --font: 'Inter', Arial, 'Helvetica Neue', Helvetica, sans-serif;
-  --font-display: 'Oswald', 'Arial Narrow', 'Helvetica Neue Condensed', Arial, sans-serif;
-  --display-weight: 700; /* Oswald needs 700 to match the poster darkness (design.md) */
-  --tracking: -0.02em;
-  --text-xs: 0.8125rem;
-  --text-sm: 0.875rem;
+  --font: 'Atkinson Hyperlegible', Verdana, Arial, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Arial Black', Arial, sans-serif;
+  --display-weight: 800;
+  --tracking: 0;
+  --text-xs: 0.875rem;
+  --text-sm: 0.9375rem;
   --text-md: 1rem;
   --text-lg: 1.25rem;
   --text-xl: 2rem; /* compact heading, stat */
   --text-xxl: 2.625rem; /* card heading */
-  --text-display: clamp(2.75rem, 13vw, 4.5rem); /* section heading */
-  --text-hero: clamp(4rem, 21vw, 11.25rem); /* the poster headline */
-  --text-title: clamp(2.5rem, 12vw, 4.75rem); /* chapter heading */
-  --text-closing: clamp(3.25rem, 17vw, 7.75rem); /* the closing statement */
+  --text-display: clamp(2.5rem, 11vw, 4rem);
+  --text-hero: clamp(3.5rem, 17vw, 9rem);
+  --text-title: clamp(2.25rem, 10.5vw, 4rem);
+  --text-closing: clamp(3rem, 15vw, 7rem);
   --text-reading: clamp(2rem, 10vw, 3.625rem); /* big readings: feature-stat */
 
   --space-1: 4px;
@@ -84,10 +82,10 @@
   --space-6: 32px;
   --space-7: 48px;
 
-  --radius-sm: 8px; /* feature cards, image panels */
-  --radius-md: 16px; /* proof and white cards */
-  --radius-card: 17px; /* capability cards */
-  --radius-pill: 100px;
+  --radius-sm: 6px;
+  --radius-md: 6px;
+  --radius-card: 6px;
+  --radius-pill: 6px;
   --touch: 52px; /* buttons stay big enough for wet hands and gloves */
   --touch-hero: 64px;
   /* Chamfers: the hard diagonal that meets the soft pills */
@@ -111,54 +109,54 @@
 /* After dark: the same system on near-black; the object colours stay as they are. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --lake: #ffffff;
+    --lake: #f3ebdd;
     --lake-strong: #ffffff;
-    --lake-soft: #23262d;
-    --on-lake: #0a0a0a;
-    --mist: #0a0a0a;
-    --surface: #17181b;
-    --ink: #ffffff;
-    --ink-soft: #c9ced8;
-    --ink-faint: #a1a8b7;
-    --line: #2a2d33;
-    --rule: #2a2d33;
-    --field: #6b7280;
-    --bar: #0a0a0a;
-    --on-bar: #ffffff;
-    --focus-halo: #73a6ff;
-    --chapter: #17181b;
+    --lake-soft: #3a2d2a;
+    --on-lake: #1b1413;
+    --mist: #1b1413;
+    --surface: #261c1a;
+    --ink: #f3ebdd;
+    --ink-soft: #e0d4c2;
+    --ink-faint: #cdbfae;
+    --line: #3a2d2a;
+    --rule: #f3ebdd;
+    --field: #cdbfae;
+    --bar: #1b1413;
+    --on-bar: #f3ebdd;
+    --focus-halo: #b9b0ee;
+    --chapter: #261c1a;
 
-    --ok: #b6ec6a;
-    --ok-soft: #1f2a10;
-    --warn: #ffc0a5;
+    --ok: #c9d65a;
+    --ok-soft: #2a2e12;
+    --warn: #ff9e5e;
     --warn-soft: #3a2418;
-    --danger: #ff9a7e;
-    --danger-soft: #3d1d15;
+    --danger: #ff7a9e;
+    --danger-soft: #3d1522;
   }
 }
 
 :root[data-theme='dark'] {
-  --lake: #ffffff;
+  --lake: #f3ebdd;
   --lake-strong: #ffffff;
-  --lake-soft: #23262d;
-  --on-lake: #0a0a0a;
-  --mist: #0a0a0a;
-  --surface: #17181b;
-  --ink: #ffffff;
-  --ink-soft: #c9ced8;
-  --ink-faint: #a1a8b7;
-  --line: #2a2d33;
-  --rule: #2a2d33;
-  --field: #6b7280;
-  --bar: #0a0a0a;
-  --on-bar: #ffffff;
-  --focus-halo: #73a6ff;
-  --chapter: #17181b;
+  --lake-soft: #3a2d2a;
+  --on-lake: #1b1413;
+  --mist: #1b1413;
+  --surface: #261c1a;
+  --ink: #f3ebdd;
+  --ink-soft: #e0d4c2;
+  --ink-faint: #cdbfae;
+  --line: #3a2d2a;
+  --rule: #f3ebdd;
+  --field: #cdbfae;
+  --bar: #1b1413;
+  --on-bar: #f3ebdd;
+  --focus-halo: #b9b0ee;
+  --chapter: #261c1a;
 
-  --ok: #b6ec6a;
-  --ok-soft: #1f2a10;
-  --warn: #ffc0a5;
+  --ok: #c9d65a;
+  --ok-soft: #2a2e12;
+  --warn: #ff9e5e;
   --warn-soft: #3a2418;
-  --danger: #ff9a7e;
-  --danger-soft: #3d1d15;
+  --danger: #ff7a9e;
+  --danger-soft: #3d1522;
 }

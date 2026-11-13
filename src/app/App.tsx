@@ -5,7 +5,6 @@ import { ConnectionPill } from '../features/sync/ConnectionPill';
 import { loadSavedSyncStatus } from '../features/sync/syncStatus';
 import { useAutoSync } from '../features/sync/useAutoSync';
 import { TopBarExtra } from '../shared/ui/Page';
-import { LiveBackdrop } from '../shared/ui/LiveBackdrop';
 import { usePath } from '../shared/ui/router';
 import { BottomNav } from './BottomNav';
 import { renderRoute } from './routes';
@@ -47,7 +46,6 @@ function SignedInApp() {
 
   return (
     <TopBarExtra.Provider value={<ConnectionPill />}>
-      <LiveBackdrop mode="app" />
       <div className="app">
         {renderRoute(path)}
         <BottomNav path={path} />

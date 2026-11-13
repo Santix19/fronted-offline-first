@@ -43,7 +43,7 @@ h3 {
   font-family: var(--font-display);
   font-weight: var(--display-weight);
   line-height: 0.94;
-  letter-spacing: normal;
+  letter-spacing: -0.02em;
 }
 
 p {

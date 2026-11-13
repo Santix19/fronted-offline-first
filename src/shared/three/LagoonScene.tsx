@@ -86,13 +86,13 @@ function scrollProgress(): number {
  * 1.1:1 (E2 in docs/rediseno/inventario.md).
  */
 const LIQUID_PALETTES = {
-  story: ['#c66ef5', '#73a6ff', '#e3ff89', '#ffc0a5'],
+  story: ['#b9b0ee', '#e8386f', '#a9b83a', '#ff9e5e'],
   sky: ['#a9cbff', '#73a6ff', '#d9e9ff', '#c4defc'],
   night: ['#0d1a30', '#163257', '#183a63', '#112645'],
 } as const;
 
 /** The calm middle where the cards sit: the page colour of each theme (--mist). */
-const CANVAS = { light: '#f5f5f5', dark: '#0a0a0a' } as const;
+const CANVAS = { light: '#f3ebdd', dark: '#1b1413' } as const;
 
 interface LiquidProps {
   clearStrength: number;
