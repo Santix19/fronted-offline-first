@@ -1,63 +1,55 @@
-/* Design tokens: "Barniz de Pasto" (design.md, 2026-11-13).
-   Shapes from Nariño's lacquer craft, colours from the project's rainbow trout: a bone ground, lacquer
-   black ink and panels, and flat rose, olive, lilac and peach. No gradients, no shadows.
-
-   The names are the ones the rest of the CSS already used (lake, mist, surface, ink), so every screen
-   changed look without being touched. "lake" is the primary action: a lacquer button. */
+/* Barniz de Pasto: primitive palette, then semantic roles. Ratios use WCAG relative luminance. */
 :root {
-  --lake: #1b1413;
-  --lake-strong: #000000;
-  --lake-soft: #e8ddca;
-  --on-lake: #f3ebdd;
-  --mist: #f3ebdd;
-  --surface: #fffaf0;
-  --ink: #1b1413;
-  --ink-soft: #3d302b;
-  --ink-faint: #5a4a40;
-  --line: #d9cdb9;
-  --rule: #1b1413;
-  --field: #1b1413;
-  --bar: #f3ebdd;
-  --on-bar: #1b1413;
-  --focus: var(--ink);
-  --focus-halo: #b9b0ee;
-  --action-blue: #b9b0ee;
+  --hueso: #f3ebdd;
+  --laca: #1b1413;
+  --papel: #fffaf0;
+  --rosa: #e8386f;
+  --oliva: #a9b83a;
+  --lila: #b9b0ee;
+  --durazno: #ff9e5e;
+  --rosa-texto: #a3123f;
+  --oliva-texto: #40530a;
+  --oliva-claro: #c9d65a;
+  --tinta-suave: #5a4a40;
+  --tinta-suave-laca: #cdbfae;
+  --madera: #e8ddca;
+  --papel-oscuro: #261c1a;
+  --borde: #d9cdb9;
+  --borde-oscuro: #3a2d2a;
+  --bueno-suave: #e3e9b4;
+  --aviso-texto: #8a4b00;
+  --aviso-suave: #ffe0c7;
+  --peligro-suave: #fbd3df;
+  --rosa-claro: #ff7a9e;
+  --bueno-oscuro: #2a2e12;
+  --aviso-oscuro: #3a2418;
+  --peligro-oscuro: #3d1522;
 
-  /* Object colours: they fill cards and art, never full-page bands */
-  --lime: #a9b83a;
-  --blue: #b9b0ee;
-  --peach: #ff9e5e;
-  --violet: #e8386f;
-  --badge: #a9b83a;
-  --coral: #ff9e5e;
-  /* Old gradient names kept so nothing breaks; they are flat colours now (design.md: no gradients) */
-  --grad-convert: linear-gradient(var(--blue), var(--blue));
-  --grad-warm: linear-gradient(var(--peach), var(--peach));
-  --grad-fresh: linear-gradient(var(--lime), var(--lime));
-
-  /* The black chapter: one strong interruption per flow */
-  --chapter: #1b1413;
-  --on-chapter: #f3ebdd;
-  --chapter-muted: #cdbfae;
-
-  /* The story field. Violet stays light in dark mode, so its ink stays black */
-  --band: var(--blue);
-  --on-band: #1b1413;
-
-  /* Old halo names now point at the object colours */
-  --halo-mint: var(--lime);
-  --halo-periwinkle: var(--blue);
-  --halo-coral: var(--peach);
-  --halo-amber: var(--coral);
-  --halo-gold: var(--badge);
-
-  --ok: #40530a;
-  --ok-soft: #e3e9b4;
-  --warn: #8a4b00;
-  --warn-soft: #ffe0c7;
-  --danger: #a3123f;
-  --danger-soft: #fbd3df;
-
+  --lake: var(--laca);
+  --lake-strong: var(--laca);
+  --lake-soft: var(--madera);
+  --on-lake: var(--hueso); /* 15.34:1 sobre laca (claro) */
+  --mist: var(--hueso);
+  --surface: var(--papel);
+  --ink: var(--laca); /* 17.46:1 sobre papel (claro) */
+  --ink-soft: var(--tinta-suave); /* 8.11:1 sobre papel (claro) */
+  --ink-faint: var(--tinta-suave); /* 8.11:1 sobre papel (claro) */
+  --line: var(--borde);
+  --rule: var(--laca); /* 17.46:1 sobre papel (claro) */
+  --field: var(--laca); /* 17.46:1 sobre papel (claro) */
+  --bar: var(--hueso);
+  --on-bar: var(--laca); /* 15.34:1 sobre hueso (claro) */
+  --focus: var(--laca); /* 17.46:1 sobre papel (claro) */
+  --focus-halo: var(--laca); /* 17.46:1 sobre papel (claro) */
+  --chapter: var(--laca);
+  --on-chapter: var(--hueso); /* 15.34:1 sobre laca (claro) */
+  --chapter-muted: var(--tinta-suave-laca); /* 10.09:1 sobre laca (claro) */
+  --ok: var(--oliva-texto); /* 6.74:1 sobre bueno-suave (claro) */
+  --ok-soft: var(--bueno-suave);
+  --warn: var(--aviso-texto); /* 5.42:1 sobre aviso-suave (claro) */
+  --warn-soft: var(--aviso-suave);
+  --danger: var(--rosa-texto); /* 5.70:1 sobre peligro-suave (claro) */
+  --danger-soft: var(--peligro-suave);
   --font: 'Atkinson Hyperlegible', Verdana, Arial, sans-serif;
   --font-display: 'Bricolage Grotesque', 'Arial Black', Arial, sans-serif;
   --display-weight: 800;
@@ -68,7 +60,7 @@
   --text-lg: 1.25rem;
   --text-xl: 2rem; /* compact heading, stat */
   --text-xxl: 2.625rem; /* card heading */
-  --text-display: clamp(2.5rem, 11vw, 4rem);
+  --text-display: clamp(2.375rem, 8vw, 2.5rem);
   --text-hero: clamp(3.5rem, 17vw, 9rem);
   --text-title: clamp(2.25rem, 10.5vw, 4rem);
   --text-closing: clamp(3rem, 15vw, 7rem);
@@ -92,71 +84,70 @@
   --cut: 48px;
   --cut-sm: 20px;
 
-  /* Motion. Taps stay quick; arrivals are loud and long (design.md Motion) */
-  --ease-water: cubic-bezier(0.19, 1, 0.22, 1);
-  --ease-proof: cubic-bezier(0.215, 0.61, 0.355, 1);
+  /* Feedback completes within 250 ms; ambient motion is confined to the story. */
+  --ease-water: cubic-bezier(0.2, 0, 0.2, 1);
+  --ease-proof: cubic-bezier(0.2, 0, 0.2, 1);
   --ease-loop: ease-in-out;
-  --dur-quick: 180ms; /* press feedback */
-  --dur-state: 240ms; /* tab pill */
-  --dur-calm: 600ms;
-  --dur-reveal: 750ms; /* clip-path reveals */
-  --dur-slow: 1200ms; /* objects and cards arriving */
-  --dur-ambient: 5s; /* floats */
-  --dur-drift: 24s; /* backdrop shapes */
-  --dur-ribbon: 60s; /* the capsule ribbon */
+  --dur-quick: 180ms;
+  --dur-state: 240ms;
+  --dur-calm: 240ms;
+  --dur-reveal: 240ms;
+  --dur-slow: 240ms;
 }
 
-/* After dark: the same system on near-black; the object colours stay as they are. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --lake: #f3ebdd;
-    --lake-strong: #ffffff;
-    --lake-soft: #3a2d2a;
-    --on-lake: #1b1413;
-    --mist: #1b1413;
-    --surface: #261c1a;
-    --ink: #f3ebdd;
-    --ink-soft: #e0d4c2;
-    --ink-faint: #cdbfae;
-    --line: #3a2d2a;
-    --rule: #f3ebdd;
-    --field: #cdbfae;
-    --bar: #1b1413;
-    --on-bar: #f3ebdd;
-    --focus-halo: #b9b0ee;
-    --chapter: #261c1a;
-
-    --ok: #c9d65a;
-    --ok-soft: #2a2e12;
-    --warn: #ff9e5e;
-    --warn-soft: #3a2418;
-    --danger: #ff7a9e;
-    --danger-soft: #3d1522;
+  --lake: var(--hueso);
+  --lake-strong: var(--papel);
+  --lake-soft: var(--borde-oscuro);
+  --on-lake: var(--laca); /* 15.34:1 sobre hueso (oscuro) */
+  --mist: var(--laca);
+  --surface: var(--papel-oscuro);
+  --ink: var(--hueso); /* 14.04:1 sobre papel-oscuro (oscuro) */
+  --ink-soft: var(--tinta-suave-laca); /* 9.23:1 sobre papel-oscuro (oscuro) */
+  --ink-faint: var(--tinta-suave-laca); /* 9.23:1 sobre papel-oscuro (oscuro) */
+  --line: var(--borde-oscuro);
+  --rule: var(--hueso); /* 14.04:1 sobre papel-oscuro (oscuro) */
+  --field: var(--tinta-suave-laca); /* 9.23:1 sobre papel-oscuro (oscuro) */
+  --bar: var(--laca);
+  --on-bar: var(--hueso); /* 15.34:1 sobre laca (oscuro) */
+  --focus: var(--lila); /* 8.32:1 sobre papel-oscuro (oscuro) */
+  --focus-halo: var(--lila); /* 8.32:1 sobre papel-oscuro (oscuro) */
+  --chapter: var(--laca);
+  --on-chapter: var(--hueso); /* 15.34:1 sobre laca (oscuro) */
+  --chapter-muted: var(--tinta-suave-laca); /* 10.09:1 sobre laca (oscuro) */
+  --ok: var(--oliva-claro); /* 8.85:1 sobre bueno-oscuro (oscuro) */
+  --ok-soft: var(--bueno-oscuro);
+  --warn: var(--durazno); /* 7.13:1 sobre aviso-oscuro (oscuro) */
+  --warn-soft: var(--aviso-oscuro);
+  --danger: var(--rosa-claro); /* 6.42:1 sobre peligro-oscuro (oscuro) */
+  --danger-soft: var(--peligro-oscuro);
   }
 }
-
 :root[data-theme='dark'] {
-  --lake: #f3ebdd;
-  --lake-strong: #ffffff;
-  --lake-soft: #3a2d2a;
-  --on-lake: #1b1413;
-  --mist: #1b1413;
-  --surface: #261c1a;
-  --ink: #f3ebdd;
-  --ink-soft: #e0d4c2;
-  --ink-faint: #cdbfae;
-  --line: #3a2d2a;
-  --rule: #f3ebdd;
-  --field: #cdbfae;
-  --bar: #1b1413;
-  --on-bar: #f3ebdd;
-  --focus-halo: #b9b0ee;
-  --chapter: #261c1a;
-
-  --ok: #c9d65a;
-  --ok-soft: #2a2e12;
-  --warn: #ff9e5e;
-  --warn-soft: #3a2418;
-  --danger: #ff7a9e;
-  --danger-soft: #3d1522;
+  --lake: var(--hueso);
+  --lake-strong: var(--papel);
+  --lake-soft: var(--borde-oscuro);
+  --on-lake: var(--laca); /* 15.34:1 sobre hueso (oscuro) */
+  --mist: var(--laca);
+  --surface: var(--papel-oscuro);
+  --ink: var(--hueso); /* 14.04:1 sobre papel-oscuro (oscuro) */
+  --ink-soft: var(--tinta-suave-laca); /* 9.23:1 sobre papel-oscuro (oscuro) */
+  --ink-faint: var(--tinta-suave-laca); /* 9.23:1 sobre papel-oscuro (oscuro) */
+  --line: var(--borde-oscuro);
+  --rule: var(--hueso); /* 14.04:1 sobre papel-oscuro (oscuro) */
+  --field: var(--tinta-suave-laca); /* 9.23:1 sobre papel-oscuro (oscuro) */
+  --bar: var(--laca);
+  --on-bar: var(--hueso); /* 15.34:1 sobre laca (oscuro) */
+  --focus: var(--lila); /* 8.32:1 sobre papel-oscuro (oscuro) */
+  --focus-halo: var(--lila); /* 8.32:1 sobre papel-oscuro (oscuro) */
+  --chapter: var(--laca);
+  --on-chapter: var(--hueso); /* 15.34:1 sobre laca (oscuro) */
+  --chapter-muted: var(--tinta-suave-laca); /* 10.09:1 sobre laca (oscuro) */
+  --ok: var(--oliva-claro); /* 8.85:1 sobre bueno-oscuro (oscuro) */
+  --ok-soft: var(--bueno-oscuro);
+  --warn: var(--durazno); /* 7.13:1 sobre aviso-oscuro (oscuro) */
+  --warn-soft: var(--aviso-oscuro);
+  --danger: var(--rosa-claro); /* 6.42:1 sobre peligro-oscuro (oscuro) */
+  --danger-soft: var(--peligro-oscuro);
 }

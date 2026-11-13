@@ -7,6 +7,7 @@ import { ChangePasswordPage } from './ChangePasswordPage';
 import { LoginPage } from './LoginPage';
 import { RegisterPage } from './RegisterPage';
 import { UnlockPage } from './UnlockPage';
+import { LoadingState } from '../../shared/ui/LoadingState';
 
 /**
  * What the caretaker sees before the app: nothing while it is working out who is there, the PIN
@@ -28,14 +29,14 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   switch (auth.status) {
     case 'loading':
-      return null;
+      return <main className="auth"><LoadingState label="Abriendo La Cocha…" /></main>;
     case 'locked':
       return <UnlockPage user={auth.user} failedUnlocks={auth.failedUnlocks} />;
     case 'must_change_password':
       return <ChangePasswordPage user={auth.user} />;
     case 'signed_out':
       // Nothing until we know whether the story was watched: no flash of the login behind it
-      if (storySeen === undefined) return null;
+      if (storySeen === undefined) return <main className="auth"><LoadingState label="Abriendo La Cocha…" /></main>;
       // First time on this phone: the story comes before signing in or registering
       if (!storySeen) return <StoryPage />;
       return registering ? (

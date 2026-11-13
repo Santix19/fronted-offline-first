@@ -1,7 +1,5 @@
-import { createContext, useContext, useRef, type ReactNode } from 'react';
-import { useStagger } from '../motion/useStagger';
+import { createContext, useContext, useEffect, useRef, type ReactNode } from 'react';
 import { Icon } from './icons';
-import { MaskedText } from './MaskedText';
 import { goBack } from './router';
 
 /**
@@ -15,13 +13,16 @@ interface PageProps {
   /** Where "back" goes when there is no history (opened from a shortcut) */
   backTo?: string;
   children: ReactNode;
+  wide?: boolean;
+  /** How the screen arranges itself on a wide screen (responsive.css); phones stack it as always */
+  layout?: 'cards' | 'sync' | 'settings';
 }
 
 /** Frame of every screen: top bar with title, optional back button and the connection state. */
-export function Page({ title, backTo, children }: PageProps) {
+export function Page({ title, backTo, children, wide = false, layout }: PageProps) {
   const extra = useContext(TopBarExtra);
-  const content = useRef<HTMLDivElement>(null);
-  useStagger(content);
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => { heading.current?.focus({ preventScroll: true }); }, [title]);
   return (
     <>
       <header className="top-bar">
@@ -33,12 +34,9 @@ export function Page({ title, backTo, children }: PageProps) {
         <span className="wordmark" aria-hidden="true">La Cocha</span>
         {extra}
       </header>
-      <main className="content">
-        {/* key: the words rise again whenever the screen changes */}
-        <h1 className="page-title" key={title}>
-          <MaskedText text={title} />
-        </h1>
-        <div className="content-body" ref={content}>{children}</div>
+      <main id="contenido" tabIndex={-1} className={`content${wide ? ' content-wide' : ''}${layout ? ` page-${layout}` : ''}`}>
+        <h1 className="page-title" ref={heading} tabIndex={-1}>{title}</h1>
+        <div className="content-body">{children}</div>
       </main>
     </>
   );

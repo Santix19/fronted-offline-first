@@ -55,6 +55,7 @@ function SignedInApp() {
   return (
     <TopBarExtra.Provider value={<ConnectionPill />}>
       <div className="app">
+        <a className="skip-content" href="#contenido" onClick={(e) => { e.preventDefault(); document.getElementById('contenido')?.focus(); }}>Ir al contenido</a>
         {renderRoute(path)}
         <BottomNav path={path} />
       </div>

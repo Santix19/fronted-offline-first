@@ -1,3 +1,5 @@
+import { EmptyState } from '../../shared/ui/EmptyState';
+import { rejectionText } from '../sync/rejectionText';
 import { SyncChip } from '../../shared/ui/SyncChip';
 import { formatDateTime, formatNumber } from '../../shared/utils/format';
 import { RECORD_LABELS, type FieldRecord } from './recordTypes';
@@ -25,7 +27,7 @@ export function describeRecord(r: FieldRecord): string {
 const SOURCE_TEXT: Record<FieldRecord['source'], string> = { sensor: 'sensor', contador: 'máquina', voz: 'voz', manual: 'a mano' };
 
 export function RecordList({ records, empty }: { records: FieldRecord[]; empty: string }) {
-  if (records.length === 0) return <p className="muted">{empty}</p>;
+  if (records.length === 0) return <EmptyState title={empty} hint="El primer registro aparece aquí cuando lo guardes, incluso sin señal." />;
   return (
     <ul className="list">
       {records.map((r) => (
@@ -33,9 +35,9 @@ export function RecordList({ records, empty }: { records: FieldRecord[]; empty: 
           <div className="row-main">
             <p className="row-title number">{describeRecord(r)}</p>
             <p className="muted">
-              {RECORD_LABELS[r.type]} · {formatDateTime(r.recordedAt)} · {SOURCE_TEXT[r.source]}
+              {RECORD_LABELS[r.type]} {SOURCE_TEXT[r.source]}<br />{formatDateTime(r.recordedAt)}
             </p>
-            {r.syncError && <p className="muted" style={{ color: 'var(--danger)' }}>{r.syncError}</p>}
+            {r.syncError && <p className="muted" style={{ color: 'var(--danger)' }}>{rejectionText(r.syncError)}</p>}
           </div>
           <SyncChip state={r.syncState} />
         </li>

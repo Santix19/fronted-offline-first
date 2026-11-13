@@ -4,7 +4,9 @@ App web instalable (PWA) que usa el cuidador en los estanques de trucha de La Co
 de agua, mortalidad, alimentación, biometrías y conteos de alevinos. **Funciona sin internet**: todo se
 guarda primero en el celular y se sube solo al backend cuando hay señal.
 
-**Stack:** React 19 · TypeScript · Vite · IndexedDB · Service Worker. La única dependencia de producción es React.
+**Stack:** React 19 · TypeScript · Vite · IndexedDB · Service Worker. Three.js y React Three Fiber dibujan
+las truchas cuando el equipo lo permite; Bricolage Grotesque y Atkinson Hyperlegible se sirven desde
+la app. Playwright y axe se usan solo en desarrollo.
 La base local, la cola offline y la sincronización son código propio, corto y explicable.
 
 ## Cómo está organizado
@@ -23,12 +25,15 @@ src/
 │   ├── auth/       Cuenta       → /api/auth              (entrar, crear cuenta, PIN sin señal)
 │   ├── settings/   Ajustes      (servidor, clave, nombre del celular, prueba de conexión)
 │   ├── sensors/    Contador     (puerto serial del Arduino, fábrica de fuentes, decoradores)
-│   └── counting/   Conteo       (sesión de conteo, motores de persistencia, pantalla)
+│   ├── counting/   Conteo       (sesión de conteo, motores de persistencia, pantalla)
+│   ├── story/      Historia     (laguna pública, pasos y desplazamiento nativo)
+│   └── dev/        Galerías     (componentes y truchas; solo en desarrollo)
 ├── facade/         La única puerta de entrada: PisciculturaFacade
 ├── shared/
 │   ├── db/         Base del celular (IndexedDB) y refresco automático de pantallas
 │   ├── http/       El único lugar que habla con el backend (clave, tiempos de espera, errores)
 │   ├── ui/         Componentes comunes (marco de pantalla, campo, botones de opción, router)
+│   ├── three/fish/ Truchas 3D   (shader, banco, respuesta al toque y respaldo estático)
 │   └── utils/      Fechas con zona horaria, ids, números, formatos
 ├── app/            Rutas, navegación inferior y arranque
 └── styles/         Colores, tipografía y componentes visuales
@@ -37,7 +42,14 @@ mock-api/           Backend simulado para demos (mismas rutas y JSON que el real
 arduino/            Sketches del contador: por cable (Arduino) y con red propia (ESP32)
 ```
 
-Cada archivo hace una sola cosa. Ningún archivo de `src/` pasa de 80 líneas de código.
+Cada archivo hace una sola cosa. El objetivo es hasta 80 líneas de código TypeScript por archivo,
+sin contar comentarios ni líneas vacías. Se separan presentación, interacción y cálculo por su
+responsabilidad. Las pruebas y los módulos existentes de API, fachada, stream y proyección pueden
+superarlo mientras dividirlos no aporte una frontera clara; no se comprime el código para cumplir
+un contador. El CSS se organiza por tema.
+
+Rutas principales: `#/` (inicio), `#/lotes` (lotes activos), `#/historia` (explicación pública).
+En desarrollo también están `#/dev/ui` (galería) y `#/dev/trucha` (nado); no se incluyen en producción.
 
 En cada carpeta de `features/` los archivos siguen el mismo patrón:
 
@@ -223,7 +235,7 @@ Para usarlo:
 
 1. Carga `arduino/contador_alevinos/contador_alevinos.ino`. Para la versión ultrasónica, pon `BAUD = 9600` y
    `REPORT_CUTS = false` (es lo que espera `ArduinoUltrasonicFactory`).
-2. Conecta la placa al celular por USB-OTG, o al computador.
+2. Conecta la placa al computador. El navegador de Android no ofrece Web Serial.
 3. Abre el lote en la app y toca **Contar con el contador** → *Conectar contador infrarrojo*. Chrome pide
    escoger el puerto; es obligatorio y lo tiene que hacer la persona, no la app.
 4. El total se guarda en el celular en cada trama: se puede salir de la pantalla y volver, y el conteo sigue.
@@ -264,8 +276,10 @@ La dirección y la clave también se pueden cambiar desde la pantalla *Ajustes* 
 ## Pruebas
 
 ```bash
-npm test          # sincronización, validación, protocolo del contador, conteo y cuenta (41 pruebas)
+npm test          # datos, cuenta, contador, corrección de rechazos y comportamiento de la trucha
 npm run typecheck # revisa los tipos de TypeScript
+npm run test:ui   # capturas, axe y flujos; requiere Vite en 5173 y mock separado en 8091
+npm run test:story # historia: escenas, encuadres, teclado, respaldos y cruces del canal
 ```
 
 Las pruebas cubren lo más delicado: cómo se divide la cola en envíos, cómo se leen las respuestas del push,
@@ -273,6 +287,16 @@ quién gana cuando dos celulares editan lo mismo y las validaciones de cada regi
 del contador (tramas con ruido, tramas repetidas, placas que no miden cortes) y la sesión de conteo completa:
 retomar un conteo a medias, corregir a mano, cerrarlo y descartarlo, todo sin IndexedDB y sin placa gracias al
 Bridge.
+
+La suite visual usa Edge instalado, cuentas ficticias y un contexto desechable. En PowerShell, el
+mock separado se inicia con `$env:PORT='8091'; npm run mock-api`. Ejecuta `npm run build` antes de
+`npm run test:ui`: la prueba PWA sirve esa compilación en 4173 y la cierra al terminar. No usa los
+datos del navegador personal. Resultados y capturas: `assets-src/revision-20261113/`, fuera de git.
+Alcance y pruebas de campo pendientes: `docs/rediseno/evaluacion.md`.
+La nueva historia tiene su galería en `assets-src/historia-la-cocha/revision.html`; el paisaje de
+La Corota es vectorial y permanece sin WebGL. Al bajar, un río llena la pantalla con las truchas
+sumergidas. El cauce nace ancho en la entrada y continúa al desplazar, con trece peces y tarjetas
+seguidas. Resultado vigente y pruebas: `docs/rediseno/rio-continuo-y-peces-sumergidos.md`.
 
 El flujo completo también se probó en un navegador real: registrar sin señal, cerrar y abrir la app sin señal,
 volver a tener señal y verificar en el servidor que llegó todo, la alerta del sistema experto, atender una
@@ -292,6 +316,9 @@ de Render. Después:
 3. En el celular, abre la URL en Chrome y elige **Agregar a la pantalla de inicio**.
 
 El modo sin internet necesita **HTTPS** (o `localhost`). Para probar en el celular, usa la versión publicada.
+El build genera `offline-assets.json`: el service worker guarda JS, CSS, fuentes, íconos y modelos
+antes de completar la instalación. Los módulos 3D diferidos se guardan al usarlos; si aún no están
+disponibles sin señal, se muestra la imagen estática.
 
 ## Límites conocidos y decisiones pendientes
 
@@ -307,7 +334,7 @@ El modo sin internet necesita **HTTPS** (o `localhost`). Para probar en el celul
 - **El conteo en curso vive en el store `meta`** (clave `count:<lote>`), no en una tabla nueva, para no tener
   que subir la versión de la base del celular. Si algún día se necesitan varios conteos por lote a la vez,
   ahí sí toca migración.
-- **La clave `X-API-Key` queda dentro de la app.** Es aceptable para el piloto. En producción haría falta un
-  inicio de sesión por usuario.
+- **La clave `X-API-Key` queda dentro de la app.** No es un secreto. El inicio de sesión por usuario ya
+  existe y su token se guarda cifrado con el PIN.
 - Los rangos de colores de la banda de agua copian los de `Rules.java` del backend. Si el productor los ajusta,
   hay que cambiarlos en los dos lados (`src/features/ponds/waterRanges.ts`).

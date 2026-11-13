@@ -1,10 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useReducedMotion } from '../../motion/reducedMotion';
 
+let webglSupported: boolean | undefined;
 function canDraw(): boolean {
+  if (webglSupported !== undefined) return webglSupported;
   try {
     const canvas = document.createElement('canvas');
-    return Boolean(canvas.getContext('webgl2') ?? canvas.getContext('webgl'));
+    const context = canvas.getContext('webgl2') ?? canvas.getContext('webgl');
+    const supported = Boolean(context);
+    context?.getExtension('WEBGL_lose_context')?.loseContext();
+    return (webglSupported = supported);
   } catch {
     return false;
   }
@@ -19,6 +24,7 @@ const savesData = () => Boolean((navigator as Navigator & { connection?: { saveD
  */
 export function useLivePond(): boolean {
   const reduced = useReducedMotion();
+  const supported = useMemo(canDraw, []);
   const [idle, setIdle] = useState(false);
   useEffect(() => {
     const start = () => setIdle(true);
@@ -29,5 +35,5 @@ export function useLivePond(): boolean {
     const id = setTimeout(start, 1200);
     return () => clearTimeout(id);
   }, []);
-  return idle && !reduced && !savesData() && canDraw();
+  return idle && !reduced && !savesData() && supported;
 }

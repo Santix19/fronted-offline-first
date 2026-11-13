@@ -25,6 +25,7 @@ export interface Fish {
   cSide: number;
   scareIn: number; // seconds until it reacts to a scare, -1 when calm
   scareHeading: number;
+  storyDelay?: number;
 }
 
 const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));

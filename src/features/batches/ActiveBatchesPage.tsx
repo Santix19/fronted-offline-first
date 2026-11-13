@@ -1,4 +1,5 @@
 import { facade } from '../../facade/PisciculturaFacade';
+import { LoadingState } from '../../shared/ui/LoadingState';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
 import { EmptyState } from '../../shared/ui/EmptyState';
 import { Page } from '../../shared/ui/Page';
@@ -23,8 +24,9 @@ export function ActiveBatchesPage({ record }: { record?: string }) {
   const href = (id: string) => (type ? `#/registrar/${type}?lote=${id}` : `#/lotes/${id}`);
 
   return (
-    <Page title={type ? '¿En qué lote?' : 'Lotes activos'} backTo="/">
+    <Page title={type ? '¿En qué lote?' : 'Lotes activos'} backTo="/" layout="cards">
       {type && <p className="muted">{RECORD_LABELS[type]}: elige el lote.</p>}
+      {!batches && <LoadingState />}
       {batches && batches.length === 0 && (
         <EmptyState title="No hay lotes activos en este celular." hint="Abre un estanque para crear el primero." />
       )}

@@ -45,7 +45,7 @@ export interface Biometry extends RecordBase {
   sampleSize?: number;
 }
 
-/** Field records are events: they are never edited, only created (and discarded if rejected). */
+/** Accepted events are immutable. A refused local event may be corrected under its original id. */
 export type FieldRecord = WaterReading | FryCount | Mortality | Feeding | Biometry;
 export type RecordType = FieldRecord['type'];
 

@@ -4,9 +4,11 @@ import { useLiveQuery } from '../../shared/db/useLiveQuery';
 export interface PendingCounts {
   pending: number;
   rejected: number;
+  loading: boolean;
 }
 
 /** How many things are waiting for signal, and how many the backend refused. Updates live. */
 export function usePendingCounts(): PendingCounts {
-  return useLiveQuery(() => facade.pendingCounts(), ['ponds', 'batches', 'records', 'actions']) ?? { pending: 0, rejected: 0 };
+  const counts = useLiveQuery(() => facade.pendingCounts(), ['ponds', 'batches', 'records', 'actions']);
+  return { pending: counts?.pending ?? 0, rejected: counts?.rejected ?? 0, loading: !counts };
 }

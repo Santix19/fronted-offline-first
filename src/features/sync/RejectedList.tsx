@@ -1,6 +1,6 @@
 import { facade } from '../../facade/PisciculturaFacade';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
-import { RECORD_LABELS } from '../records/recordTypes';
+import { RECORD_LABELS, parentIdOf } from '../records/recordTypes';
 import { formatDateTime } from '../../shared/utils/format';
 import { rejectionText } from './rejectionText';
 
@@ -10,6 +10,7 @@ interface RejectedItem {
   error: string;
   /** Records are discarded; ponds and batches are fixed by editing them */
   editHref?: string;
+  discardable?: boolean;
 }
 
 async function loadRejected(): Promise<RejectedItem[]> {
@@ -18,7 +19,7 @@ async function loadRejected(): Promise<RejectedItem[]> {
   return [
     ...ponds.map((p) => ({ id: p.id, title: `Estanque ${p.name}`, error: error(p), editHref: `#/estanques/${p.id}/editar` })),
     ...batches.map((b) => ({ id: b.id, title: `Lote ${b.code}`, error: error(b), editHref: `#/lotes/${b.id}/editar` })),
-    ...records.map((r) => ({ id: r.id, title: `${RECORD_LABELS[r.type]} · ${formatDateTime(r.recordedAt)}`, error: error(r) })),
+    ...records.map((r) => ({ id: r.id, title: `${RECORD_LABELS[r.type]} — ${formatDateTime(r.recordedAt)}`, error: error(r), editHref: `#/registrar/${r.type}?${r.type === 'water_reading' ? 'estanque' : 'lote'}=${parentIdOf(r)}&corregir=${r.id}`, discardable: true })),
   ];
 }
 
@@ -38,11 +39,10 @@ export function RejectedList() {
               <p className="row-title">{item.title}</p>
               <p className="muted">{item.error}</p>
             </div>
-            {item.editHref ? (
-              <a className="button secondary" href={item.editHref}>Corregir</a>
-            ) : (
-              <button className="button danger" onClick={() => facade.discardRecord(item.id)}>Descartar</button>
-            )}
+            <div className="button-row">
+              {item.editHref && <a className="button secondary" href={item.editHref}>Corregir</a>}
+              {item.discardable && <button className="button danger" onClick={() => { if (window.confirm('¿Descartar este registro rechazado? No se podrá recuperar.')) void facade.discardRecord(item.id); }}>Descartar</button>}
+            </div>
           </li>
         ))}
       </ul>

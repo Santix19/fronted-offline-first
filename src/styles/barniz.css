@@ -1,28 +1,5 @@
 /* Barniz de Pasto, the component layer (design.md). Loaded last: it gives the shared pieces their
-   lacquer edges and motifs while the older sheets are retired screen by screen (fase 3 and 4). */
-
-/* The triangle band: the craft's inlaid border, across the top of every screen */
-.top-bar {
-  padding-top: calc(12px + max(var(--space-3), env(safe-area-inset-top)));
-  padding-bottom: var(--space-3);
-  background: var(--bar);
-}
-
-.top-bar::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto;
-  height: 12px;
-  background:
-    linear-gradient(135deg, var(--violet) 25%, transparent 25%) 0 0 / 24px 24px,
-    linear-gradient(225deg, var(--violet) 25%, transparent 25%) 0 0 / 24px 24px,
-    var(--ink);
-}
-
-.top-bar .wordmark {
-  text-transform: none;
-  letter-spacing: 0.02em;
-}
+   lacquer edges. Fields, navigation, water, home and auth live in their topic sheets. */
 
 /* Lacquer edges: every surface is a cut piece with a 2 px outline, no shadows */
 .list,
@@ -56,111 +33,6 @@
   background: transparent;
 }
 
-/* The one shortcut for the task done several times a day */
-.quick-action {
-  min-height: 60px;
-  justify-content: space-between;
-  padding-inline: var(--space-5);
-  font-size: 1.125rem;
-}
-
-.quick-action span {
-  color: var(--peach);
-  font-size: 1.5rem;
-  line-height: 1;
-}
-
-/* Bottom bar: a lacquer strip; the active tab keeps its olive piece */
-.bottom-nav {
-  background: var(--chapter);
-  border-top: 0;
-}
-
-.bottom-nav a {
-  color: var(--chapter-muted);
-  font-weight: 700;
-}
-
-.bottom-nav a[aria-current='page'] {
-  color: var(--on-chapter);
-}
-
-/* Home tiles: the batches tile is a window into the pond; alerts turn rose only when there are any */
-.kpi-grid {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-}
-
-.kpi {
-  grid-column: span 3;
-  min-height: 96px;
-  background: var(--surface);
-  color: var(--ink);
-}
-
-.kpi-batches {
-  grid-column: span 4;
-  min-height: 168px;
-  background: radial-gradient(circle, #3a2d2a 1.6px, transparent 2px) 0 0 / 18px 18px, #1b1413;
-  color: #f3ebdd;
-}
-
-.kpi-alerts {
-  grid-column: span 2;
-  min-height: 168px;
-}
-
-.kpi-alerts.danger {
-  background: var(--violet);
-  color: #1b1413;
-}
-
-.kpi.danger,
-.kpi.warn {
-  box-shadow: none;
-}
-
-.kpi.warn {
-  border-left: 10px solid var(--peach);
-}
-
-.kpi-trout {
-  position: absolute;
-  height: auto;
-  pointer-events: none;
-}
-
-.kpi-trout-0 { width: 150px; right: -14px; top: 12px; }
-.kpi-trout-1 { width: 96px; right: 70px; top: 74px; transform: scaleX(-1); }
-.kpi-trout-2 { width: 70px; right: 10px; top: 104px; }
-
-/* The band takes the colour of the section: rose by default, lilac where something is being
-   written down, peach while counting */
-.top-bar::before {
-  background:
-    linear-gradient(135deg, var(--band-color, var(--violet)) 25%, transparent 25%) 0 0 / 24px 24px,
-    linear-gradient(225deg, var(--band-color, var(--violet)) 25%, transparent 25%) 0 0 / 24px 24px,
-    var(--ink);
-}
-
-.app:has(form.form) { --band-color: var(--blue); }
-.app:has(.count-panel) { --band-color: var(--peach); }
-
-/* Sync state: a lacquer-edged piece with a rhombus instead of the usual round dot, 44 px to tap */
-.connection-pill {
-  min-height: 44px;
-  gap: 8px;
-  border: 2px solid var(--rule);
-  background: transparent;
-  font-weight: 700;
-}
-
-.connection-pill .dot {
-  border-radius: 0;
-  rotate: 45deg;
-}
-
-.connection-pill.offline { background: var(--lake-soft); }
-
 /* The chamfered corners belonged to the previous style; lacquer pieces are square-cut */
 .cut-corner { clip-path: none; }
 
@@ -168,114 +40,11 @@
 .trout-image { height: auto; max-width: 100%; }
 .summary .facts { padding-right: 0; }
 
-/* A field whose value is one number: what it is on the left, the number large on the right */
-.field-text {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.field-big {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 7.25rem 2.5rem;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border: 2px solid var(--rule);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-}
-
-.field-big input {
-  width: 100%;
-  min-width: 0;
-  min-height: 60px;
-  padding: 0 var(--space-2);
-  background: var(--mist);
-  font-family: var(--font-display);
-  font-weight: var(--display-weight);
-  font-size: 2rem;
-  text-align: center;
-}
-
-.field-big .unit { font-weight: 700; }
-
-.field-big .error,
-.field-big .warning {
-  grid-column: 1 / -1;
-}
-
-.field .warning {
-  color: var(--danger);
-  font-weight: 700;
-}
-
-.field-big[data-warning='true'],
-.field-big[data-invalid='true'] {
-  border-color: var(--danger);
-  border-left-width: 10px;
-}
-
-/* The border is already ink, so focus needs its own sign: a lilac ring */
-.field input:focus,
-.field select:focus,
-.field textarea:focus {
-  outline: 3px solid var(--focus-halo);
-  outline-offset: 1px;
-}
-
 /* Icons sit on the text baseline and never shrink inside a flex row */
 .icon-line { flex: none; vertical-align: middle; }
 .top-bar .back { display: grid; place-items: center; min-width: 48px; min-height: 48px; }
 .quick-action span { display: flex; }
 .kpi-icon { position: absolute; top: 12px; left: 14px; display: flex; }
-
-/* Water readings: a plain piece per value; the state is said in words and marked on the left edge */
-.reading {
-  border: 2px solid var(--rule);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-}
-
-.reading .value { font-size: clamp(1.5rem, 7.5vw, 2.25rem); }
-.reading .label { font-weight: 700; color: var(--ink-faint); }
-.reading.ok { background: var(--surface); border-color: var(--rule); }
-.reading.ok .label { color: var(--ok); }
-.reading.warn { background: var(--surface); border-color: var(--rule); border-left: 10px solid var(--peach); }
-.reading.warn .label { color: var(--warn); }
-.reading.danger { background: var(--surface); border-color: var(--danger); border-left: 10px solid var(--violet); }
-.reading.danger .label { color: var(--danger); }
-
-/* A pond's name fits on one line beside its type and its alerts */
-.pond-row .name { font-size: 1.375rem; line-height: 1.1; }
-
-.reading { min-width: 0; padding: var(--space-2) var(--space-3); }
-.reading .label { overflow-wrap: anywhere; }
-
-/* Before the app (sign in, register, PIN): a lacquer wall with the trout's spots, the trout above
-   a bone card. No animated background: the PIN screen is opened every day and has to be instant. */
-.auth {
-  background: radial-gradient(circle, #3a2d2a 1.6px, transparent 2px) 0 0 / 18px 18px, #1b1413;
-}
-
-.auth::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto;
-  height: 12px;
-  background:
-    linear-gradient(135deg, var(--violet) 25%, transparent 25%) 0 0 / 24px 24px,
-    linear-gradient(225deg, var(--violet) 25%, transparent 25%) 0 0 / 24px 24px,
-    #f3ebdd;
-}
-
-.auth-card { border: 2px solid var(--rule); }
-.auth-title { line-height: 0.95; }
-.auth-footer { border-top-width: 2px; }
-
-@media (max-width: 899px) {
-  .auth-fish { top: 48px; right: 50%; translate: 50% 0; }
-}
 
 .link {
   min-height: 44px;
@@ -293,5 +62,28 @@
 .kpi-batches .kpi-value,
 .kpi-batches .kpi-label {
   pointer-events: none;
-  text-shadow: 0 0 6px #1b1413, 0 0 2px #1b1413;
 }
+
+.page-title {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-size: var(--text-display);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.stage-chapter {
+  background: var(--chapter);
+  color: var(--on-chapter);
+}
+
+.stage-chapter .muted { color: var(--chapter-muted); }
+
+.summary { position: relative; overflow: hidden; }
+.summary .facts dt { color: var(--chapter-muted); }
+.summary .facts dd { color: var(--on-chapter); font-size: var(--text-reading); line-height: 0.92; }
+.summary .facts > div:first-child dd { color: var(--oliva); }
+/* --ink, not a fixed black: in the dark theme the notice turns dark brown and black text read at 1.36:1 (E2) */
+.summary .notice { color: var(--ink); }
+.empty-object { margin: 0 auto var(--space-3); }

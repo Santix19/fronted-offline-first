@@ -4,6 +4,7 @@ import { type ApiConfig } from '../../shared/http/apiConfig';
 import { DEVICE_ID_PATTERN } from '../../shared/utils/ids';
 import { Field } from '../../shared/ui/Field';
 import { Page } from '../../shared/ui/Page';
+import { LoadingState } from '../../shared/ui/LoadingState';
 import { AccountPanel } from '../auth/AccountPanel';
 import { ConnectionTest } from './ConnectionTest';
 import { StorageInfo } from './StorageInfo';
@@ -18,7 +19,7 @@ export function SettingsPage() {
   useEffect(() => {
     facade.config().then(setConfig);
   }, []);
-  if (!config) return <Page title="Ajustes">{null}</Page>;
+  if (!config) return <Page title="Ajustes"><LoadingState /></Page>;
 
   const set = (key: keyof ApiConfig) => (value: string) => {
     setSaved(false);
@@ -43,7 +44,9 @@ export function SettingsPage() {
   }
 
   return (
-    <Page title="Ajustes">
+    <Page title="Ajustes" wide layout="settings">
+      {/* Two columns on a wide screen: who you are and where the data goes, then this device */}
+      <div className="settings-column">
       <AccountPanel />
       {/* Folded: set once when the phone is prepared, not something a caretaker opens every day */}
       <details className="fold">
@@ -56,10 +59,13 @@ export function SettingsPage() {
         <button className="button block" type="submit">Guardar ajustes</button>
       </form>
       </details>
+      </div>
+      <div className="settings-column">
       <ThemePicker />
       <ConnectionTest />
       <StorageInfo />
       <a className="button secondary block" href="#/historia">Ver cómo funciona sin señal</a>
+      </div>
     </Page>
   );
 }

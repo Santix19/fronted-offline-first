@@ -1,4 +1,4 @@
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useThree } from '@react-three/fiber';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { FishSchool } from './FishSchool';
@@ -6,6 +6,7 @@ import { TROUT_MODELS } from './loadTrout';
 import { createSwimUniforms } from './swimShader';
 import { TroutStudio } from './TroutStudio';
 import { DEFAULT_TUNING } from './tuning';
+import { FrameBudget } from './FrameBudget';
 import { visibleWater } from './waterPlane';
 
 interface PondWindowProps {
@@ -16,26 +17,9 @@ interface PondWindowProps {
   onSlow: () => void;
 }
 
-const SLOW_FRAME = 1 / 28; // seconds; slower than this on average and the trout are not worth it
-const SAMPLE = 90; // frames measured after the first ones, which include start-up work
-
-/** Tells the tile when the school is drawn, and measures whether the phone keeps up. */
-function Watch({ onReady, onSlow }: Pick<PondWindowProps, 'onReady' | 'onSlow'>) {
-  const seen = useRef({ frames: 0, time: 0, done: false });
-  useEffect(onReady, [onReady]);
-  useFrame((_, delta) => {
-    const s = seen.current;
-    if (s.done || ++s.frames <= 20) return;
-    s.time += delta;
-    if (s.frames < 20 + SAMPLE) return;
-    s.done = true;
-    if (s.time / SAMPLE > SLOW_FRAME) onSlow();
-  });
-  return null;
-}
-
 function Pond({ count, onReady, onSlow }: PondWindowProps) {
   const { camera, size } = useThree();
+  useEffect(onReady, [onReady]);
   const uniforms = useMemo(createSwimUniforms, []);
   const bounds = useMemo(() => {
     const cam = camera as THREE.PerspectiveCamera;
@@ -53,7 +37,7 @@ function Pond({ count, onReady, onSlow }: PondWindowProps) {
       <hemisphereLight args={['#ffffff', '#3a2d2a', 1.1]} />
       <directionalLight position={[-3, 7, 3]} intensity={1.5} />
       <FishSchool model={TROUT_MODELS.small} count={count} length={length} bounds={bounds} tuning={DEFAULT_TUNING} uniforms={uniforms} shadows={false} />
-      <Watch onReady={onReady} onSlow={onSlow} />
+      <FrameBudget onSlow={onSlow} />
     </>
   );
 }
@@ -75,7 +59,7 @@ export default function PondWindow(props: PondWindowProps) {
     <div ref={box} className="pond-window" aria-hidden="true">
       <Canvas
         frameloop={visible ? 'always' : 'never'}
-        dpr={[1, 1.5]}
+        dpr={1}
         camera={{ fov: 40, near: 0.1, far: 60 }}
         gl={{ antialias: true, alpha: true, toneMapping: THREE.NeutralToneMapping, powerPreference: 'low-power' }}
       >

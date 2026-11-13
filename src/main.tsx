@@ -18,14 +18,14 @@ import './styles/water.css';
 import './styles/counting.css';
 import './styles/findings.css';
 import './styles/auth.css';
-import './styles/trout.css';
 import './styles/motion.css';
 import './styles/dashboard.css';
 import './styles/story.css';
-import './styles/story-phone.css';
-import './styles/story-diagram.css';
-import './styles/loud.css';
+import './styles/story-shore.css';
+import './styles/story-landscape.css';
+import './styles/story-sims.css';
 import './styles/barniz.css';
+import './styles/responsive.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

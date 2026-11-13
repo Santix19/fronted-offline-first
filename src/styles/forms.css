@@ -99,3 +99,59 @@
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
+
+/* A field whose value is one number: what it is on the left, the number large on the right */
+.field-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.field-big {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7.25rem 2.5rem;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--rule);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.field-big input {
+  width: 100%;
+  min-width: 0;
+  min-height: 60px;
+  padding: 0 var(--space-2);
+  background: var(--mist);
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-size: 2rem;
+  text-align: center;
+}
+
+.field-big .unit { font-weight: 700; }
+
+.field-big .error,
+.field-big .warning {
+  grid-column: 1 / -1;
+}
+
+.field .warning {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.field-big[data-warning='true'],
+.field-big[data-invalid='true'] {
+  border-color: var(--danger);
+  border-left-width: 10px;
+}
+
+/* The border is already ink, so focus needs its own sign: a lilac ring */
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 3px solid var(--focus-halo);
+  outline-offset: 1px;
+}

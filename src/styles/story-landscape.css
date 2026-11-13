@@ -1,0 +1,29 @@
+/* The photographs supply these muted landscape colours; the application palette stays Barniz. */
+.laguna {
+  --sc-sky: #d5e2df; --sc-cloud: #edf0e5;
+  --sc-mountain-far: #91a8a7; --sc-mountain: #607e80;
+  --sc-water-far: #7e9ba1; --sc-water: #638994; --sc-water-near: #4c7583;
+  --sc-water-line: #aec7c9; --sc-reflection: #57766b;
+  --sc-forest-deep: #263f32; --sc-forest: #39583a; --sc-leaf: #577047;
+  --sc-reed: #7f8750; --sc-sedge-light: #b4b478; --sc-rock: #aa9b70;
+  --sc-bank: #788c50; --sc-marsh: #647d44; --sc-path: #d1bf8d;
+  --sc-wood: #b7986a; --sc-wood-dark: #493e2c; --sc-house: #ecdfbd;
+  --sc-roof: #9a5544; --sc-boat: #cb8058; --sc-channel: #426c7b;
+}
+.lg-landscape { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.lg-world { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; }
+.lg-world-front { z-index: 2; }
+.lg-landscape-front { z-index: 2; pointer-events: none; }
+.lg-corota { transform-origin: 500px 430px; transform: translate(var(--sc-island-shift, 0px), 0px) scale(var(--sc-island-scale, 1)); }
+.lg-channel { visibility: hidden; }
+.laguna[data-current='4'] .lg-channel { visibility: visible; }
+.lg-boat { transform-box: fill-box; transform-origin: center; transition: transform 240ms var(--ease-water); }
+.laguna[data-current='3'] .lg-boat { transform: translate(80px, -28px) rotate(-8deg); }
+/* Two wooden rails across the counting lane; its box comes from storyWaterFrame (paintStoryWorld) */
+.lg-gate { position: absolute; z-index: 2; left: var(--lg-lane-left); top: var(--lg-lane-top); width: var(--lg-lane-width); height: var(--lg-lane-height); border-block: 7px solid var(--sc-wood-dark); pointer-events: none; visibility: hidden; }
+.lg-gate::before, .lg-gate::after { content: ''; position: absolute; inset-inline: 0; height: 3px; background: var(--sc-wood); }
+.lg-gate::before { top: -6px; }
+.lg-gate::after { bottom: -6px; }
+.lg-gate .lg-sim-tag { position: absolute; top: auto; left: 0; bottom: calc(100% + 16px); }
+.laguna[data-current='4'] .lg-gate { visibility: visible; }
+.lg-static-school { filter: saturate(.75); }

@@ -1,6 +1,4 @@
-import { useRef } from 'react';
 import { facade } from '../../facade/PisciculturaFacade';
-import { useStagger } from '../../shared/motion/useStagger';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
 import { Sparkline } from '../../shared/ui/Sparkline';
 import { formatNumber } from '../../shared/utils/format';
@@ -47,8 +45,6 @@ function DashboardSkeleton() {
 /** The first thing on the home screen: what needs you, then how the water has been. */
 export function HomeDashboard() {
   const data = useLiveQuery(load, ['ponds', 'batches', 'records', 'alerts']);
-  const tiles = useRef<HTMLDivElement>(null);
-  useStagger(tiles, [data !== undefined]);
   if (!data) return <DashboardSkeleton />;
 
   return (
@@ -56,10 +52,10 @@ export function HomeDashboard() {
       {data.feedHref && (
         <a className="button block quick-action" href={data.feedHref}>Registrar alimentación <span><Icon name="arrow" /></span></a>
       )}
-      <div className="kpi-grid" ref={tiles}>
+      <div className="kpi-grid">
         <KpiTile kind="batches" label="Lotes activos" value={data.activeBatches} href="#/lotes" />
         <KpiTile kind="alerts" label="Alertas" value={data.alerts} href="#/alertas" tone={data.alerts > 0 ? 'danger' : undefined} />
-        <KpiTile kind="ponds" label="Estanques activos" value={data.activePonds} href="#/" />
+        <KpiTile kind="ponds" label="Estanques activos" value={data.activePonds} />
         <KpiTile kind="pending" label="Por subir" value={data.waiting} href="#/sincronizacion" tone={data.waiting > 0 ? 'warn' : undefined} />
       </div>
       <div className="panel trend stage-chapter">

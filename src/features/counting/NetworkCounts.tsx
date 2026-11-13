@@ -55,7 +55,7 @@ export function NetworkCounts({ batchId }: { batchId: string }) {
   return (
     <section className="panel network-counts" aria-live="polite">
       <header className="panel-head">
-        <h2>Lo que subió el contador</h2>
+        <h2>Contador por WiFi</h2>
         {connected ? (
           <span className="chip live" title="Conectado al servidor: las tandas nuevas llegan solas">
             En vivo
@@ -67,6 +67,7 @@ export function NetworkCounts({ batchId }: { batchId: string }) {
         )}
       </header>
 
+      <p className="muted">Tandas que recibió el servidor. Este total se muestra aparte del conteo por cable.</p>
       {fromCounter.length === 0 ? (
         <p className="muted">
           El contador todavía no ha subido ninguna tanda a este lote.

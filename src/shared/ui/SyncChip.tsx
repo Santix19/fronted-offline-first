@@ -8,6 +8,7 @@ const LOOK: Record<SyncState, { label: string; tone: string }> = {
 
 /** Shows the caretaker whether a row already reached the backend. */
 export function SyncChip({ state }: { state: SyncState }) {
+  if (state === 'synced') return null;
   const { label, tone } = LOOK[state];
   return <span className={`chip ${tone}`}>{label}</span>;
 }

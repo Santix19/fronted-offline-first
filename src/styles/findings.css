@@ -49,13 +49,9 @@
   margin-right: 0.4em;
   border-radius: 50%;
   background: currentColor;
-  animation: latido calc(var(--dur-slow) * 2) var(--ease-loop) infinite;
 }
 
-@keyframes latido {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
-}
+
 
 /* Quien pidió menos movimiento en pantalla no tiene por qué ver un punto parpadeando */
 @media (prefers-reduced-motion: reduce) {

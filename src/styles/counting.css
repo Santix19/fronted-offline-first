@@ -1,6 +1,7 @@
 /* Counting screen: the running total has to be readable at arm's length, standing over the
    channel, with the phone wet and the sun on the screen (design.md: a lacquer panel in both themes). */
 .count-panel {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -16,7 +17,7 @@
 .count-number {
   font-family: var(--font-display);
   font-weight: var(--display-weight);
-  font-size: clamp(4.5rem, 27vw, 7.5rem);
+  font-size: clamp(2rem, calc(160cqi / var(--count-digits, 4)), 7rem);
   line-height: 0.95;
   letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
@@ -72,7 +73,7 @@
 }
 
 .count-fish.crossing {
-  animation: cross-gate 700ms var(--ease-proof) both;
+  animation: cross-gate 240ms var(--ease-proof) both;
 }
 
 @keyframes cross-gate {

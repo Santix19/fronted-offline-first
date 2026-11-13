@@ -1,6 +1,7 @@
 /* Messages to the caretaker: notices (info, warning, error, success) and empty states. */
 /* Notices */
 .notice {
+  color: var(--ink);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   border-left: 4px solid var(--lake);

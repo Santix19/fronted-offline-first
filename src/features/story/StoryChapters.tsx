@@ -1,94 +1,86 @@
-import { CapsuleRibbon, type Capsule } from '../../shared/ui/CapsuleRibbon';
-import { GlossyObject } from '../../shared/ui/GlossyObject';
-import { MaskedText } from '../../shared/ui/MaskedText';
-import { LocalTime } from './LocalTime';
-import { markStorySeen } from './storySeen';
-import { StoryDiagram } from './StoryDiagram';
+import { TroutImage } from '../../shared/ui/TroutImage';
+import { CountSim, SaveSim, SyncSim, WriteSim } from './StorySims';
+import { StoryStep as Step } from './StoryStep';
 
-/** Example records for the ribbon: the five kinds the app really keeps, labelled as examples below */
-const EXAMPLES: Capsule[] = [
-  { mark: '°C', label: 'Temperatura', value: '12,4' },
-  { mark: 'pH', label: 'pH del agua', value: '7,1' },
-  { mark: 'kg', label: 'Alimento', value: '3,5', action: 'Por subir' },
-  { mark: '✕', label: 'Mortalidad', value: '2' },
-  { mark: 'g', label: 'Biometría', value: '48' },
-  { mark: '#', label: 'Conteo', value: '148', action: 'Subido' },
-];
-
-/** Chapter 1: the lake. The poster headline jumps in letter by letter on arrival, not on scroll. */
-export function LakeChapter() {
+function Signal({ on }: { on: boolean }) {
   return (
-    <section className="chapter ch-lake">
-      <h1 className="display hero">
-        <MaskedText text="La laguna no tiene señal." mode="chars" delay={0.2} />
-      </h1>
-      <p className="story-lede lead">Los estanques están donde el celular no llega. El trabajo no espera.</p>
-    </section>
+    <span className={on ? 'connection-pill ok' : 'connection-pill offline'}>
+      <span className="dot" />
+      {on ? 'Al día' : 'Sin señal'}
+    </span>
   );
 }
 
-export function WriteChapter() {
+function SavedRow({ uploaded }: { uploaded: boolean }) {
   return (
-    <section className="chapter ch-write">
-      <h2 className="display small"><MaskedText text="Anotas igual." manual /></h2>
-      <p className="story-lede">Temperatura, pH, mortalidad, lo que dio de comer. Sin barras, sin esperar.</p>
-    </section>
-  );
-}
-
-export function SaveChapter() {
-  return (
-    <section className="chapter ch-save">
-      <h2 className="display small"><MaskedText text="Se guarda en el celular." manual /></h2>
-      <p className="story-lede">Queda como «Por subir» hasta que haya señal. Si se reenvía, no se duplica.</p>
-    </section>
-  );
-}
-
-/** The black chapter: the one strong interruption, where the signal comes back */
-export function SyncChapter() {
-  return (
-    <section className="chapter ch-sync stage-chapter">
-      <GlossyObject kind="cloud" color="violet" size={150} tilt={-8} className="float sync-cloud" />
-      <h2 className="display small"><MaskedText text="Vuelve la señal. Sube solo." manual /></h2>
-      <p className="story-lede">Al llegar a la orilla, la cola se vacía sola y cada registro pasa a «Subido».</p>
-    </section>
-  );
-}
-
-export function RouteChapter() {
-  return (
-    <section className="chapter ch-route">
-      <h2 className="display small"><MaskedText text="Cada registro sabe a dónde va." manual /></h2>
-      <p className="story-lede">Registros como estos entran al celular y salen juntos hacia el servidor.</p>
-      <CapsuleRibbon items={EXAMPLES} label="Registros de ejemplo" />
-      <StoryDiagram />
-    </section>
-  );
-}
-
-export function CountChapter() {
-  return (
-    <section className="chapter ch-count">
-      <GlossyObject kind="coin" color="lime" size={170} tilt={10} className="float count-coin" />
-      <p className="story-big number story-total">148</p>
-      <h2 className="display small"><MaskedText text="Y el contador cuenta." manual /></h2>
-      <p className="story-lede">Cada alevino que cruza la barrera suma. Cifras de ejemplo.</p>
-    </section>
-  );
-}
-
-/** The close: the promise once more, big, in the clipped gradient panel, with one direct action */
-export function EnterChapter() {
-  return (
-    <section className="chapter ch-enter">
-      <div className="invitation cut stage-convert">
-        <GlossyObject kind="fish" color="lime" size={200} tilt={12} className="float invite-fish" />
-        <h2 className="display closing"><MaskedText text="A trabajar." manual /></h2>
-        <p className="story-lede">Entra con tu documento y tu clave. Sin señal, tu PIN abre la app igual.</p>
-        <a className="button hero-button" href="#/" onClick={() => void markStorySeen()}>Entrar a La Cocha</a>
+    <div className="lg-row">
+      <div>
+        <p className="lg-row-title">12,4 °C · pH 7,1</p>
+        <p className="muted">Lectura de agua · Estanque Norte</p>
       </div>
-      <LocalTime />
-    </section>
+      <span className={uploaded ? 'chip ok' : 'chip warn'}>{uploaded ? 'Subido' : 'Por subir'}</span>
+    </div>
+  );
+}
+
+export function WriteStep() {
+  return (
+    <Step step={1} title="Anotas igual." text="Temperatura, pH, mortalidad, lo que diste de comer. Sin esperar a que cargue nada." more={[
+      'Cinco registros: lectura de agua, alimentación, mortalidad, biometría y conteo de alevinos.',
+      'Te marca si un valor sale del rango: temperatura de 10 a 16 °C, pH de 6,5 a 8,5 y oxígeno desde 6 mg/L.',
+      'La fecha y la hora se ponen solas. Cámbialas solo si anotas algo que pasó antes.',
+    ]} sim={<WriteSim />}>
+      <div className="field field-big">
+        <div className="field-text">
+          <span className="lg-label">Temperatura</span>
+          <span className="hint">Ideal: 10 a 16 °C</span>
+        </div>
+        <span className="lg-value">12,4</span>
+        <span className="unit">°C</span>
+      </div>
+    </Step>
+  );
+}
+
+export function SaveStep() {
+  return (
+    <Step step={2} title="Se guarda en el celular." text="Queda como «Por subir» hasta que haya señal. Si se envía dos veces, no se duplica." more={[
+      'Queda guardado en el celular aunque cierres la app.',
+      'Cada registro nace con su propio código: si llega dos veces, el servidor lo reconoce y no lo repite.',
+      'En Inicio y en Sincronizar ves cuántos registros faltan por subir.',
+    ]} sim={<SaveSim />}>
+      <Signal on={false} />
+      <SavedRow uploaded={false} />
+    </Step>
+  );
+}
+
+export function SyncStep() {
+  return (
+    <Step step={3} title="Vuelve la señal. Sube solo." text="Cuando vuelve la conexión, lo pendiente se envía sin que hagas nada y pasa a «Subido»." more={[
+      'Lo intenta al abrir la app, cuando vuelve la señal, cuando regresas a ella y cada 2 minutos.',
+      'De paso trae los estanques, lotes y alertas nuevos de la finca.',
+      'Si el servidor rechaza un registro, la app te dice por qué y lo puedes corregir.',
+    ]} sim={<SyncSim />}>
+      <Signal on />
+      <SavedRow uploaded />
+    </Step>
+  );
+}
+
+export function CountStep({ total }: { total: number }) {
+  return (
+    <Step step={4} title="Y el contador cuenta." text="Cada alevino que cruza la barrera suma al total del lote." more={[
+      'Funciona con un contador infrarrojo o ultrasónico conectado al celular, o con el contador por WiFi.',
+      'Si pasan dos alevinos juntos, la app lo marca para que bajes el caudal.',
+      'Antes de guardar el conteo puedes corregir el total a mano.',
+    ]} sim={<CountSim />}>
+      <div className="lg-count">
+        <span className="lg-count-number">{total}</span>
+        <div className="count-gate">
+          <span key={total} className={`count-fish${total > 0 ? ' crossing' : ''}`}><TroutImage width={96} /></span>
+        </div>
+      </div>
+    </Step>
   );
 }

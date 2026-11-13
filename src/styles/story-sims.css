@@ -1,0 +1,96 @@
+/* The scenes in the open water below each step (beside it on desktop). Bone pieces in both themes,
+   like the examples inside the cards, drawn flat: no shadows, no gradients. */
+.lg-sim {
+  --sim-ratio: .75;
+  position: relative; width: 100%; max-width: 580px; margin: 24px auto 0; aspect-ratio: 4 / 3;
+  container-type: inline-size; color: #1b1413; pointer-events: none;
+}
+.lg-sim-tag {
+  position: absolute; z-index: 2; top: 0; left: 0; display: inline-flex; align-items: center; gap: 8px; margin: 0;
+  padding: 6px 10px; background: #f3ebdd; color: #1b1413; border: 1px solid #1b1413; border-radius: 6px;
+  font-size: .75rem; font-weight: 700; line-height: 1.2; white-space: nowrap;
+}
+.lg-sim-mark { flex: none; width: 8px; height: 8px; background: #40530a; rotate: 45deg; }
+
+/* Pieces shared by the scenes */
+.lg-sim-status { display: inline-flex; align-items: center; gap: .4em; padding: .1em .5em; border: 1.5px solid #1b1413; border-radius: 999px; background: #fffaf0; font-size: .8em; font-weight: 700; line-height: 1.3; white-space: nowrap; }
+.lg-sim-status.off { background: #e8ddca; }
+.lg-sim-dot { flex: none; width: .55em; height: .55em; background: #5a4a40; rotate: 45deg; }
+.lg-sim-status.busy .lg-sim-dot { background: #8a4b00; }
+.lg-sim-status.ok .lg-sim-dot { background: #40530a; }
+.lg-sim-chip { flex: none; padding: .1em .5em; border-radius: 999px; font-size: .82em; font-weight: 700; line-height: 1.35; white-space: nowrap; }
+.lg-sim-chip.warn { background: #ffe0c7; color: #8a4b00; }
+.lg-sim-chip.busy { background: #e8ddca; color: #3d302b; }
+.lg-sim-chip.ok { background: #e3e9b4; color: #40530a; }
+.lg-sim-chip.new { background: #b9b0ee; color: #1b1413; }
+.lg-sim-chip[data-shown='false'] { visibility: hidden; }
+
+.lg-phone { padding: 5px; background: #1b1413; border-radius: 16px; font-size: clamp(12.5px, 3cqw, 17px); line-height: 1.25; }
+.lg-phone-screen { position: relative; display: flex; flex-direction: column; gap: .4em; height: 100%; overflow: hidden; padding: .55em .6em; background: #fffaf0; border-radius: 11px; }
+.lg-phone-bar { display: flex; align-items: center; justify-content: space-between; gap: .4em; font-size: .78em; font-weight: 700; }
+.lg-phone-bar .lg-sim-status { font-size: 1em; }
+.lg-phone-heading { margin: 0; font: 800 1em/1.15 var(--font-display); }
+.lg-phone-list { display: grid; gap: .35em; margin: 0; padding: 0; list-style: none; }
+.lg-phone-row { display: grid; gap: .1em; padding: .3em .45em; border: 1.5px solid #1b1413; border-radius: 6px; background: #fffaf0; }
+.lg-phone-title { overflow: hidden; font-size: .85em; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.lg-phone-detail { display: flex; align-items: center; justify-content: space-between; gap: .3em; color: #3d302b; font-size: .82em; }
+.lg-phone-detail .lg-sim-chip { font-size: 1em; }
+.lg-phone-note { margin: auto 0 0; padding: .3em .45em; border-radius: 6px; background: #e3e9b4; color: #40530a; font-size: .8em; font-weight: 700; }
+.lg-phone-closed { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; background: #1b1413; color: #f3ebdd; font-weight: 700; }
+
+/* Step 1: a thermometer in the water and the notes filling in, without a spinner */
+.lg-thermo { position: absolute; left: 1%; top: 13%; width: 17%; height: 85%; overflow: visible; }
+.lg-thermo-level { fill: var(--rosa); transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(.16); }
+.lg-thermo[data-reading='true'] .lg-thermo-level { transform: scaleY(.62); }
+.lg-notebook { position: absolute; left: 22%; right: 0; top: 13%; display: flex; flex-direction: column; gap: .55em; padding: .85em .95em; background: #fffaf0; border: 2px solid #1b1413; border-radius: 6px; font-size: clamp(12px, 3cqw, 17px); line-height: 1.25; }
+.lg-notebook-head { display: flex; align-items: center; justify-content: space-between; gap: .6em; padding-bottom: .5em; border-bottom: 2px solid #1b1413; }
+.lg-notebook-row { display: grid; grid-template-columns: minmax(0, 1fr) 5.6em auto; align-items: center; gap: .6em; }
+.lg-notebook-label { overflow: hidden; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.lg-notebook-value { display: flex; align-items: baseline; gap: .25em; min-height: 1.85em; padding: .15em .45em; background: #f3ebdd; border: 2px solid #1b1413; border-radius: 6px; font: 800 1.1em/1.45 var(--font-display); }
+.lg-notebook-value small { font: 700 .62em/1 var(--font); }
+.lg-caret { align-self: center; width: 2px; height: 1em; background: #1b1413; }
+.lg-notebook-note { margin: .1em 0 0; color: #3d302b; font-size: .85em; }
+.lg-notebook-note[data-shown='false'] { visibility: hidden; }
+
+/* Step 2: the phone on a dock, records arriving and staying through a closed app */
+.lg-dock { position: absolute; left: 12%; right: 12%; bottom: 0; height: 11%; overflow: visible; }
+.lg-sim-save .lg-phone { position: absolute; left: 29%; width: 42%; top: 10%; bottom: 8%; }
+
+/* Step 3: signal back on the bank, each record flying to the server, a new batch coming down */
+.lg-sim-sync .lg-phone { position: absolute; left: 1%; width: 41%; top: 11%; bottom: 2%; }
+.lg-sim-path { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.lg-sim-path path { fill: none; stroke: #f3ebdd; stroke-width: .6; stroke-dasharray: 1.6 1.4; }
+.lg-server { position: absolute; left: 61%; right: 0; top: 13%; display: flex; align-items: center; gap: .6em; padding: .5em .7em; background: #fffaf0; border: 2px solid #1b1413; border-radius: 6px; font-size: clamp(12px, 3cqw, 17px); line-height: 1.25; }
+.lg-server > span { display: grid; }
+.lg-server small { color: #3d302b; font-size: .85em; }
+.lg-server-icon { flex: none; width: 1.3em; height: 1.5em; }
+.lg-antenna { position: absolute; right: 6%; bottom: 0; width: 26%; height: 56%; overflow: visible; }
+.lg-antenna-top { fill: #8a7f70; stroke: #1b1413; stroke-width: 2.5; }
+.lg-antenna[data-on='true'] .lg-antenna-top { fill: #c9d65a; }
+.lg-antenna-waves { stroke: #f3ebdd; opacity: .3; }
+.lg-antenna[data-on='true'] .lg-antenna-waves { stroke: #c9d65a; opacity: 1; }
+.lg-packet { position: absolute; z-index: 3; left: 43%; top: 46%; width: 4.2cqw; height: 4.2cqw; margin: -2.1cqw 0 0 -2.1cqw; background: #c9d65a; border: 2px solid #1b1413; rotate: 45deg; }
+.lg-packet.down { left: 61%; top: 26.7%; background: #b9b0ee; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .lg-thermo-level { transition: transform 600ms var(--ease-water); }
+  .lg-caret { animation: lg-blink 900ms steps(1) infinite; }
+  .lg-phone-row { animation: lg-row-in 360ms var(--ease-water) both; }
+  .lg-antenna[data-on='true'] .lg-antenna-waves { animation: lg-waves 1.4s ease-in-out infinite; }
+  .lg-packet.up { animation: lg-packet-up 640ms var(--ease-water) both; }
+  .lg-packet.down { animation: lg-packet-down 640ms var(--ease-water) both; }
+}
+@keyframes lg-blink { 50% { opacity: 0; } }
+@keyframes lg-row-in { from { opacity: 0; translate: -24% 0; } }
+@keyframes lg-waves { 50% { opacity: .45; } }
+/* From the phone (43%, 46%) to the server (61%, 26.7%): heights are a share of the scene's width */
+@keyframes lg-packet-up { to { translate: 18cqw calc(-19.3cqw * var(--sim-ratio)); } }
+@keyframes lg-packet-down { to { translate: -18cqw calc(19.3cqw * var(--sim-ratio)); } }
+
+/* Desktop: the scene stands in the open river right of its card, level with it (storySimBox) */
+@media (min-width: 1024px) and (min-height: 600px) {
+  .lg-step { position: relative; }
+  .lg-sim { --sim-ratio: .625; position: absolute; left: var(--lg-sim-left); top: calc(50% - 32px); width: var(--lg-sim-width); max-width: none; margin: 0; aspect-ratio: 16 / 10; translate: 0 -50%; }
+}
+/* With text at 200% the story drops to a plain column; the scenes' fixed boxes would not hold it */
+.laguna[data-compact='true'] .lg-sim { display: none; }

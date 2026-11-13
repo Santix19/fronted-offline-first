@@ -17,7 +17,7 @@ export function PersonRow({ person, busy, onResetPassword, onToggleActive }: Per
       <div className="row-main">
         <p className="row-title">{person.name}</p>
         <p className="muted">
-          Documento {person.document} · {ROLE_LABELS[person.role]}
+          Documento {person.document}<br />{ROLE_LABELS[person.role]}
           {person.mustChangePassword && ' · clave temporal sin cambiar'}
         </p>
       </div>

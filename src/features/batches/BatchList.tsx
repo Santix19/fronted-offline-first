@@ -1,4 +1,5 @@
 import { facade } from '../../facade/PisciculturaFacade';
+import { LoadingState } from '../../shared/ui/LoadingState';
 import { useLiveQuery } from '../../shared/db/useLiveQuery';
 import { SyncChip } from '../../shared/ui/SyncChip';
 import { formatDate, formatNumber } from '../../shared/utils/format';
@@ -13,6 +14,7 @@ export function BatchList({ pondId }: { pondId: string }) {
         <h2>Lotes</h2>
         <a className="button secondary" href={`#/lotes/nuevo?estanque=${pondId}`}>Nuevo lote</a>
       </div>
+      {!batches && <LoadingState />}
       {batches?.length === 0 && <p className="muted">Este estanque no tiene lotes. Crea uno cuando siembres.</p>}
       {batches && batches.length > 0 && (
         <ul className="list">

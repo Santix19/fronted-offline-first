@@ -2,6 +2,7 @@ import { TroutImage } from '../../shared/ui/TroutImage';
 import { formatNumber, timeAgo } from '../../shared/utils/format';
 import type { SensorDescriptor } from '../sensors/sensorTypes';
 import type { CountingTally } from './countingTypes';
+import type { CSSProperties } from 'react';
 
 interface CountingTotalsProps {
   totals?: CountingTally;
@@ -18,11 +19,12 @@ interface CountingTotalsProps {
  */
 export function CountingTotals({ totals, sensor, warning, problem, expected }: CountingTotalsProps) {
   const total = totals?.total ?? 0;
+  const display = formatNumber(total, 0);
   const percent = expected ? Math.min(100, Math.round((total / expected) * 100)) : undefined;
   return (
     <section className="panel count-panel stage-chapter" aria-live="polite">
       <p className="count-label">Alevinos contados{sensor ? ` · ${sensor.label}` : ''}</p>
-      <strong key={total} className="count-number number tick">{formatNumber(total, 0)}</strong>
+      <strong key={total} className="count-number number tick" style={{ '--count-digits': Math.max(4, display.length) } as CSSProperties}>{display}</strong>
       {percent !== undefined && (
         <>
           <div className="count-bar" role="img" aria-label={`${percent} por ciento de los ${formatNumber(expected!, 0)} sembrados`}>
@@ -51,6 +53,7 @@ export function CountingTotals({ totals, sensor, warning, problem, expected }: C
           <dt>Último pez</dt>
         </div>
       </dl>
+      <p className="count-help">«Pasaron dos juntos» indica un paso ambiguo: la barrera lo cuenta como un pez. Baja el caudal para separarlos.</p>
     </section>
   );
 }

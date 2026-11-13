@@ -22,7 +22,7 @@ function softDot(): THREE.Texture {
 
 export function useBlobShadows(count: number, enabled: boolean) {
   const shadows = useMemo(() => {
-    const material = new THREE.MeshBasicMaterial({ map: softDot(), color: '#1d3f66', transparent: true, opacity: 0.22, depthWrite: false });
+    const material = new THREE.MeshBasicMaterial({ map: softDot(), color: '#050303', transparent: true, opacity: 0.3, depthWrite: false });
     const mesh = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), material, count);
     mesh.frustumCulled = false;
     mesh.renderOrder = -1;
@@ -33,14 +33,15 @@ export function useBlobShadows(count: number, enabled: boolean) {
     const s = new THREE.Vector3();
     return {
       mesh,
-      update(fish: Fish[]) {
+      update(fish: Fish[], visible?: (fish: Fish) => boolean) {
         if (!enabled) return;
         fish.forEach((f, i) => {
           const floor = FLOOR * f.length;
           // The light is up and to the left, so the shadow falls a little right of the fish
           p.set(f.x + (f.y - floor) * 0.35, floor, f.z + (f.y - floor) * 0.2);
           q.setFromEuler(e.set(-Math.PI / 2, f.heading, 0));
-          mesh.setMatrixAt(i, m.compose(p, q, s.set(f.length * 0.3, f.length * 0.95, 1)));
+          const length = !visible || visible(f) ? f.length : 0;
+          mesh.setMatrixAt(i, m.compose(p, q, s.set(length * 0.3, length * 0.95, 1)));
         });
         mesh.instanceMatrix.needsUpdate = true;
       },

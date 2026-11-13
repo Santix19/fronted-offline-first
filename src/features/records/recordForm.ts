@@ -20,7 +20,7 @@ export const RECORD_FIELDS: Record<RecordType, FieldSpec[]> = {
   ],
   fry_count: [
     { key: 'total', label: 'Total contado', kind: 'number' },
-    { key: 'multipleCuts', label: 'Pasaron dos juntos', kind: 'number', hint: 'Opcional. Lo indica la máquina contadora' },
+    { key: 'multipleCuts', label: 'Pasaron dos juntos', kind: 'number', hint: 'Opcional. Pasos ambiguos que la máquina contó como un solo pez' },
   ],
   mortality: [
     { key: 'quantity', label: 'Peces muertos', kind: 'number' },

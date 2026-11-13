@@ -1,200 +1,113 @@
-/* "La laguna, sin señal": the scroll story. The default (no .story-pinned) is the readable stack. */
-.story {
-  min-height: 100dvh;
+﻿/* A continuous landscape beside the caretaker's story. Native scroll; opaque reading surfaces. */
+.laguna {
+  --lg-header: calc(max(76px, 4.75rem) + env(safe-area-inset-top));
+  --lg-scene-height: calc(100svh - var(--lg-header));
+  --lg-panorama-height: clamp(240px, min(calc((100svh - var(--lg-header)) * .47), 100vw), 410px);
+  --lg-descent: 0;
+  min-height: 100svh;
   background: var(--mist);
   color: var(--ink);
-  overflow-x: clip;
+  isolation: isolate;
 }
-
-.story-stage {
-  position: relative;
-  overflow: hidden;
+.lg-header {
+  position: sticky; top: 0; z-index: 5;
+  height: var(--lg-header); padding: calc(18px + env(safe-area-inset-top)) 20px 10px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  background: var(--mist); border-bottom: 2px solid var(--rule);
 }
-
-.chapter {
-  position: relative;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: var(--space-4);
-  padding: var(--space-6) var(--space-5);
-  max-width: 720px;
-  margin: 0 auto;
+.lg-header::before {
+  content: ''; position: absolute; inset: 0 0 auto; height: 8px;
+  background: var(--rosa);
+  clip-path: polygon(0 0,100% 0,100% 100%,98% 0,96% 100%,94% 0,92% 100%,90% 0,88% 100%,86% 0,84% 100%,82% 0,80% 100%,78% 0,76% 100%,74% 0,72% 100%,70% 0,68% 100%,66% 0,64% 100%,62% 0,60% 100%,58% 0,56% 100%,54% 0,52% 100%,50% 0,48% 100%,46% 0,44% 100%,42% 0,40% 100%,38% 0,36% 100%,34% 0,32% 100%,30% 0,28% 100%,26% 0,24% 100%,22% 0,20% 100%,18% 0,16% 100%,14% 0,12% 100%,10% 0,8% 100%,6% 0,4% 100%,2% 0,0 100%);
 }
-
-/* Pinned: every chapter sits on the same screen and the timeline decides which one shows */
-.story-pinned .chapter,
-.story-pinned .story-phone {
-  will-change: transform, opacity;
+.lg-brand { font: 800 1.5rem/1 var(--font-display); letter-spacing: -.02em; }
+.lg-brand > span { display: block; margin-top: 4px; font: 400 .875rem/1.1 var(--font); letter-spacing: 0; }
+.lg-skip { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 18px; border: 2px solid var(--rule); border-radius: 6px; font-weight: 700; text-decoration: none; }
+.lg-stage { position: sticky; top: var(--lg-header); height: var(--lg-scene-height); z-index: 0; }
+.lg-scene { position: relative; width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--mist); }
+.lg-scene-art { position: relative; width: 100%; height: 100%; overflow: hidden; }
+.laguna :is(a, button, [tabindex]) { scroll-margin-top: calc(var(--lg-header) + 16px); scroll-margin-bottom: max(104px, 6rem); }
+.lg-water { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.lg-water canvas { display: block; }
+.lg-still { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.lg-location { position: absolute; z-index: 3; top: calc(var(--lg-panorama-height) - 78px); left: 16px; display: flex; align-items: center; gap: 10px; max-width: calc(100% - 32px); padding: 9px 12px; background: #f3ebdd; color: #1b1413; border: 1px solid #1b1413; border-radius: 6px; font-size: .875rem; line-height: 1.2; }
+.lg-location strong { font-weight: 700; }
+.lg-location > span:last-child > span { display: block; margin-top: 3px; }
+.lg-location-mark { width: 10px; height: 10px; background: #40530a; rotate: 45deg; }
+.laguna[data-river='true'] .lg-location { top: 16px; bottom: auto; }
+.laguna[data-transition='true'] .lg-location { visibility: hidden; }
+@media (max-width: 1023px), (max-height: 599px) {
+  .laguna[data-river='true'] .lg-location { visibility: hidden; }
 }
-
-.story-pinned .story-stage {
-  height: 100svh;
+.lg-flow { position: relative; z-index: 1; margin-top: calc(-1 * var(--lg-scene-height)); pointer-events: none; }
+.lg-flow > section { pointer-events: auto; }
+.lg-hero { padding: calc(var(--lg-panorama-height) + 24px) 16px 20svh; }
+/* Every card shares one column: same gutters, same width, same inner padding */
+.lg-plate { display: grid; gap: 16px; max-width: 580px; margin: 0 auto; }
+.lg-hero .lg-plate { position: relative; padding: 24px 20px 22px; border: 2px solid var(--rule); border-radius: 6px; background: var(--surface); }
+.lg-kicker { font-size: .875rem; font-weight: 700; color: var(--ok); }
+.laguna h1 { margin: 0; font-size: clamp(2.25rem, 9.5vw, 4.5rem); line-height: .98; letter-spacing: -.035em; }
+.laguna h2 { font-size: clamp(1.875rem, 8vw, 2.5rem); line-height: 1; }
+.lg-text { font-size: 1.125rem; line-height: 1.4; }
+.laguna h1, .laguna h2, .lg-text, .lg-kicker { overflow-wrap: anywhere; }
+.lg-start { display: flex; width: fit-content; align-items: center; gap: 24px; min-height: 48px; padding: 0; border: 0; border-bottom: 2px solid currentColor; border-radius: 0; color: var(--ink); background: transparent; font-weight: 700; cursor: pointer; }
+.lg-start span { font-size: 1.5rem; }
+/* Below each card, the same stretch of open river (58% of the screen): its scene plays there, then
+   a little water before the next step. The scene is 24px down and 4:3 (story-sims.css). */
+.lg-step { padding: 0 16px max(32px, calc(58svh - 24px - min(100vw - 32px, 580px) * .75)); scroll-margin-top: calc(var(--lg-header) + 16px); }
+.lg-step:focus { outline: none; }
+.lg-piece { position: relative; max-width: 580px; margin: 0 auto; overflow: hidden; padding: 22px 20px 20px; border: 2px solid var(--rule); border-radius: 6px; background: var(--surface); color: var(--ink); }
+.lg-piece h2 { margin-bottom: 8px; font-size: 1.625rem; line-height: 1.05; }
+.lg-piece .lg-text { font-size: 1rem; }
+.lg-piece::before { content: ''; position: absolute; inset: 0 0 auto; height: 8px; background: var(--lila); clip-path: polygon(0 0,100% 0,100% 100%,95% 0,90% 100%,85% 0,80% 100%,75% 0,70% 100%,65% 0,60% 100%,55% 0,50% 100%,45% 0,40% 100%,35% 0,30% 100%,25% 0,20% 100%,15% 0,10% 100%,5% 0,0 100%); }
+.lg-piece > .lg-kicker { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 10px; padding-right: 72px; }
+.lg-piece .lg-example { position: absolute; top: 30px; right: 20px; margin: 0; }
+.lg-step-number { font: 800 1.75rem/1 var(--font-display); letter-spacing: -.04em; color: var(--ink); }
+.lg-more { display: none; }
+.lg-end { padding-bottom: max(120px, 7rem); }
+.lg-end .lg-plate { padding: 28px 24px; border: 2px solid var(--rule); border-radius: 6px; background: #1b1413; color: #f3ebdd; }
+.lg-enter { display: flex; align-items: center; justify-content: center; min-height: 64px; padding: 12px 16px; border-radius: 6px; background: #a9b83a; color: #1b1413; font-weight: 700; font-size: 1.125rem; text-align: center; text-decoration: none; }
+.lg-enter:focus-visible { outline-color: #b9b0ee; }
+@media (min-width: 1024px) and (min-height: 600px) {
+  /* One step per screen. The card width (44% up to 640px, 36px margin) is mirrored in storyViewport.ts */
+  .lg-hero { display: flex; align-items: center; width: auto; min-height: calc(var(--lg-scene-height) - 24px); padding: 0 36px calc(var(--lg-scene-height) * .2); }
+  .lg-step { display: flex; align-items: center; min-height: var(--lg-scene-height); padding: 32px 36px 96px; }
+  .lg-end { padding-bottom: 96px; }
+  .lg-hero .lg-plate, .lg-piece, .lg-end .lg-plate { width: min(44%, 640px); max-width: none; margin: 0; }
+  .lg-hero .lg-plate, .lg-piece { padding: 40px; }
+  .lg-hero .lg-plate { gap: 20px; }
+  .lg-hero .lg-text { font-size: 1.25rem; }
+  .lg-end .lg-plate { padding: 44px 40px; }
+  .lg-piece .lg-example { top: 48px; right: 40px; }
+  .lg-piece > .lg-kicker { margin-bottom: 14px; }
+  .lg-piece h2 { margin-bottom: 14px; font-size: clamp(2.25rem, 3vw, 2.875rem); }
+  .lg-piece .lg-text { font-size: 1.1875rem; }
+  .lg-piece .lg-demo { margin-top: 20px; }
+  .laguna h1 { font-size: clamp(2.75rem, 4vw, 4rem); }
+  .lg-location { top: auto; bottom: 84px; left: auto; right: 20px; max-width: 260px; padding: 6px 10px; gap: 8px; font-size: .75rem; }
+  .lg-location-mark { width: 8px; height: 8px; }
+  .laguna[data-river='true'] .lg-location { top: 24px; left: auto; right: 24px; }
 }
-
-.story-pinned .chapter {
-  position: absolute;
-  inset: 0;
-  max-width: none;
-  padding-inline: max(var(--space-5), calc((100vw - 720px) / 2));
+/* With a whole screen per step there is room to say more; short laptop screens keep the essentials */
+@media (min-width: 1024px) and (min-height: 780px) {
+  .lg-more { display: grid; gap: 14px; margin: 26px 0 0; padding: 24px 0 0; border-top: 2px solid var(--rule); list-style: none; font-size: 1.0625rem; line-height: 1.45; }
+  .lg-more li { display: grid; grid-template-columns: 8px 1fr; gap: 14px; align-items: baseline; }
+  .lg-more li::before { content: ''; width: 8px; height: 8px; background: var(--ok); rotate: 45deg; translate: 0 -2px; }
 }
-
-/* The chapters that share the screen with the phone keep their copy in the top half */
-.story-pinned .ch-write,
-.story-pinned .ch-save,
-.story-pinned .ch-sync {
-  justify-content: flex-start;
-  padding-top: 17svh;
-}
-
-.display.small {
-  font-size: var(--text-title);
-}
-
-.story-lede {
-  max-width: 28ch;
-  font-size: var(--text-lg);
-  font-weight: 500;
-  /* Full ink, not charcoal: the live lagoon behind can be violet, where charcoal drops under 4.5:1 */
-  color: var(--ink);
-}
-
-.story-big {
-  font-family: var(--font-display);
-  font-size: var(--text-hero);
-  font-weight: var(--display-weight);
-  line-height: 0.95;
-  letter-spacing: -0.03em;
-  color: var(--lake);
-}
-
-/* ---------- Chapter 1: the poster ---------- */
-.display.hero {
-  font-size: var(--text-hero);
-  line-height: 0.82;
-  letter-spacing: -0.02em;
-  position: relative;
-  z-index: 1;
-}
-
-.lead {
-  margin-top: var(--space-4);
-  font-weight: 600;
-  color: var(--ink);
-  position: relative;
-  z-index: 1;
-}
-
-
-/* ---------- The phone's backing: a chamfered gradient slab behind the black interface ---------- */
-.story-backing {
-  position: absolute;
-  left: 50%;
-  bottom: 6svh;
-  width: min(380px, 96vw);
-  height: 52svh;
-  translate: -50% 0;
-  background: var(--grad-warm);
-}
-
-.story-static .story-backing { display: none; }
-
-/* ---------- The black chapter ---------- */
-.ch-sync .story-lede { color: var(--chapter-muted); }
-.story-pinned .ch-sync { padding-top: 14svh; }
-.sync-cloud { position: absolute; top: auto; bottom: 46svh; right: -30px; width: 120px; height: auto; }
-
-/* ---------- The count: a lime capability field ---------- */
-.ch-count {
-  background: var(--lime);
-  border-radius: var(--radius-card);
-  overflow: hidden;
-}
-
-.story-pinned .ch-count {
-  inset: var(--space-4);
-  padding-inline: var(--space-5);
-}
-
-.count-coin { position: absolute; top: 6%; right: -20px; }
-
-.story-pinned .ch-route {
-  justify-content: flex-start;
-  padding-top: 13svh;
-}
-
-.ch-count .story-big,
-.ch-count .display,
-.ch-count .story-lede {
-  color: #0a0a0a;
-}
-
-/* ---------- The close: clipped gradient panel, monumental line, one black pill ---------- */
-.ch-enter {
-  align-items: stretch;
-  justify-content: center;
-}
-
-.invitation {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-4);
-  padding: calc(var(--space-6) * 2) var(--space-5) var(--space-6);
-  border-radius: var(--radius-sm);
-}
-
-.display.closing {
-  font-size: var(--text-closing);
-  line-height: 0.91;
-  letter-spacing: -0.02em;
-}
-
-.invitation .story-lede { max-width: 30ch; color: #0a0a0a; }
-.invite-fish { position: absolute; top: -34px; right: -44px; width: 150px; height: auto; }
-.invitation > :not(.glossy) { position: relative; z-index: 1; }
-
-.hero-button {
-  min-height: var(--touch-hero);
-  padding-inline: 34px;
-  font-size: var(--text-lg);
-}
-
-.story-footer {
-  margin-top: var(--space-5);
-  text-align: center;
-  font-size: var(--text-sm);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: var(--ink); /* over the live lagoon, the faint grey is unreadable */
-}
-
-.story-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  z-index: 3;
-}
-
-.story-progress-bar {
-  height: 100%;
-  background: var(--lake);
-  transform-origin: left;
-}
-
-.story-skip {
-  position: fixed;
-  top: max(var(--space-3), env(safe-area-inset-top));
-  right: var(--space-4);
-  z-index: 3;
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  font-weight: 500;
-}
+.laguna[data-compact='true'] { --lg-scene-height: 320px; --lg-panorama-height: 240px; }
+.laguna[data-compact='true'] .lg-stage { position: relative; top: auto; height: 320px; }
+.laguna[data-compact='true'] .lg-location { top: auto; bottom: 0; left: 0; right: 0; max-width: none; border: 0; border-top: 2px solid #1b1413; border-radius: 0; padding: 12px 16px; }
+.laguna[data-compact='true'] .lg-flow { margin-top: 0; background: var(--mist); }
+.laguna[data-compact='true'] .lg-hero { width: auto; min-height: 0; padding: 32px 16px; }
+.laguna[data-compact='true'] .lg-step { min-height: 0; padding: 16px 16px 24px; }
+.laguna[data-compact='true'] .lg-end { padding-bottom: 180px; }
+.laguna[data-compact='true'] .lg-piece, .laguna[data-compact='true'] .lg-end .lg-plate { width: 100%; max-width: 900px; margin: 0 auto; }
+.laguna[data-compact='true'] .lg-piece h2 { font-size: 1.875rem; }
+.laguna[data-compact='true'] .lg-piece .lg-text { font-size: 1.125rem; }
+.laguna[data-compact='true'] .lg-brand { font-size: .875rem; }
+.laguna[data-compact='true'] .lg-brand > span { display: none; }
+.laguna[data-compact='true'] .lg-step { scroll-margin-top: calc(var(--lg-header) + 16px); }
+.laguna[data-compact='true'] :is(a, button, [tabindex]) { scroll-margin-top: calc(var(--lg-header) + 16px); }
+.laguna[data-compact='true'] .lg-demo .field-big { grid-template-columns: minmax(0,1fr) auto; }
+.laguna[data-compact='true'] .lg-demo .field-text { grid-column: 1 / -1; }
+.laguna[data-compact='true'] .lg-progress { grid-template-columns: repeat(2,minmax(0,1fr)); }

@@ -5,7 +5,7 @@
   gap: var(--space-4);
 }
 
-/* The capability family: four flat coloured cards, each with its own object spilling off an edge */
+/* Four farm figures; the live trout have their own window. */
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -59,22 +59,6 @@
   font-weight: 500;
 }
 
-/* Attention: a black dot that pulses, on top of the card's own colour */
-.kpi-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #0a0a0a;
-  animation: pulse 1.4s var(--ease-loop) infinite;
-}
-
-.kpi.danger { box-shadow: inset 0 0 0 3px #0a0a0a; }
-.kpi.warn { box-shadow: inset 0 0 0 3px var(--warn); }
-
-@keyframes pulse {
-  50% { transform: scale(1.6); opacity: 0.4; }
-}
-
 /* The black chapter of the home screen: the water trend */
 .trend {
   position: relative;
@@ -93,7 +77,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-  padding-right: 96px;
+
 }
 
 .trend-now {
@@ -101,7 +85,7 @@
   font-size: var(--text-reading);
   line-height: 0.92;
   font-weight: var(--display-weight);
-  color: var(--lime);
+  color: var(--oliva);
 }
 
 .sparkline {
@@ -111,20 +95,16 @@
 
 .spark-line {
   fill: none;
-  stroke: var(--lime);
+  stroke: var(--oliva);
   stroke-width: 2.5;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.spark-area {
-  fill: var(--blue);
-  stroke: none;
-  opacity: 0.5;
-}
+
 
 .spark-dot {
-  fill: var(--peach);
+  fill: var(--durazno);
   stroke: #0a0a0a;
   stroke-width: 1.25;
 }
@@ -135,14 +115,13 @@
   }
 }
 
-/* Loading: the same shapes as the real thing, breathing once a second. Opacity only. */
+/* Loading: the same shapes as the real thing, static to save attention and battery. */
 .skeleton-bar {
   display: block;
   height: 14px;
   width: 60%;
   border-radius: var(--radius-pill);
   background: var(--rule);
-  animation: breathe var(--dur-slow) var(--ease-loop) infinite alternate;
 }
 
 .skeleton-bar.tall {
@@ -156,3 +135,80 @@
   border-radius: var(--radius-md);
 }
 .kpi.skeleton { background: var(--surface); }
+
+/* The one shortcut for the task done several times a day */
+.quick-action {
+  min-height: 60px;
+  justify-content: space-between;
+  padding-inline: var(--space-5);
+  font-size: 1.125rem;
+}
+
+.quick-action span {
+  color: var(--durazno);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+/* Bottom bar: a lacquer strip; the active tab keeps its olive piece */
+.bottom-nav {
+  background: var(--chapter);
+  border-top: 0;
+}
+
+.bottom-nav a {
+  color: var(--chapter-muted);
+  font-weight: 700;
+}
+
+.bottom-nav a[aria-current='page'] {
+  color: var(--on-chapter);
+}
+
+/* Home tiles: the batches tile is a window into the pond; alerts turn rose only when there are any */
+.kpi-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.kpi {
+  grid-column: span 3;
+  min-height: 96px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.kpi-batches {
+  grid-column: span 4;
+  min-height: 168px;
+  background: radial-gradient(circle, #3a2d2a 1.6px, transparent 2px) 0 0 / 18px 18px, #1b1413;
+  color: #f3ebdd;
+}
+
+.kpi-alerts {
+  grid-column: span 2;
+  min-height: 168px;
+}
+
+.kpi-alerts.danger {
+  background: var(--rosa);
+  color: #1b1413;
+}
+
+.kpi.danger,
+.kpi.warn {
+  box-shadow: none;
+}
+
+.kpi.warn {
+  border-left: 10px solid var(--durazno);
+}
+
+.kpi-trout {
+  position: absolute;
+  height: auto;
+  pointer-events: none;
+}
+
+.kpi-trout-0 { width: 150px; right: -14px; top: 12px; }
+.kpi-trout-1 { width: 96px; right: 70px; top: 74px; transform: scaleX(-1); }
+.kpi-trout-2 { width: 70px; right: 10px; top: 104px; }
