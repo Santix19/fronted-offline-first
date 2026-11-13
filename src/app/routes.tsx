@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { AlertsPage } from '../features/alerts/AlertsPage';
+import { ActiveBatchesPage } from '../features/batches/ActiveBatchesPage';
 import { BatchDetailPage } from '../features/batches/BatchDetailPage';
 import { BatchFormPage } from '../features/batches/BatchFormPage';
 import { CountingPage } from '../features/counting/CountingPage';
@@ -21,6 +22,7 @@ const ROUTES: [string, (p: Params) => ReactNode][] = [
   ['/estanques/nuevo', () => <PondFormPage />],
   ['/estanques/:id/editar', (p) => <PondFormPage pondId={p.id} />],
   ['/estanques/:id', (p) => <PondDetailPage pondId={p.id} />],
+  ['/lotes', (p) => <ActiveBatchesPage record={p.registrar} />],
   ['/lotes/nuevo', (p) => <BatchFormPage pondId={p.estanque} />],
   ['/lotes/:id/editar', (p) => <BatchFormPage batchId={p.id} />],
   ['/lotes/:id/conteo', (p) => <CountingPage batchId={p.id} />],

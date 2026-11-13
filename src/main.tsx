@@ -25,6 +25,7 @@ import './styles/story.css';
 import './styles/story-phone.css';
 import './styles/story-diagram.css';
 import './styles/loud.css';
+import './styles/barniz.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

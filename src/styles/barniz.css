@@ -1,0 +1,134 @@
+/* Barniz de Pasto, the component layer (design.md). Loaded last: it gives the shared pieces their
+   lacquer edges and motifs while the older sheets are retired screen by screen (fase 3 and 4). */
+
+/* The triangle band: the craft's inlaid border, across the top of every screen */
+.top-bar {
+  padding-top: calc(12px + max(var(--space-3), env(safe-area-inset-top)));
+  padding-bottom: var(--space-3);
+  background: var(--bar);
+}
+
+.top-bar::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 12px;
+  background:
+    linear-gradient(135deg, var(--violet) 25%, transparent 25%) 0 0 / 24px 24px,
+    linear-gradient(225deg, var(--violet) 25%, transparent 25%) 0 0 / 24px 24px,
+    var(--ink);
+}
+
+.top-bar .wordmark {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+/* Lacquer edges: every surface is a cut piece with a 2 px outline, no shadows */
+.list,
+.panel,
+.empty,
+.kpi {
+  border: 2px solid var(--rule);
+}
+
+.panel.stage-chapter,
+.trend {
+  border: 0;
+}
+
+.field input,
+.field select,
+.field textarea {
+  border-width: 2px;
+}
+
+.button {
+  border-width: 2px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.button.secondary,
+.panel .button.secondary,
+.list .button.secondary {
+  border-color: var(--rule);
+  background: transparent;
+}
+
+/* The one shortcut for the task done several times a day */
+.quick-action {
+  min-height: 60px;
+  justify-content: space-between;
+  padding-inline: var(--space-5);
+  font-size: 1.125rem;
+}
+
+.quick-action span {
+  color: var(--peach);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+/* Bottom bar: a lacquer strip; the active tab keeps its olive piece */
+.bottom-nav {
+  background: var(--chapter);
+  border-top: 0;
+}
+
+.bottom-nav a {
+  color: var(--chapter-muted);
+  font-weight: 700;
+}
+
+.bottom-nav a[aria-current='page'] {
+  color: var(--on-chapter);
+}
+
+/* Home tiles: the batches tile is a window into the pond; alerts turn rose only when there are any */
+.kpi-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.kpi {
+  grid-column: span 3;
+  min-height: 96px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.kpi-batches {
+  grid-column: span 4;
+  min-height: 168px;
+  background: radial-gradient(circle, #3a2d2a 1.6px, transparent 2px) 0 0 / 18px 18px, #1b1413;
+  color: #f3ebdd;
+}
+
+.kpi-alerts {
+  grid-column: span 2;
+  min-height: 168px;
+}
+
+.kpi-alerts.danger {
+  background: var(--violet);
+  color: #1b1413;
+}
+
+.kpi.danger,
+.kpi.warn {
+  box-shadow: none;
+}
+
+.kpi.warn {
+  border-left: 10px solid var(--peach);
+}
+
+.kpi-trout {
+  position: absolute;
+  height: auto;
+  pointer-events: none;
+}
+
+.kpi-trout-0 { width: 150px; right: -14px; top: 12px; }
+.kpi-trout-1 { width: 96px; right: 70px; top: 74px; transform: scaleX(-1); }
+.kpi-trout-2 { width: 70px; right: 10px; top: 104px; }

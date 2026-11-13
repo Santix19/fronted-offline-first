@@ -3,10 +3,10 @@
  * The data is not cached here: it lives in IndexedDB (src/shared/db). Backend calls go straight
  * to the network, because the sync module already handles failures and retries.
  */
-const CACHE = 'lacocha-app-v2';
+const CACHE = 'lacocha-app-v3';
 const SHELL = ['/', '/index.html', '/manifest.webmanifest', '/icons/icon.svg', '/icons/icon-192.png', '/icons/icon-512.png',
   // The 3D objects of the loud style: cached up front so the first offline open still shows them
-  ...['fish', 'drop', 'thermo', 'bell', 'coin', 'cloud'].map((n) => `/objects/${n}.webp`)];
+  ...['fish', 'drop', 'thermo', 'bell', 'coin', 'cloud'].map((n) => `/objects/${n}.webp`), '/objects/trucha.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)));
