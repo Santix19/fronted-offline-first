@@ -22,7 +22,7 @@ export function AlertItem({ alert, pondName }: AlertItemProps) {
       </div>
       <span className={`chip ${critical ? 'danger' : 'warn'}`}>{critical ? 'Crítica' : 'Advertencia'}</span>
       <button className="button secondary" onClick={() => facade.attendAlert(alert.id)} aria-label={`Marcar como atendida: ${alert.message}`}>
-        Atendida
+        Marcar atendida
       </button>
     </li>
   );

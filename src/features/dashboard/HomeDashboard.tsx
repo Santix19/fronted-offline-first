@@ -5,6 +5,7 @@ import { useLiveQuery } from '../../shared/db/useLiveQuery';
 import { Sparkline } from '../../shared/ui/Sparkline';
 import { formatNumber } from '../../shared/utils/format';
 import { buildDashboard } from './dashboardMath';
+import { Icon } from '../../shared/ui/icons';
 import { KpiTile } from './KpiTile';
 
 async function load() {
@@ -53,7 +54,7 @@ export function HomeDashboard() {
   return (
     <section className="dashboard" aria-label="Resumen">
       {data.feedHref && (
-        <a className="button block quick-action" href={data.feedHref}>Registrar alimentación <span aria-hidden="true">→</span></a>
+        <a className="button block quick-action" href={data.feedHref}>Registrar alimentación <span><Icon name="arrow" /></span></a>
       )}
       <div className="kpi-grid" ref={tiles}>
         <KpiTile kind="batches" label="Lotes activos" value={data.activeBatches} href="#/lotes" />

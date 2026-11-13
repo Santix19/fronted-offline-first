@@ -1,5 +1,6 @@
 import { createContext, useContext, useRef, type ReactNode } from 'react';
 import { useStagger } from '../motion/useStagger';
+import { Icon } from './icons';
 import { MaskedText } from './MaskedText';
 import { goBack } from './router';
 
@@ -26,7 +27,7 @@ export function Page({ title, backTo, children }: PageProps) {
       <header className="top-bar">
         {backTo && (
           <button className="back" onClick={() => goBack(backTo)} aria-label="Volver">
-            ‹
+            <Icon name="back" />
           </button>
         )}
         <span className="wordmark" aria-hidden="true">La Cocha</span>

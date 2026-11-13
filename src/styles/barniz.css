@@ -223,3 +223,31 @@
   outline: 3px solid var(--focus-halo);
   outline-offset: 1px;
 }
+
+/* Icons sit on the text baseline and never shrink inside a flex row */
+.icon-line { flex: none; vertical-align: middle; }
+.top-bar .back { display: grid; place-items: center; min-width: 48px; min-height: 48px; }
+.quick-action span { display: flex; }
+.kpi-icon { position: absolute; top: 12px; left: 14px; display: flex; }
+
+/* Water readings: a plain piece per value; the state is said in words and marked on the left edge */
+.reading {
+  border: 2px solid var(--rule);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.reading .value { font-size: clamp(1.5rem, 7.5vw, 2.25rem); }
+.reading .label { font-weight: 700; color: var(--ink-faint); }
+.reading.ok { background: var(--surface); border-color: var(--rule); }
+.reading.ok .label { color: var(--ok); }
+.reading.warn { background: var(--surface); border-color: var(--rule); border-left: 10px solid var(--peach); }
+.reading.warn .label { color: var(--warn); }
+.reading.danger { background: var(--surface); border-color: var(--danger); border-left: 10px solid var(--violet); }
+.reading.danger .label { color: var(--danger); }
+
+/* A pond's name fits on one line beside its type and its alerts */
+.pond-row .name { font-size: 1.375rem; line-height: 1.1; }
+
+.reading { min-width: 0; padding: var(--space-2) var(--space-3); }
+.reading .label { overflow-wrap: anywhere; }

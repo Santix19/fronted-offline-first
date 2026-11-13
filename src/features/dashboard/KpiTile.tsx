@@ -1,4 +1,5 @@
 import { CountUp } from '../../shared/ui/CountUp';
+import { Icon } from '../../shared/ui/icons';
 
 export type KpiKind = 'batches' | 'alerts' | 'ponds' | 'pending';
 
@@ -22,6 +23,7 @@ export function KpiTile({ kind, label, value, href, tone }: KpiTileProps) {
       {Array.from({ length: trout }, (_, i) => (
         <img key={i} className={`kpi-trout kpi-trout-${i}`} src="/objects/trucha.png" alt="" width={560} height={253} decoding="async" draggable={false} />
       ))}
+      {kind === 'alerts' && <span className="kpi-icon"><Icon name="bell" size={28} /></span>}
       <strong className="kpi-value">
         <CountUp value={value} decimals={0} />
       </strong>
