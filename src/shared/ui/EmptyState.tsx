@@ -1,19 +1,17 @@
 import type { ReactNode } from 'react';
-import { GlossyObject, type ObjectColor, type ObjectKind } from './GlossyObject';
+import { TroutImage } from './TroutImage';
 
 interface EmptyStateProps {
   title: string;
   hint: string;
   children?: ReactNode;
-  object?: ObjectKind;
-  color?: ObjectColor;
 }
 
-/** Nothing here yet: one glossy object floating, one plain sentence and, if there is one, the next action. */
-export function EmptyState({ title, hint, children, object = 'fish', color = 'blue' }: EmptyStateProps) {
+/** Nothing here yet: the trout, one plain sentence and, if there is one, the next action. */
+export function EmptyState({ title, hint, children }: EmptyStateProps) {
   return (
     <div className="empty">
-      <GlossyObject kind={object} color={color} size={120} tilt={-12} className="float empty-object" />
+      <TroutImage width={132} className="empty-object" />
       <p>{title}</p>
       <p className="muted">{hint}</p>
       {children}

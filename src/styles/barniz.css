@@ -132,3 +132,38 @@
 .kpi-trout-0 { width: 150px; right: -14px; top: 12px; }
 .kpi-trout-1 { width: 96px; right: 70px; top: 74px; transform: scaleX(-1); }
 .kpi-trout-2 { width: 70px; right: 10px; top: 104px; }
+
+/* The band takes the colour of the section: rose by default, lilac where something is being
+   written down, peach while counting */
+.top-bar::before {
+  background:
+    linear-gradient(135deg, var(--band-color, var(--violet)) 25%, transparent 25%) 0 0 / 24px 24px,
+    linear-gradient(225deg, var(--band-color, var(--violet)) 25%, transparent 25%) 0 0 / 24px 24px,
+    var(--ink);
+}
+
+.app:has(form.form) { --band-color: var(--blue); }
+.app:has(.count-total) { --band-color: var(--peach); }
+
+/* Sync state: a lacquer-edged piece with a rhombus instead of the usual round dot, 44 px to tap */
+.connection-pill {
+  min-height: 44px;
+  gap: 8px;
+  border: 2px solid var(--rule);
+  background: transparent;
+  font-weight: 700;
+}
+
+.connection-pill .dot {
+  border-radius: 0;
+  rotate: 45deg;
+}
+
+.connection-pill.offline { background: var(--lake-soft); }
+
+/* The chamfered corners belonged to the previous style; lacquer pieces are square-cut */
+.cut-corner { clip-path: none; }
+
+/* The trout sits on bone or lacquer and never spills out of its piece */
+.trout-image { height: auto; max-width: 100%; }
+.summary .facts { padding-right: 0; }
