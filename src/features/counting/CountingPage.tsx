@@ -43,7 +43,7 @@ export function CountingPage({ batchId }: { batchId: string }) {
       <p className="muted">{batch ? `Lote ${batch.code}` : ''}</p>
       {saved > 0 && <SavedNotice count={saved} backHref={`#${back}`} />}
 
-      <CountingTotals totals={count.totals} sensor={count.sensor} warning={count.warning} problem={count.problem} />
+      <CountingTotals totals={count.totals} sensor={count.sensor} warning={count.warning} problem={count.problem} expected={batch?.initialQuantity} />
 
       {/* Lo que el ESP32 sube solo por WiFi. Aparte del número de arriba, que es lo que cuenta
           este celular por el cable: ver el comentario de NetworkCounts. */}
@@ -57,8 +57,8 @@ export function CountingPage({ batchId }: { batchId: string }) {
           </button>
         ) : (
           <div className="button-row">
-            {sources.map((source) => (
-              <button key={source.kind} className="button" onClick={() => void count.connect(source.kind)}>
+            {sources.map((source, i) => (
+              <button key={source.kind} className={empty && i === 0 ? 'button' : 'button secondary'} onClick={() => void count.connect(source.kind)}>
                 Conectar {source.label.toLowerCase()}
               </button>
             ))}
@@ -69,8 +69,9 @@ export function CountingPage({ batchId }: { batchId: string }) {
         )}
       </section>
 
-      <section className="section">
-        <h2>Corregir a mano</h2>
+      {/* Kept folded: needed now and then, and it must not compete with the count */}
+      <details className="fold">
+        <summary>Corregir a mano</summary>
         <p className="muted">Úsalo si un alevín se saltó la barrera o si el contador se disparó.</p>
         <Field
           label="Total correcto"
@@ -82,7 +83,7 @@ export function CountingPage({ batchId }: { batchId: string }) {
         <button className="button secondary block" onClick={() => void applyCorrection()} disabled={typed.trim() === ''}>
           Aplicar corrección
         </button>
-      </section>
+      </details>
 
       <FrameLog log={count.log} />
 
@@ -90,9 +91,11 @@ export function CountingPage({ batchId }: { batchId: string }) {
         <button className="button block" onClick={() => void closeCount()} disabled={empty}>
           Guardar el conteo
         </button>
-        <button className="button danger block" onClick={() => void count.cancel()} disabled={empty}>
-          Descartar este conteo
-        </button>
+        {!empty && (
+          <button className="button danger block" onClick={() => void count.cancel()}>
+            Descartar este conteo
+          </button>
+        )}
       </section>
     </Page>
   );

@@ -5,6 +5,7 @@ import { Choices } from '../../shared/ui/Choices';
 import { Field } from '../../shared/ui/Field';
 import { Page } from '../../shared/ui/Page';
 import { toDateTimeInput, toIsoWithOffset } from '../../shared/utils/dates';
+import { readingWarning } from './readingWarning';
 import { buildRecord, RECORD_FIELDS, SOURCE_OPTIONS, type FormValues } from './recordForm';
 import { RECORD_LABELS, type RecordSource, type RecordType } from './recordTypes';
 import { validateRecord, type ValidationErrors } from './recordValidation';
@@ -57,6 +58,9 @@ export function RecordFormPage({ type, parentId }: RecordFormPageProps) {
             label={spec.label}
             hint={spec.hint}
             type={spec.kind === 'number' ? 'number' : 'text'}
+            big={spec.kind === 'number'}
+            unit={spec.unit}
+            warning={readingWarning(spec.key, values[spec.key] ?? '')}
             value={values[spec.key] ?? ''}
             onChange={(value) => setValues((v) => ({ ...v, [spec.key]: value }))}
             error={errors[spec.key]}

@@ -6,8 +6,8 @@ import type { SensorLogEntry } from '../sensors/sensorLog';
  */
 export function FrameLog({ log }: { log: SensorLogEntry[] }) {
   return (
-    <section className="section">
-      <h2>Tramas del contador</h2>
+    <details className="fold">
+      <summary>Mensajes del contador</summary>
       {log.length === 0 && <p className="muted">Todavía no llega nada del contador.</p>}
       {log.length > 0 && (
         <ul className="frame-log">
@@ -18,6 +18,6 @@ export function FrameLog({ log }: { log: SensorLogEntry[] }) {
           ))}
         </ul>
       )}
-    </section>
+    </details>
   );
 }
