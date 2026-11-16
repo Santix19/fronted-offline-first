@@ -98,6 +98,19 @@
 // Si tu módulo entrega HIGH al cortar el haz en vez de LOW, pon esto en true.
 #define BARRERA_INVERTIDA false
 
+/*
+ * Echar por el cable una línea por cada alevín, apenas cruza:
+ *
+ *     PASO;1
+ *     PASO;2
+ *
+ * Es lo que permite ajustar el potenciómetro: se mete un lápiz en el haz y se ve al instante si
+ * contó. Sin esto habría que esperar a que cierre la tanda, medio minuto, para enterarse.
+ *
+ * Déjelo en true. No cambia nada de lo que se sube al servidor: es solo texto por el USB.
+ */
+#define ECO_DE_CRUCES true
+
 // ---------------------------------------------------------------- los tiempos
 // Más largo que el ruido eléctrico y más corto que un alevín pasando.
 #define ANTIRREBOTE_US 1500
