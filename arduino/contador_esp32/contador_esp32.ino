@@ -56,6 +56,8 @@ volatile bool cortado = false;
 
 unsigned long seq = 0;
 unsigned long ultimaTandaMs = 0;
+/** Lo último que se echó por el cable como eco, para no repetir la misma línea. */
+unsigned long ecoUltimo = 0;
 
 /*
  * El candado de los contadores.
@@ -174,6 +176,13 @@ void setup() {
     }
   } else {
     Serial.printf("# comparador LM393 en el pin %d\n", PIN_BARRERA);
+    if (MOSTRAR_LECTURAS) {
+      // Sin este aviso la placa parecería dañada: con el LM393 el modo calibración no
+      // imprime nada —lo que imprime vive en la otra rama— y antes además dejaba de
+      // cerrar tandas, así que no salía ni una línea por el cable.
+      Serial.println("# aviso: MOSTRAR_LECTURAS no aplica a este armado y no hace nada.");
+      Serial.println("#        el umbral del LM393 se ajusta girando el potenciómetro.");
+    }
   }
 
   iniciarSensor();
@@ -184,7 +193,32 @@ void setup() {
 void loop() {
   atenderRed();
 
-  if (MOSTRAR_LECTURAS) return;  // en calibración no se cierran tandas
+#if SENSOR_ANALOGICO
+  // Solo el armado sin comparador tiene modo calibración. Fuera del #if, esta línea dejaba la
+  // placa muda y sin contar cuando alguien activaba MOSTRAR_LECTURAS con el LM393 puesto.
+  if (MOSTRAR_LECTURAS) return;
+#endif
+
+  /*
+   * El eco de cada cruce, apenas ocurre.
+   *
+   * Sin esto habría que esperar a que cierre la tanda —medio minuto— para saber si el último
+   * paso se contó, y así es imposible ajustar el potenciómetro: uno mete el dedo y no sabe si
+   * sirvió hasta treinta segundos después. El eco sale por el cable y no toca la cola de envío,
+   * así que no cambia en nada lo que se sube al servidor.
+   *
+   * Se lee con el candado puesto porque el contador lo toca el otro núcleo.
+   */
+  if (ECO_DE_CRUCES) {
+    portENTER_CRITICAL(&candado);
+    unsigned long llevamos = peces;
+    portEXIT_CRITICAL(&candado);
+    if (llevamos != ecoUltimo) {
+      ecoUltimo = llevamos;
+      Serial.printf("PASO;%lu\n", llevamos);
+    }
+  }
+
   if (millis() - ultimaTandaMs < (unsigned long) TANDA_SEGUNDOS * 1000UL) return;
   ultimaTandaMs = millis();
 
@@ -196,6 +230,7 @@ void loop() {
   peces = 0;
   ambiguos = 0;
   portEXIT_CRITICAL(&candado);
+  ecoUltimo = 0;   // el eco vuelve a empezar con la tanda
 
   if (contados == 0) return;
 
