@@ -50,7 +50,7 @@ la de enfrente.
 | 21 | Cable azul | `G-11` *(cursor del potenciómetro)* | `G-17` *(pata 2 del LM393)* |
 | 22 | Cable verde | `H-25` *(señal del fototransistor)* | `H-18` *(pata 3 del LM393)* |
 | 23 | Resistencia 10 kΩ *(de subida)* | `J-16` *(pata 1)* | Línea `3,3 V` de abajo |
-| 24 | Cable rosado | Pin `D4` del ESP32 | `H-16` *(pata 1)* |
+| 24 | Cable rosado | Pin `G4` del ESP32 *(en algunas placas se imprime `D4`)* | `H-16` *(pata 1)* |
 
 Son 24 filas y 22 cosas que meter: el LED y el fototransistor ocupan dos filas
 cada uno, una por pata.
@@ -61,6 +61,13 @@ cada uno, una por pata.
 no, sino un voltaje que sube y baja de a poquitos — también con la luz del día o el agua turbia.
 El LM393 lo convierte en un pulso limpio, y la frontera se ajusta con un destornillador en vez
 de recompilando.
+
+**Cómo se llama el pin 4 en su placa.** El serigrafiado depende del fabricante: al mismo pin
+—el GPIO 4— unas placas lo imprimen `D4`, otras `G4`, otras `IO4` o `GPIO4`. La tarjeta de este
+proyecto (DevKit de 38 pines con USB-C) usa `G4`. Si no aparece ninguno de esos nombres,
+cuéntelo: con el USB hacia abajo es el 13.º de arriba en la hilera derecha, entre `G16` y `G0`.
+No lo confunda con `G0`, el de justo abajo, que decide si la placa arranca normal o en modo de
+programación. Hay una hoja con la foto de la tarjeta marcada en `pines-esp32.pdf`.
 
 **Por qué sirve el pin 4.** Lo que llega es digital, así que casi cualquier pin vale. En el
 armado reducido (`SENSOR_ANALOGICO true`) habría que usar uno del ADC1, del 32 al 39, porque el
