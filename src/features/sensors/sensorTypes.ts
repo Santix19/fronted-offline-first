@@ -20,7 +20,9 @@ export type SensorSample =
  */
 export type SensorEvent =
   | { type: 'sample'; sample: SensorSample }
-  | { type: 'problem'; message: string; frame?: string };
+  | { type: 'problem'; message: string; frame?: string }
+  /** Live progress of the batch the board is still counting. Never saved: the CNT frame that closes the batch is the record. */
+  | { type: 'echo'; running: number };
 
 /** What a source is and how it behaves, so the screens do not have to know each model. */
 export interface SensorDescriptor {

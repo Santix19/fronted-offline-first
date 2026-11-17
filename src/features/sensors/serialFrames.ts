@@ -8,6 +8,10 @@ import type { SensorEvent } from './sensorTypes';
  *
  *   CNT;<seq>;<fish since the previous frame>;<how many of those were ambiguous>
  *   AGUA;<seq>;<temperature C>;<pH>;<oxygen mg/L>
+ *   PASO;<fish so far in the batch still open>   (ESP32 live echo, one per crossing)
+ *
+ * LECTURA;... and CORTE;... are the ESP32's calibration lines (MOSTRAR_LECTURAS): useful in the
+ * Arduino IDE's monitor, nothing for the app, so they are ignored instead of reported.
  *
  * Plain text on purpose: it can be read in the Arduino IDE's serial monitor while the counter is
  * being calibrated at the pond, which is where most of the work actually happens.
@@ -32,6 +36,14 @@ function field(text: string | undefined): number | undefined | null {
 
 const problem = (message: string, frame: string): SensorEvent => ({ type: 'problem', message, frame });
 
+function parseEcho(text: string | undefined, frame: string): SensorEvent {
+  const running = field(text);
+  if (running === null || running === undefined || !Number.isInteger(running) || running < 0) {
+    return problem('el eco de cruces de la trama no es un número entero', frame);
+  }
+  return { type: 'echo', running };
+}
+
 /**
  * One line of the serial port -> one domain event. Pure function, so the protocol can be tested
  * without a board plugged in. Returns null for lines that are not data (boot banner, comments).
@@ -41,6 +53,8 @@ export function parseFrame(line: string, dialect: FrameDialect, at = toIsoWithOf
   if (text === '' || text.startsWith('#')) return null;
 
   const [tag, ...fields] = text.split(';');
+  if (tag === 'LECTURA' || tag === 'CORTE') return null;
+  if (tag === 'PASO') return parseEcho(fields[0], text);
   const seq = field(fields[0]);
   if (seq === null || seq === undefined || !Number.isInteger(seq) || seq < 0) {
     return problem('la trama llegó sin número de secuencia', text);
