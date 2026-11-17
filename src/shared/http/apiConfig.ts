@@ -21,13 +21,7 @@ let cached: ApiConfig | null = null;
 export async function getApiConfig(): Promise<ApiConfig> {
   if (cached) return cached;
   const saved = await getMeta<ApiConfig>(KEY);
-  const fallback = defaults();
-  cached = saved
-    ? {
-        ...saved,
-        apiKey: saved.apiKey || (saved.apiUrl === fallback.apiUrl ? fallback.apiKey : ''),
-      }
-    : fallback;
+  cached = saved ?? defaults();
   // The device id is created once and kept forever: the backend uses it to tell phones apart
   if (!saved) await setMeta(KEY, cached);
   return cached;

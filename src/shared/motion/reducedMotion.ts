@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react';
 
 const QUERY = '(prefers-reduced-motion: reduce)';
 
-/** The CSS kill switch stops feedback motion; this also prevents starting a 3D pond. */
+/** True when the phone asks for less movement. GSAP tweens are not covered by the CSS kill switch in base.css, so JS checks this. */
 export function prefersReducedMotion(): boolean {
   return typeof window !== 'undefined' && window.matchMedia(QUERY).matches;
 }

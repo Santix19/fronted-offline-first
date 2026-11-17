@@ -1,4 +1,5 @@
 import { CountUp } from '../../shared/ui/CountUp';
+import { GlossyObject } from '../../shared/ui/GlossyObject';
 import { timeAgo } from '../../shared/utils/format';
 import type { Batch } from './batchTypes';
 import { useBatchSummary } from './useBatchSummary';
@@ -36,6 +37,7 @@ export function BatchSummaryPanel({ batch }: { batch: Batch }) {
 
   return (
     <section className="panel summary stage-chapter cut-corner">
+      <GlossyObject kind="coin" color="lime" size={110} tilt={14} className="float summary-object" />
       <dl className="facts">
         {facts
           .filter((f) => f.value !== undefined)
