@@ -30,8 +30,7 @@ export abstract class SensorSourceDecorator implements SensorSource {
 export class LoggingSensorDecorator extends SensorSourceDecorator {
   override subscribe(listener: (event: SensorEvent) => void): () => void {
     return this.inner.subscribe((event) => {
-      const line = describe(event);
-      appendSensorLog(line, event.type === 'problem');
+      if (event.type !== 'echo') appendSensorLog(describe(event), event.type === 'problem');
       listener(event);
     });
   }
@@ -56,7 +55,7 @@ export class DedupeSensorDecorator extends SensorSourceDecorator {
   }
 }
 
-function describe(event: SensorEvent): string {
+function describe(event: Exclude<SensorEvent, { type: 'echo' }>): string {
   if (event.type === 'problem') {
     return event.frame ? `${event.frame} → ${event.message}` : event.message;
   }
