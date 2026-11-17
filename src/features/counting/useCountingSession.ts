@@ -15,6 +15,8 @@ export function useCountingSession(batchId: string) {
   const [totals, setTotals] = useState<CountingTally>();
   const [warning, setWarning] = useState<string | null>(null);
   const [problem, setProblem] = useState<string>();
+  /** Fish the board has seen in the batch it has not closed yet: the live part of the total */
+  const [live, setLive] = useState(0);
   /** Kept after disconnecting too: the closed record has to say what measured it */
   const [sensor, setSensor] = useState<SensorDescriptor>();
   const [connected, setConnected] = useState(false);
@@ -48,6 +50,12 @@ export function useCountingSession(batchId: string) {
         setProblem(event.message);
         return;
       }
+      if (event.type === 'echo') {
+        setLive(event.running);
+        return;
+      }
+      // The closing frame carries these same fish: they move from "live" into the saved total
+      setLive(0);
       void session.current?.register(event.sample).then((feedback) => {
         setTotals(feedback.totals);
         setWarning(feedback.warning);
@@ -62,6 +70,7 @@ export function useCountingSession(batchId: string) {
     await source.current?.close();
     source.current = undefined;
     setConnected(false);
+    setLive(0);
   }, []);
 
   const correct = useCallback(async (total: number) => {
@@ -86,5 +95,5 @@ export function useCountingSession(batchId: string) {
     await reopen();
   }, [disconnect, reopen]);
 
-  return { totals, warning, problem, sensor, connected, log, connect, disconnect, correct, finish, cancel };
+  return { totals, live, warning, problem, sensor, connected, log, connect, disconnect, correct, finish, cancel };
 }

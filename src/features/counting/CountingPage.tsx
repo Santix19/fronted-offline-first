@@ -43,7 +43,7 @@ export function CountingPage({ batchId }: { batchId: string }) {
       <p className="muted">{batch ? `Lote ${batch.code}` : ''}</p>
       {saved > 0 && <SavedNotice count={saved} backHref={`#${back}`} />}
 
-      <CountingTotals totals={count.totals} sensor={count.sensor} warning={count.warning} problem={count.problem} />
+      <CountingTotals totals={count.totals} live={count.live} sensor={count.sensor} warning={count.warning} problem={count.problem} />
 
       {/* Lo que el ESP32 sube solo por WiFi. Aparte del número de arriba, que es lo que cuenta
           este celular por el cable: ver el comentario de NetworkCounts. */}
