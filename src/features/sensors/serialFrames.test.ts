@@ -43,3 +43,23 @@ test('a count cannot be negative or fractional', () => {
   assert.equal(parseFrame('CNT;4;-3;0', infrared, at)?.type, 'problem');
   assert.equal(parseFrame('CNT;4;2.5;0', infrared, at)?.type, 'problem');
 });
+
+test('the live echo of a crossing is progress, not a sample to save', () => {
+  assert.deepEqual(parseFrame('PASO;5', infrared, at), { type: 'echo', running: 5 });
+  assert.deepEqual(parseFrame('PASO;0', infrared, at), { type: 'echo', running: 0 });
+});
+
+test('a garbled echo is reported, never shown as a number', () => {
+  const event = parseFrame('PASO;abc', infrared, at);
+  assert.ok(event && event.type === 'problem');
+  assert.ok(parseFrame('PASO;-3', infrared, at)?.type === 'problem');
+});
+
+test('calibration lines from the ESP32 are not data and not errors', () => {
+  assert.equal(parseFrame('LECTURA;1500;libre', infrared, at), null);
+  assert.equal(parseFrame('CORTE;12 ms', infrared, at), null);
+});
+
+test('a tag nobody knows is still reported', () => {
+  assert.ok(parseFrame('XYZ;1;2', infrared, at)?.type === 'problem');
+});
