@@ -227,6 +227,19 @@ CNT;<seq>;<alevinos>;<ambiguos>        ← alevinos desde la trama anterior
 AGUA;<seq>;<temp_c>;<ph>;<oxigeno>     ← lectura de agua ("-" en lo que no midió)
 ```
 
+El ESP32 (`arduino/contador_esp32/`) habla el mismo `CNT` y además escribe tres líneas de diagnóstico:
+
+```
+PASO;<n>                ← eco de cada cruce: peces de la tanda que sigue abierta (ECO_DE_CRUCES)
+LECTURA;<valor>;<estado> ← lo que lee el sensor, solo con MOSTRAR_LECTURAS (calibración)
+CORTE;<ms>              ← cuánto duró cada corte, solo con MOSTRAR_LECTURAS
+```
+
+La app usa `PASO` para sumar en vivo, en la pantalla de conteo, los peces de la tanda en curso
+("N de la tanda en curso, todavía sin cerrar"): sin él el total salta cada 30 segundos. **No se guarda**:
+cuando llega el `CNT` que cierra la tanda esos mismos peces pasan al total guardado y el eco vuelve a
+cero. `LECTURA` y `CORTE` la app los ignora (son para el monitor serial del IDE), y no cuentan como error.
+
 Es texto plano a propósito: se puede leer en el monitor serial del Arduino IDE mientras se calibra el
 contador en el estanque, que es donde está el trabajo de verdad.
 
