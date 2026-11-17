@@ -18,7 +18,7 @@ export function CountingTotals({ totals, live = 0, sensor, warning, problem }: C
       <div className="count-total">
         <strong key={(totals?.total ?? 0) + live} className="number tick">{formatNumber((totals?.total ?? 0) + live, 0)}</strong>
         <span>alevinos contados{sensor ? ` · ${sensor.label}` : ''}</span>
-        {live > 0 && <span className="muted">{formatNumber(live, 0)} de la tanda en curso, todavía sin cerrar</span>}
+        {live > 0 && <span className="muted live-note">{formatNumber(live, 0)} de la tanda en curso, todavía sin cerrar</span>}
       </div>
       {warning && <p className="notice warn" role="alert">{warning}</p>}
       {problem && <p className="notice danger" role="alert">{problem}</p>}

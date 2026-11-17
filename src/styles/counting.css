@@ -45,3 +45,9 @@
   color: var(--danger);
   background: var(--danger-soft);
 }
+
+/* The live part of the total sits on its own line, under the sensor name */
+.count-total .live-note {
+  display: block;
+  margin-top: var(--space-1);
+}
