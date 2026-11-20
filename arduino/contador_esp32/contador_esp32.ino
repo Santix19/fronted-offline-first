@@ -191,6 +191,12 @@ static void iniciarSensor() {
 void setup() {
   Serial.begin(115200);
   Serial.println("# contador de alevinos la cocha (esp32)");
+  if (MODO_DEMOSTRACION) {
+    Serial.println("# ####################################################");
+    Serial.println("# MODO DEMOSTRACION ACTIVO: los cruces son SIMULADOS.");
+    Serial.println("# El conteo, las tandas y la subida si son los de verdad.");
+    Serial.println("# ####################################################");
+  }
   if (SENSOR_ANALOGICO) {
     Serial.printf("# sensor directo en el pin %d\n", PIN_SENSOR);
     if (MOSTRAR_LECTURAS) {
@@ -213,8 +219,30 @@ void setup() {
   ultimaTandaMs = millis();
 }
 
+/*
+ * Un alevín inventado de vez en cuando, para la demostración.
+ *
+ * Entra por terminarCruce(), que es la misma puerta por la que entran los de verdad: de ahí en
+ * adelante nada distingue un cruce simulado de uno real, y eso es justo lo que se quiere
+ * enseñar. La duración se sortea en el rango de un alevín normal para que el reporte de cruces
+ * ambiguos también sea realista.
+ */
+static void alevinInventado() {
+  if (!MODO_DEMOSTRACION) return;
+  static unsigned long proximoMs = 0;
+  unsigned long ahora = millis();
+  if (ahora < proximoMs) return;
+  proximoMs = ahora + random(DEMO_MIN_MS, DEMO_MAX_MS);
+
+  unsigned long duroUs = random(40000, 110000);   // entre 40 y 110 ms, como un alevín
+  cortadoDesdeUs = micros() - duroUs;
+  terminarCruce(micros());
+  Serial.printf("DEMO;cruce simulado de %lu ms\n", duroUs / 1000UL);
+}
+
 void loop() {
   atenderRed();
+  alevinInventado();
 
   if (MOSTRAR_LECTURAS) reportarCalibracion();
 
@@ -260,6 +288,7 @@ void loop() {
   if (contados == 0) return;
 
   seq++;
-  Serial.printf("CNT;%lu;%lu;%lu\n", seq, contados, cortes);
+  Serial.printf("CNT;%lu;%lu;%lu%s\n", seq, contados, cortes,
+                MODO_DEMOSTRACION ? ";SIMULADO" : "");
   encolarConteo(contados, cortes);
 }
