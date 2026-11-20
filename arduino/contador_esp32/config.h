@@ -114,7 +114,20 @@
 // ---------------------------------------------------------------- los tiempos
 // Más largo que el ruido eléctrico y más corto que un alevín pasando.
 #define ANTIRREBOTE_US 1500
-// Un corte más largo que esto es más de un pez a la vez.
-#define CORTE_LARGO_US 25000
+/*
+ * Un corte más largo que esto se marca como "más de un pez a la vez".
+ *
+ * OJO: este número hay que MEDIRLO con alevines de verdad, y hasta entonces es provisional.
+ *
+ * Estaba en 25 ms, y eso contradecía al propio código: el comentario de la tarea del sensor
+ * calcula que un alevín de cuatro centímetros tapa el haz unos 80 ms. Con el umbral en 25, cada
+ * alevín salía marcado como ambiguo y la métrica quedaba en 100% — justo la métrica que sostiene
+ * la comparación contra el conteo a mano.
+ *
+ * Queda en 150 ms, que es holgadamente más que un pez solo y bastante menos que dos pegados. En
+ * cuanto haya una jornada real, las líneas PASO del cable dan la duración de cada cruce y de ahí
+ * sale el valor bueno.
+ */
+#define CORTE_LARGO_US 150000
 // Cada cuánto se cierra una tanda y se manda al servidor.
 #define TANDA_SEGUNDOS 30
