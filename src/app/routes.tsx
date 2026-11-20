@@ -10,6 +10,8 @@ import { PeoplePage } from '../features/people/PeoplePage';
 import { PondListPage } from '../features/ponds/PondListPage';
 import { RECORD_LABELS, type RecordType } from '../features/records/recordTypes';
 import { RecordFormPage } from '../features/records/RecordFormPage';
+import { QuickEntryPage } from '../features/records/QuickEntryPage';
+import { isEntryType } from '../features/records/quickEntry';
 import { SettingsPage } from '../features/settings/SettingsPage';
 import { SyncPage } from '../features/sync/SyncPage';
 import { matchPath } from '../shared/ui/router';
@@ -27,6 +29,8 @@ const ROUTES: [string, (p: Params) => ReactNode][] = [
   ['/lotes/:id/conteo', (p) => <CountingPage batchId={p.id} />],
   ['/lotes/:id', (p) => <BatchDetailPage batchId={p.id} />],
   ['/registrar/:type', (p) => recordForm(p)],
+  ['/anotar', () => <QuickEntryPage />],
+  ['/anotar/:type', (p) => (isEntryType(p.type) ? <QuickEntryPage key={p.type} type={p.type} /> : <QuickEntryPage />)],
   ['/alertas', () => <AlertsPage />],
   ['/asistente', () => <AssistantPage />],
   ['/sincronizacion', () => <SyncPage />],
