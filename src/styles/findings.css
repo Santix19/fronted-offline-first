@@ -100,3 +100,12 @@
   font-size: var(--text-xl);
   color: var(--ink);
 }
+
+/* Pronóstico de temperatura: cada día ocupa lo que necesita, y "12,1–13,1 °C" no se parte */
+.forecast .facts {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.forecast .facts dd {
+  white-space: nowrap;
+}

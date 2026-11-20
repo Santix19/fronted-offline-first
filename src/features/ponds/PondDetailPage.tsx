@@ -7,6 +7,7 @@ import { AlertItem } from '../alerts/AlertItem';
 import { BatchList } from '../batches/BatchList';
 import { RecordList } from '../records/RecordList';
 import { POND_TYPE_LABELS } from './pondTypes';
+import { ForecastPanel } from './ForecastPanel';
 import { WaterBand } from './WaterBand';
 import type { WaterReading } from '../records/recordTypes';
 
@@ -38,6 +39,8 @@ export function PondDetailPage({ pondId }: { pondId: string }) {
           <a className="button secondary" href={`#/estanques/${pond.id}/editar`}>Editar estanque</a>
         </div>
       </section>
+
+      <ForecastPanel pondId={pond.id} />
 
       {alerts.length > 0 && (
         <section className="section">
