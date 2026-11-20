@@ -11,6 +11,7 @@ import { PondListPage } from '../features/ponds/PondListPage';
 import { RECORD_LABELS, type RecordType } from '../features/records/recordTypes';
 import { RecordFormPage } from '../features/records/RecordFormPage';
 import { QuickEntryPage } from '../features/records/QuickEntryPage';
+import { HistoryPage } from '../features/history/HistoryPage';
 import { isEntryType } from '../features/records/quickEntry';
 import { SettingsPage } from '../features/settings/SettingsPage';
 import { SyncPage } from '../features/sync/SyncPage';
@@ -30,6 +31,7 @@ const ROUTES: [string, (p: Params) => ReactNode][] = [
   ['/lotes/:id', (p) => <BatchDetailPage batchId={p.id} />],
   ['/registrar/:type', (p) => recordForm(p)],
   ['/anotar', () => <QuickEntryPage />],
+  ['/historial', () => <HistoryPage />],
   ['/anotar/:type', (p) => (isEntryType(p.type) ? <QuickEntryPage key={p.type} type={p.type} /> : <QuickEntryPage />)],
   ['/alertas', () => <AlertsPage />],
   ['/asistente', () => <AssistantPage />],

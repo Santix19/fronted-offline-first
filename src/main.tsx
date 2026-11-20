@@ -20,6 +20,7 @@ import './styles/counting.css';
 import './styles/findings.css';
 import './styles/assistant.css';
 import './styles/quick-entry.css';
+import './styles/history.css';
 import './styles/auth.css';
 import './styles/trout.css';
 import './styles/motion.css';

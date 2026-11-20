@@ -188,7 +188,20 @@ _Este es el servidor simulado; el real responde con Claude._`,
     }];
   }],
   ['GET', /^\/api\/lotes\/([^/]+)\/resumen$/, (_, __, [id]) => (summary(id) ? [200, summary(id)] : [404, { detalle: 'lote no encontrado' }])],
-  ['GET', /^\/api\/alertas$/, () => [200, [...db.alerts.values()].filter((a) => !a.atendida)]],
+  // Historial de un lote, como el backend real: lo más nuevo primero, hasta "limite"
+  ['GET', /^\/api\/lotes\/([^/]+)\/(alimentaciones|mortalidades|biometrias|conteos)$/, (url, _, [id, kind]) => {
+    const tipo = { alimentaciones: 'alimentacion', mortalidades: 'mortalidad', biometrias: 'biometria', conteos: 'conteo' }[kind];
+    const rows = [...db.events.values()]
+      .filter((e) => e.tipo === tipo && e.lote_id === id)
+      .sort((a, b) => b.registrado_en.localeCompare(a.registrado_en))
+      .slice(0, Number(url.searchParams.get('limite') ?? 100));
+    return [200, rows];
+  }],
+  ['GET', /^\/api\/alertas$/, (url) => {
+    const pendingOnly = url.searchParams.get('pendientes') !== 'false';
+    const pond = url.searchParams.get('estanque_id');
+    return [200, [...db.alerts.values()].filter((a) => (!pendingOnly || !a.atendida) && (!pond || a.estanque_id === pond))];
+  }],
   ['POST', /^\/api\/alertas\/([^/]+)\/atender$/, (_, __, [id]) => {
     const alert = db.alerts.get(id);
     if (!alert) return [404, { detalle: 'alerta no encontrada' }];

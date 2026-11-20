@@ -23,6 +23,10 @@ export function PondListPage() {
         ✍️ Anotar datos
         <span>agua, alimento, mortalidad…</span>
       </a>
+      <a className="button secondary block quick-entry-cta" href="#/historial">
+        📋 Historial y reportes
+        <span>qué pasó, resumen, Excel y PDF</span>
+      </a>
       <HomeDashboard />
       <section className="section">
         <div className="section-head">

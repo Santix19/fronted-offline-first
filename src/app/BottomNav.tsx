@@ -12,7 +12,7 @@ interface Tab {
 }
 
 const TABS: Tab[] = [
-  { href: '#/', label: 'Estanques', icon: 'ponds', match: ['/', '/estanques', '/lotes', '/registrar', '/anotar'] },
+  { href: '#/', label: 'Estanques', icon: 'ponds', match: ['/', '/estanques', '/lotes', '/registrar', '/anotar', '/historial'] },
   { href: '#/alertas', label: 'Alertas', icon: 'alerts', match: ['/alertas'] },
   { href: '#/asistente', label: 'Asistente', icon: 'assistant', match: ['/asistente'] },
   { href: '#/sincronizacion', label: 'Sincronizar', icon: 'sync', match: ['/sincronizacion'] },
