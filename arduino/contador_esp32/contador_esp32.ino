@@ -126,6 +126,9 @@ void tareaSensor(void *) {
   }
 }
 
+/** En este armado la tarea del sensor ya imprime; no hay nada que reportar desde loop(). */
+static inline void reportarCalibracion() {}
+
 static void iniciarSensor() {
   // El rango completo hasta 3,3 V. Sin esto el ADC satura cerca de 1 V y la mitad de arriba de la
   // escala no se distingue, que es justo donde está "haz libre".
@@ -157,6 +160,27 @@ void IRAM_ATTR alCambiarLaBarrera() {
   terminarCruce(ahora);
 }
 
+/*
+ * Enseña por el cable lo que el comparador está decidiendo, para poder girar el tornillo
+ * mirando datos en vez de a ciegas.
+ *
+ *     NIVEL;1;libre
+ *     NIVEL;0;cortado
+ *
+ * Sale una línea cada vez que cambia, y otra por segundo aunque no cambie, para saber que la
+ * placa sigue viva. Sin esto, ajustar el potenciómetro es adivinar: el LM393 decide por
+ * hardware y el programa solo ve el resultado ya digerido.
+ */
+static void reportarCalibracion() {
+  static int anterior = -1;
+  static unsigned long ultimoMs = 0;
+  int nivel = digitalRead(PIN_BARRERA);
+  if (nivel == anterior && millis() - ultimoMs < 1000) return;
+  anterior = nivel;
+  ultimoMs = millis();
+  Serial.printf("NIVEL;%d;%s\n", nivel, nivel == nivelCortado() ? "cortado" : "libre");
+}
+
 static void iniciarSensor() {
   pinMode(PIN_BARRERA, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(PIN_BARRERA), alCambiarLaBarrera, CHANGE);
@@ -177,11 +201,10 @@ void setup() {
   } else {
     Serial.printf("# comparador LM393 en el pin %d\n", PIN_BARRERA);
     if (MOSTRAR_LECTURAS) {
-      // Sin este aviso la placa parecería dañada: con el LM393 el modo calibración no
-      // imprime nada —lo que imprime vive en la otra rama— y antes además dejaba de
-      // cerrar tandas, así que no salía ni una línea por el cable.
-      Serial.println("# aviso: MOSTRAR_LECTURAS no aplica a este armado y no hace nada.");
-      Serial.println("#        el umbral del LM393 se ajusta girando el potenciómetro.");
+      // En este armado la calibración no cambia el umbral (eso lo hace el tornillo): solo
+      // enseña lo que el comparador ya decidió, que es lo que hace falta para girarlo bien.
+      Serial.println("# MODO CALIBRACION: se muestra el nivel que entrega el comparador.");
+      Serial.println("#        gire el tornillo hasta que cambie al tapar el haz.");
     }
   }
 
@@ -192,6 +215,8 @@ void setup() {
 
 void loop() {
   atenderRed();
+
+  if (MOSTRAR_LECTURAS) reportarCalibracion();
 
 #if SENSOR_ANALOGICO
   // Solo el armado sin comparador tiene modo calibración. Fuera del #if, esta línea dejaba la
