@@ -5,6 +5,24 @@ import { Page } from '../../shared/ui/Page';
 import { useOnline } from '../../shared/ui/useOnline';
 import type { ChatTurn } from './assistantApi';
 import { parseMarkdown, type Inline } from './markdown';
+import { canListen, canSpeak, listen, speak, stopSpeaking } from './voice';
+
+/** Preferencia de leer siempre en voz alta. Es de este celular y no importa si se pierde. */
+const READ_ALOUD_KEY = 'lacocha.asistente.leer';
+function loadReadAloud(): boolean {
+  try {
+    return localStorage.getItem(READ_ALOUD_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+function saveReadAloud(on: boolean): void {
+  try {
+    localStorage.setItem(READ_ALOUD_KEY, on ? '1' : '0');
+  } catch {
+    // Sin almacenamiento (modo privado): la opción dura mientras la app está abierta
+  }
+}
 
 /** Las preguntas de todos los días, a un toque. */
 const SHORTCUTS = [
@@ -67,12 +85,66 @@ export function AssistantPage() {
   const [error, setError] = useState<string>();
   const end = useRef<HTMLDivElement>(null);
 
+  // Voz: lo que el navegador permite, preguntado una vez
+  const [voiceIn] = useState(canListen);
+  const [voiceOut] = useState(canSpeak);
+  const [listening, setListening] = useState(false);
+  const [speaking, setSpeaking] = useState<number>();
+  const [readAloud, setReadAloud] = useState(loadReadAloud);
+  const stopListening = useRef<() => void>(undefined);
+
   useEffect(() => {
     conversation = turns;
     end.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [turns, waiting]);
 
-  async function send(question: string) {
+  // Al salir de la pantalla se deja de escuchar y de hablar
+  useEffect(() => () => {
+    stopListening.current?.();
+    stopSpeaking();
+  }, []);
+
+  function readOut(index: number, text: string) {
+    setSpeaking(index);
+    speak(text, () => setSpeaking((current) => (current === index ? undefined : current)));
+  }
+
+  function toggleSpeaking(index: number, text: string) {
+    if (speaking === index) {
+      stopSpeaking();
+      setSpeaking(undefined);
+    } else {
+      readOut(index, text);
+    }
+  }
+
+  function toggleListening() {
+    if (listening) {
+      stopListening.current?.();
+      return;
+    }
+    stopSpeaking();
+    setSpeaking(undefined);
+    setError(undefined);
+    setListening(true);
+    stopListening.current = listen({
+      onPartial: (text) => setDraft(text),
+      onFinal: (text) => {
+        setListening(false);
+        stopListening.current = undefined;
+        // Quien pregunta hablando quiere oír la respuesta: tiene las manos ocupadas.
+        // Por la referencia, para mandar con la conversación de ahora y no la de cuando empezó a hablar
+        if (text) void sendRef.current(text, true);
+      },
+      onError: (message) => {
+        setListening(false);
+        stopListening.current = undefined;
+        setError(message);
+      },
+    });
+  }
+
+  async function send(question: string, spoken = false) {
     const text = question.trim();
     if (!text || waiting) return;
     const history = turns;
@@ -83,6 +155,7 @@ export function AssistantPage() {
     try {
       const answer = await facade.askAssistant(text, history);
       setTurns((current) => [...current, { role: 'assistant', text: answer.text }]);
+      if (voiceOut && (spoken || readAloud)) readOut(history.length + 1, answer.text);
     } catch (e) {
       setError(errorMessage(e));
       // La pregunta que no se respondió vuelve al cuadro para mandarla otra vez
@@ -92,6 +165,9 @@ export function AssistantPage() {
       setWaiting(false);
     }
   }
+
+  const sendRef = useRef(send);
+  sendRef.current = send;
 
   function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -122,6 +198,16 @@ export function AssistantPage() {
           {turns.map((turn, i) => (
             <div key={i} className={`bubble ${turn.role}`}>
               {turn.role === 'user' ? <p>{turn.text}</p> : <AnswerText text={turn.text} />}
+              {turn.role === 'assistant' && voiceOut && (
+                <button
+                  type="button"
+                  className="bubble-listen"
+                  aria-pressed={speaking === i}
+                  onClick={() => toggleSpeaking(i, turn.text)}
+                >
+                  {speaking === i ? '⏹ Detener' : '🔊 Escuchar'}
+                </button>
+              )}
             </div>
           ))}
           {waiting && (
@@ -135,6 +221,17 @@ export function AssistantPage() {
         {error && <p className="notice danger">{error}</p>}
 
         <form className="assistant-form" onSubmit={onSubmit}>
+          {voiceIn && (
+            <button
+              type="button"
+              className={`button block assistant-mic${listening ? ' listening' : ''}`}
+              aria-pressed={listening}
+              disabled={!online || waiting}
+              onClick={toggleListening}
+            >
+              {listening ? '⏹ Te escucho… toca para terminar' : '🎤 Hablar'}
+            </button>
+          )}
           <div className="field">
             <label htmlFor="pregunta">Tu pregunta</label>
             <textarea
@@ -142,7 +239,7 @@ export function AssistantPage() {
               rows={2}
               maxLength={4000}
               value={draft}
-              placeholder="Ej.: ¿cuánto alimento le doy al lote L1 y en cuántas tomas?"
+              placeholder={voiceIn ? 'Escribe o toca «Hablar». Ej.: ¿cuánto alimento le doy al lote L1?' : 'Ej.: ¿cuánto alimento le doy al lote L1 y en cuántas tomas?'}
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -162,6 +259,23 @@ export function AssistantPage() {
               </button>
             )}
           </div>
+          {voiceOut && (
+            <label className="assistant-readaloud">
+              <input
+                type="checkbox"
+                checked={readAloud}
+                onChange={(e) => {
+                  setReadAloud(e.target.checked);
+                  saveReadAloud(e.target.checked);
+                  if (!e.target.checked) {
+                    stopSpeaking();
+                    setSpeaking(undefined);
+                  }
+                }}
+              />
+              Leer siempre las respuestas en voz alta
+            </label>
+          )}
         </form>
         <p className="muted panel-note">Responde Claude (Anthropic). Puede equivocarse: ante un problema serio de salud de los peces, consulta a un profesional.</p>
       </section>
