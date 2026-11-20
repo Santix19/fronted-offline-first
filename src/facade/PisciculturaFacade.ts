@@ -21,6 +21,7 @@ import type { Pond } from '../features/ponds/pondTypes';
 import { fetchWaterForecast, type WaterForecast } from '../features/ponds/forecastApi';
 import { askAssistant, type AssistantAnswer, type ChatTurn } from '../features/assistant/assistantApi';
 import { discardRecord, latestReadingsByPond, listRecords, saveRecord } from '../features/records/recordRepository';
+import { fetchServerHistory, type ServerHistory } from '../features/history/historyApi';
 import type { FieldRecord } from '../features/records/recordTypes';
 import { availableSensors, sensorFactoryFor, type SensorOptions } from '../features/sensors/SensorFactory';
 import type { SensorKind } from '../features/sensors/sensorTypes';
@@ -91,6 +92,13 @@ export class PisciculturaFacade {
   readonly discardRecord = (id: string): Promise<void> => discardRecord(id);
   readonly alerts = (pondId?: string) => listAlerts(pondId);
   readonly attendAlert = (id: string): Promise<void> => attendAlert(id);
+
+  // ---------- History and reports ----------
+  /** Everything on this phone, without the usual limit: the history works with no signal. */
+  readonly localHistory = (): Promise<FieldRecord[]> => listRecords(undefined, Number.POSITIVE_INFINITY);
+  /** With signal: what every phone, the sensor and the counter sent, from a date on. */
+  readonly serverHistory = (ponds: Pond[], batches: Batch[], from: Date, pondId?: string): Promise<ServerHistory> =>
+    fetchServerHistory(ponds, batches, from, pondId);
 
   // ---------- Synchronization and settings ----------
   /**

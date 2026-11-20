@@ -1,0 +1,130 @@
+/*
+ * Historial y reportes: el resumen del periodo en tarjetas y, debajo, todo lo que pasó por día.
+ * Se puede imprimir o guardar como PDF desde el navegador; para eso está el bloque @media print.
+ */
+
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.history-filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.report-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+}
+
+.report-tile p {
+  margin: 0;
+}
+
+.report-label {
+  font-weight: 700;
+}
+
+.report-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.report-value span {
+  font-size: var(--text-md);
+  font-weight: 400;
+}
+
+.report-flag {
+  align-self: flex-start;
+  margin-top: var(--space-1) !important;
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  font-size: 0.9em;
+}
+
+.report-flag.ok { background: var(--ok-soft); color: var(--ok); }
+.report-flag.warn { background: var(--warn-soft); color: var(--warn); }
+
+.history-day h3 {
+  margin: var(--space-3) 0 var(--space-2);
+  font-size: var(--text-md);
+}
+
+.history-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-left: 4px solid transparent;
+}
+
+.history-entry p {
+  margin: 0;
+}
+
+.history-entry.tone-ok { border-left-color: var(--ok); }
+.history-entry.tone-warn { border-left-color: var(--warn); }
+.history-entry.tone-danger { border-left-color: var(--danger); }
+
+.history-time {
+  min-width: 4.5em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft, inherit);
+  opacity: 0.8;
+}
+
+.print-only {
+  display: none;
+}
+
+/* Imprimir o «Guardar como PDF»: solo el reporte, en blanco y negro legible */
+@media print {
+  .no-print,
+  .bottom-nav,
+  .top-bar,
+  .lagoon,
+  .backdrop,
+  .page-title {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block;
+  }
+
+  body,
+  .app,
+  .content,
+  .report-tile,
+  .history-entry,
+  .list {
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+  }
+
+  .report-tile,
+  .history-entry {
+    break-inside: avoid;
+  }
+
+  .history-day h3 {
+    break-after: avoid;
+  }
+}
