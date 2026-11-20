@@ -1,0 +1,62 @@
+/*
+ * «Anotar datos»: el camino corto a cualquier registro, con o sin señal.
+ * Botones grandes, como el resto de la app: se usan con las manos mojadas o con guantes.
+ */
+
+.quick-entry-cta {
+  min-height: var(--touch-hero);
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: var(--space-4);
+  font-size: var(--text-md);
+}
+
+.quick-entry-cta span {
+  font-size: 0.85em;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.quick-entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.quick-entry-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--space-3);
+}
+
+.quick-entry-tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  min-height: 112px;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: inherit;
+  text-decoration: none;
+}
+
+.quick-entry-grid li:first-child .quick-entry-tile {
+  background: var(--lime);
+  color: #0a0a0a;
+  border-color: transparent;
+}
+
+.quick-entry-grid li:first-child .quick-entry-tile .muted {
+  color: #2f3a12;
+}
+
+.quick-entry-title {
+  font-size: var(--text-lg, 1.25rem);
+  font-weight: 700;
+}

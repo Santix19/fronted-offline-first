@@ -18,6 +18,11 @@ export function PondListPage() {
 
   return (
     <Page title="Tu finca, hoy">
+      {/* Lo que más se hace en el día, a un toque y funciona sin señal */}
+      <a className="button block quick-entry-cta" href="#/anotar">
+        ✍️ Anotar datos
+        <span>agua, alimento, mortalidad…</span>
+      </a>
       <HomeDashboard />
       <section className="section">
         <div className="section-head">
