@@ -9,6 +9,8 @@ interface RequestOptions {
   query?: Query;
   /** true for signing in and registering: the phone has no token yet */
   anonymous?: boolean;
+  /** Para las rutas que esperan a la IA, que puede tardar un minuto en despertar en Render. */
+  timeoutMs?: number;
 }
 
 /**
@@ -26,7 +28,10 @@ export async function apiRequest<T>(method: 'GET' | 'POST' | 'PATCH' | 'DELETE',
   const { apiUrl, apiKey } = await getApiConfig();
   const token = getSessionToken();
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), serverAwake ? NORMAL_TIMEOUT_MS : COLD_START_TIMEOUT_MS);
+  const timer = setTimeout(
+    () => controller.abort(),
+    options.timeoutMs ?? (serverAwake ? NORMAL_TIMEOUT_MS : COLD_START_TIMEOUT_MS),
+  );
 
   let response: Response;
   try {

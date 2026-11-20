@@ -158,6 +158,20 @@ const routes = [
   ['POST', /^\/api\/sync\/push$/, (_, body) => [200, push(body)]],
   ['GET', /^\/api\/sync\/pull$/, (url) => [200, pull(url.searchParams.get('desde') ?? undefined)]],
   ['GET', /^\/api\/estanques\/([^/]+)\/lecturas$/, (url, _, [id]) => [200, [...db.events.values()].filter((e) => e.tipo === 'lectura_agua' && e.estanque_id === id).slice(-Number(url.searchParams.get('limite') ?? 500)).reverse()]],
+  ['GET', /^\/api\/estanques\/([^/]+)\/pronostico-temperatura$/, (url, _, [id]) => {
+    // Igual que el backend: con menos de 10 lecturas de temperatura no hay pronóstico
+    const lecturas = [...db.events.values()].filter((e) => e.tipo === 'lectura_agua' && e.estanque_id === id && e.temp_c != null);
+    if (lecturas.length < 10) {
+      return [200, { dias: [], error_tipico: null, reaccion_horas: null, lecturas_usadas: lecturas.length, mensaje: `Faltan lecturas: se necesitan al menos 10 de temperatura y hay ${lecturas.length}` }];
+    }
+    const media = lecturas.reduce((s, e) => s + e.temp_c, 0) / lecturas.length;
+    const dias = Array.from({ length: Number(url.searchParams.get('dias') ?? 2) }, (_, i) => {
+      const fecha = new Date(Date.now() + (i + 1) * 86_400_000).toISOString().slice(0, 10);
+      const promedio = Math.round((media + (i - 0.5) * 0.3) * 10) / 10;
+      return { fecha, minima: Math.round((promedio - 0.5) * 10) / 10, maxima: Math.round((promedio + 0.5) * 10) / 10, promedio };
+    });
+    return [200, { dias, error_tipico: 0.4, reaccion_horas: 30, lecturas_usadas: lecturas.length, mensaje: null }];
+  }],
   ['GET', /^\/api\/lotes\/([^/]+)\/resumen$/, (_, __, [id]) => (summary(id) ? [200, summary(id)] : [404, { detalle: 'lote no encontrado' }])],
   ['GET', /^\/api\/alertas$/, () => [200, [...db.alerts.values()].filter((a) => !a.atendida)]],
   ['POST', /^\/api\/alertas\/([^/]+)\/atender$/, (_, __, [id]) => {
