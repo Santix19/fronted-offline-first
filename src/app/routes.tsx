@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { AlertsPage } from '../features/alerts/AlertsPage';
+import { AssistantPage } from '../features/assistant/AssistantPage';
 import { BatchDetailPage } from '../features/batches/BatchDetailPage';
 import { BatchFormPage } from '../features/batches/BatchFormPage';
 import { CountingPage } from '../features/counting/CountingPage';
@@ -27,6 +28,7 @@ const ROUTES: [string, (p: Params) => ReactNode][] = [
   ['/lotes/:id', (p) => <BatchDetailPage batchId={p.id} />],
   ['/registrar/:type', (p) => recordForm(p)],
   ['/alertas', () => <AlertsPage />],
+  ['/asistente', () => <AssistantPage />],
   ['/sincronizacion', () => <SyncPage />],
   ['/ajustes', () => <SettingsPage />],
   ['/personas', () => <PeoplePage />],

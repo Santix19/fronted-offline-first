@@ -172,6 +172,21 @@ const routes = [
     });
     return [200, { dias, error_tipico: 0.4, reaccion_horas: 30, lecturas_usadas: lecturas.length, mensaje: null }];
   }],
+  ['POST', /^\/api\/asistente$/, (_, body) => {
+    // Respuesta fija con el mismo formato del backend real, para probar la pantalla sin gastar en Claude
+    if (!(body.pregunta ?? '').trim()) return [422, { detalle: 'pregunta: no debe estar vacío' }];
+    const estanques = db.ponds.size;
+    return [200, {
+      respuesta: `## Respuesta de prueba
+Preguntaste: **${body.pregunta.trim()}**
+
+- Estanques en el servidor simulado: ${estanques}
+- Mensajes anteriores: ${(body.historial ?? []).length}
+
+_Este es el servidor simulado; el real responde con Claude._`,
+      modelo: 'simulado',
+    }];
+  }],
   ['GET', /^\/api\/lotes\/([^/]+)\/resumen$/, (_, __, [id]) => (summary(id) ? [200, summary(id)] : [404, { detalle: 'lote no encontrado' }])],
   ['GET', /^\/api\/alertas$/, () => [200, [...db.alerts.values()].filter((a) => !a.atendida)]],
   ['POST', /^\/api\/alertas\/([^/]+)\/atender$/, (_, __, [id]) => {

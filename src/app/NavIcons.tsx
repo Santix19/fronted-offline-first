@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 const base = { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.75, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true } as const;
 
-/** Four line icons in one stroke weight. The wave is the water of the ponds; the others are plain on purpose. */
+/** Five line icons in one stroke weight. The wave is the water of the ponds; the others are plain on purpose. */
 export const NAV_ICONS: Record<string, ReactNode> = {
   ponds: (
     <svg {...base}>
@@ -15,6 +15,12 @@ export const NAV_ICONS: Record<string, ReactNode> = {
     <svg {...base}>
       <path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9Z" />
       <path d="M10 20a2 2 0 0 0 4 0" />
+    </svg>
+  ),
+  assistant: (
+    <svg {...base}>
+      <path d="M4 5h16v11H9l-5 4V5Z" />
+      <path d="M8.5 9.5h7M8.5 12.5h4" />
     </svg>
   ),
   sync: (
