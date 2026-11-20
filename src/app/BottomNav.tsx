@@ -14,6 +14,7 @@ interface Tab {
 const TABS: Tab[] = [
   { href: '#/', label: 'Estanques', icon: 'ponds', match: ['/', '/estanques', '/lotes', '/registrar'] },
   { href: '#/alertas', label: 'Alertas', icon: 'alerts', match: ['/alertas'] },
+  { href: '#/asistente', label: 'Asistente', icon: 'assistant', match: ['/asistente'] },
   { href: '#/sincronizacion', label: 'Sincronizar', icon: 'sync', match: ['/sincronizacion'] },
   { href: '#/ajustes', label: 'Ajustes', icon: 'settings', match: ['/ajustes'] },
 ];

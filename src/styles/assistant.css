@@ -1,0 +1,96 @@
+/*
+ * Asistente de la finca: una conversación en burbujas.
+ *
+ * Lo del cuidador va a la derecha en el color de acción; lo del asistente a la izquierda, en blanco
+ * como los paneles, porque es información para leer con calma y no un botón.
+ */
+
+.assistant {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.assistant-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.assistant-shortcuts .button {
+  min-height: var(--touch);
+  white-space: normal;
+  text-align: left;
+}
+
+.assistant-chat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.bubble {
+  max-width: min(92%, 560px);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.bubble.user {
+  align-self: flex-end;
+  background: var(--lime);
+  color: #0a0a0a;
+}
+
+.bubble.assistant {
+  align-self: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+}
+
+.bubble.thinking {
+  animation: assistant-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes assistant-pulse {
+  50% { opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble.thinking { animation: none; }
+}
+
+.bubble p,
+.bubble ul,
+.bubble ol {
+  margin: 0 0 var(--space-2);
+}
+
+.bubble > :last-child {
+  margin-bottom: 0;
+}
+
+.bubble ul,
+.bubble ol {
+  padding-left: 1.25em;
+}
+
+.bubble h3,
+.bubble h4 {
+  margin: var(--space-3) 0 var(--space-1);
+  font-size: var(--text-md);
+  font-weight: 700;
+}
+
+.bubble > h3:first-child,
+.bubble > h4:first-child {
+  margin-top: 0;
+}
+
+.assistant-form textarea {
+  resize: vertical;
+  min-height: 72px;
+  font: inherit;
+  padding-top: var(--space-3);
+}

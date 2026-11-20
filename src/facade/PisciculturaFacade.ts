@@ -19,6 +19,7 @@ import { SupervisedCountingSession } from '../features/counting/SupervisedCounti
 import { deactivatePond, getPond, listPonds, nameTaken, savePond, type PondInput } from '../features/ponds/pondRepository';
 import type { Pond } from '../features/ponds/pondTypes';
 import { fetchWaterForecast, type WaterForecast } from '../features/ponds/forecastApi';
+import { askAssistant, type AssistantAnswer, type ChatTurn } from '../features/assistant/assistantApi';
 import { discardRecord, latestReadingsByPond, listRecords, saveRecord } from '../features/records/recordRepository';
 import type { FieldRecord } from '../features/records/recordTypes';
 import { availableSensors, sensorFactoryFor, type SensorOptions } from '../features/sensors/SensorFactory';
@@ -161,6 +162,11 @@ export class PisciculturaFacade {
    * Cómo va a estar la temperatura del agua del estanque los próximos días. La calcula el modelo
    * de IA con las lecturas del estanque y el pronóstico del clima de El Encano.
    */
+  /**
+   * Una pregunta para el asistente de la finca (IA nivel 3). El backend le agrega el estado de la finca
+   * y la IA responde con Claude. Necesita señal.
+   */
+  readonly askAssistant = (question: string, history: ChatTurn[]): Promise<AssistantAnswer> => askAssistant(question, history);
   readonly waterForecast = (pondId: string, days = 2): Promise<WaterForecast> => fetchWaterForecast(pondId, days);
   /** Hacia dónde va el lote. El servidor la calcula al preguntar y no la guarda. */
   readonly batchProjection = (batchId: string): Promise<BatchProjection> =>
