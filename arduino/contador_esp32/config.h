@@ -41,7 +41,7 @@
  *                        que recompilar para cambiar el umbral. Queda disponible por si el
  *                        LM393 o el potenciómetro fallan lejos de una tienda de electrónica.
  */
-#define SENSOR_ANALOGICO false
+#define SENSOR_ANALOGICO true
 
 // ---- si SENSOR_ANALOGICO es true (el armado reducido, de respaldo) ----
 /*
@@ -110,6 +110,25 @@
  * Déjelo en true. No cambia nada de lo que se sube al servidor: es solo texto por el USB.
  */
 #define ECO_DE_CRUCES true
+
+/*
+ * Modo demostración: la placa inventa los cruces en vez de leerlos del sensor.
+ *
+ * Para enseñar el sistema completo cuando el sensor óptico todavía no está montado o calibrado.
+ * Los cruces inventados pasan por EXACTAMENTE el mismo camino que los de verdad —el mismo
+ * contador, las mismas tandas, la misma cola de envío y el mismo reintento—, así que lo que se
+ * ve funcionar es el sistema real; lo único simulado es de dónde viene el pulso.
+ *
+ * Se anuncia en cada línea y en cada tanda, a propósito: una demostración que no se declara es
+ * un engaño, y además el que presenta necesita poder señalarlo cuando le pregunten.
+ *
+ * Déjelo en false para contar de verdad.
+ */
+#define MODO_DEMOSTRACION false
+
+/** Cada cuánto aparece un alevín inventado, en milisegundos. Se sortea entre los dos. */
+#define DEMO_MIN_MS 400
+#define DEMO_MAX_MS 1800
 
 // ---------------------------------------------------------------- los tiempos
 // Más largo que el ruido eléctrico y más corto que un alevín pasando.
