@@ -47,9 +47,9 @@ struct Punto {
 };
 
 Punto PUNTOS[] = {
-  {34, "alimentación del chip", "C-16  (misma columna que la pata 8)", 3.30f},
-  {35, "cursor del potenciómetro", "I-11  (misma columna que la pata del medio)", -1.0f},
-  {32, "señal del fototransistor", "G-25  (misma columna que la pata corta)", -1.0f},
+  {34, "nodo del LED (entre la 220 y el LED)", "H-5", -1.0f},
+  {35, "riel + de ABAJO",                      "columna 7 del riel + de abajo", 3.30f},
+  {32, "sin usar",                             "la sonda que no hacia contacto", -1.0f},
 };
 const int CUANTOS = sizeof(PUNTOS) / sizeof(PUNTOS[0]);
 
@@ -60,33 +60,30 @@ static float voltios(int pin) {
   return suma / 16.0f / 1000.0f;
 }
 
-/** Quién manda en el pin de la señal, deducido de cómo responde a las resistencias internas. */
-static void interrogarSenal() {
-  pinMode(PIN_SENAL, INPUT_PULLUP);
-  delay(20);
-  int arriba = digitalRead(PIN_SENAL);
-
-  pinMode(PIN_SENAL, INPUT_PULLDOWN);
-  delay(20);
-  int abajo = digitalRead(PIN_SENAL);
-
-  pinMode(PIN_SENAL, INPUT);
-  delay(20);
-  int suelto = digitalRead(PIN_SENAL);
+/**
+ * Quién manda en un pin, deducido de cómo responde a las resistencias internas.
+ *
+ * Es la prueba que un voltímetro no da: un pin al aire y un nodo sin corriente marcan voltajes
+ * parecidos, pero reaccionan distinto cuando se tira de ellos.
+ *
+ *   arriba=1 abajo=1   algo lo sostiene arriba con fuerza
+ *   arriba=1 abajo=0   NADIE manda: el cable no hace contacto
+ *   arriba=0 abajo=0   algo lo sostiene abajo: hay una resistencia a tierra, o un corto
+ */
+static void interrogar(int pin, const char *nombre) {
+  pinMode(pin, INPUT_PULLUP);  delay(30);  int arriba = digitalRead(pin);
+  pinMode(pin, INPUT_PULLDOWN); delay(30); int abajo = digitalRead(pin);
+  pinMode(pin, INPUT);          delay(30); int suelto = digitalRead(pin);
 
   const char *veredicto;
-  if (arriba == 1 && abajo == 1) {
-    veredicto = "SOSTENIDO EN ALTO: la resistencia de subida esta puesta y el chip no tira abajo";
-  } else if (arriba == 1 && abajo == 0) {
-    veredicto = "CABLE SUELTO: nadie manda en este pin (falta la subida, o la pata 1 no llega)";
-  } else if (arriba == 0 && abajo == 0) {
-    veredicto = "SOSTENIDO EN BAJO: el chip tira a tierra, o hay un corto a GND";
-  } else {
-    veredicto = "raro: mide mas abajo con la resistencia arriba. Revise el cableado";
-  }
+  if (arriba == 1 && abajo == 1)       veredicto = "SOSTENIDO ARRIBA";
+  else if (arriba == 1 && abajo == 0)  veredicto = "AL AIRE: el cable no hace contacto";
+  else if (arriba == 0 && abajo == 0)  veredicto = "SOSTENIDO ABAJO: hay camino a tierra";
+  else                                  veredicto = "raro, revisar";
 
-  Serial.printf("SENAL;arriba=%d;abajo=%d;suelto=%d;%s\n", arriba, abajo, suelto, veredicto);
-  pinMode(PIN_SENAL, INPUT_PULLUP);   // se deja como lo usa el sketch de verdad
+  Serial.printf("QUIEN;%s;arriba=%d;abajo=%d;suelto=%d;%s\n",
+                nombre, arriba, abajo, suelto, veredicto);
+  pinMode(pin, INPUT);
 }
 
 void setup() {
@@ -98,7 +95,10 @@ void setup() {
     analogSetPinAttenuation(PUNTOS[i].pin, ADC_11db);   // rango completo hasta 3,3 V
     Serial.printf("# G%d <- %s   (%s)\n", PUNTOS[i].pin, PUNTOS[i].desde, PUNTOS[i].nombre);
   }
-  interrogarSenal();
+  interrogar(PIN_SENAL, "pin de la senal (G4)");
+  // G32 es un GPIO normal y tiene resistencias internas; G34 y G35 son de solo entrada y no.
+  interrogar(32, "toma de medida (G32)");
+  analogSetPinAttenuation(32, ADC_11db);
 }
 
 void loop() {
@@ -113,8 +113,10 @@ void loop() {
     float v = voltios(PUNTOS[i].pin);
     // Un pin de entrada sin nada conectado se queda flotando cerca de cero y tiembla; avisarlo
     // evita leer como medida lo que en realidad es un cable que nadie puso.
-    const char *nota = (v < 0.08f) ? "cero o sin cable" : "";
+    const char *nota = (v < 0.25f) ? "SIN CABLE o cero: un pin al aire ronda 0,15 V" : "";
     Serial.printf("V;G%d;%.2f;%s;%s\n", PUNTOS[i].pin, v, PUNTOS[i].nombre, nota);
   }
+  interrogar(32, "toma de medida (G32)");
+  analogSetPinAttenuation(32, ADC_11db);
   Serial.println("---");
 }
